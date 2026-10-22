@@ -617,6 +617,11 @@ a.kpi:hover { border-color: var(--primary); }
 }
 @media (max-width: 520px) { .hero .ring-txt small { font-size: .5rem; max-width: 50px; } .hero .ring-txt b { font-size: 1rem; } }
 
+/* Uso a distanza senza server: invio dei progressi e link di invito */
+.card.highlight { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-soft); }
+.invite-link { width: 100%; font-family: ui-monospace, monospace; font-size: .8rem; word-break: break-all; }
+ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { margin: .25rem 0; }
+
 </style>
 </head>
 <body>
@@ -1160,6 +1165,111 @@ a.kpi:hover { border-color: var(--primary); }
       return db.settings;
     },
 
+    // ---------- Uso a distanza senza server ----------
+    // L'insegnante manda a ogni studente un link di invito; lo studente studia sul suo dispositivo
+    // e le manda un file con i progressi, che lei importa nella sua area.
+    async inviteData(db, auth, p) {
+      needTeacher(auth);
+      const u = studentOrFail(db, p.id);
+      const prof = db.profiles[u.id] || defaultProfile(u.l1);
+      return {
+        tipo: 'il2-invito', v: 1, at: Date.now(),
+        settings: { ...db.settings },
+        user: { ...publicUser(u), secret: u.secret },
+        teacher: { levelOverride: prof.levelOverride || null, testRequested: !!prof.testRequested, nextTestDue: prof.nextTestDue || null },
+        reviews: db.submissions.filter(s => s.userId === u.id && s.status === 'corretto')
+          .map(s => ({ id: s.id, teacherFeedback: s.teacherFeedback, corrected: s.corrected || '', reviewedAt: s.reviewedAt })),
+        customVocab: db.customVocab
+      };
+    },
+
+    async acceptInvite(db, auth, p, ctx) {
+      // solo nella versione che gira nel browser dello studente, mai sul server
+      if (!ctx || !ctx.allowInvite) fail(403, 'Funzione non disponibile');
+      const d = p.data;
+      if (!d || d.tipo !== 'il2-invito' || !d.user || !d.settings) fail(400, 'Link di invito non valido');
+      if (db.users.some(u => u.role === 'teacher')) fail(409, 'Su questo dispositivo c\'è già un insegnante');
+      const inc = d.user;
+      if (typeof inc.id !== 'string' || typeof inc.secret !== 'string') fail(400, 'Link di invito non valido');
+      const other = db.users.find(u => u.id !== inc.id);
+      if (other && !p.replace) fail(409, 'Su questo dispositivo studia già ' + other.displayName);
+      if (other) { for (const k of Object.keys(db)) delete db[k]; Object.assign(db, emptyDb()); }
+      db.settings = Object.assign({}, db.settings || {}, d.settings);
+      let u = findUser(db, inc.id);
+      const fields = { username: normUsername(inc.username), displayName: str(inc.displayName, 60, 'nome'), secret: inc.secret,
+        l1: str(inc.l1, 10, 'lingua') || 'en', group: str(inc.group, 40, 'gruppo'), birthYear: inc.birthYear || null };
+      if (u) Object.assign(u, fields);
+      else { u = { id: inc.id, role: 'student', createdAt: inc.createdAt || Date.now(), ...fields }; db.users.push(u); }
+      const prof = db.profiles[u.id] || (db.profiles[u.id] = defaultProfile(u.l1));
+      const t = d.teacher || {};
+      prof.levelOverride = ['A1', 'A2', 'B1', 'B2', 'C1'].includes(t.levelOverride) ? t.levelOverride : null;
+      // una richiesta di test già soddisfatta da un test fatto dopo l'invito non torna attiva
+      const lastTest = prof.placement.length ? prof.placement[prof.placement.length - 1].at : 0;
+      prof.testRequested = !!t.testRequested && lastTest < (d.at || 0);
+      if (t.nextTestDue && (!prof.nextTestDue || lastTest < (d.at || 0))) prof.nextTestDue = t.nextTestDue;
+      for (const r of Array.isArray(d.reviews) ? d.reviews : []) {
+        const s = db.submissions.find(x => x.id === r.id && x.userId === u.id);
+        if (s && (!s.reviewedAt || s.reviewedAt < r.reviewedAt)) {
+          s.teacherFeedback = str(r.teacherFeedback, 5000, 'commento'); s.corrected = str(r.corrected, 9000, 'correzione');
+          s.status = 'corretto'; s.reviewedAt = r.reviewedAt; s.seen = false;
+        }
+      }
+      if (Array.isArray(d.customVocab)) db.customVocab = d.customVocab;
+      const token = ctx.token();
+      db.sessions = { [token]: { userId: u.id, exp: Date.now() + 10 * 365 * DAY } };
+      u.lastLogin = Date.now();
+      return { token, user: publicUser(u) };
+    },
+
+    async exportProgress(db, auth) {
+      needStudent(auth);
+      const u = findUser(db, auth.userId);
+      return {
+        tipo: 'il2-progressi', v: 1, exportedAt: Date.now(),
+        user: publicUser(u), profile: db.profiles[u.id] || defaultProfile(u.l1),
+        activity: db.activity.filter(a => a.userId === u.id),
+        submissions: db.submissions.filter(s => s.userId === u.id),
+        feedback: db.feedback.filter(f => f.userId === u.id)
+      };
+    },
+
+    async importProgress(db, auth, p) {
+      needTeacher(auth);
+      const d = p.data;
+      if (!d || d.tipo !== 'il2-progressi' || !d.user || !d.profile) fail(400, 'Questo file non contiene i progressi di uno studente');
+      const u = db.users.find(x => x.role === 'student' && x.id === d.user.id);
+      if (!u) fail(404, 'Lo studente ' + (d.user.displayName || '') + ' non è nell\'elenco: il file viene da un altro invito');
+      const prof = db.profiles[u.id] || (db.profiles[u.id] = defaultProfile(u.l1));
+      const inc = d.profile;
+      const newer = !prof.updatedAt || !inc.updatedAt || inc.updatedAt >= prof.updatedAt || (inc.placement || []).length > prof.placement.length;
+      if (newer) {
+        const keep = { levelOverride: prof.levelOverride, testRequested: prof.testRequested };
+        const before = prof.placement.length;
+        for (const k of STUDENT_FIELDS) if (inc[k] !== undefined) prof[k] = inc[k];
+        for (const k of ['placement', 'level', 'theta', 'nextTestDue']) if (inc[k] !== undefined) prof[k] = inc[k];
+        prof.levelOverride = keep.levelOverride;
+        prof.testRequested = keep.testRequested && prof.placement.length <= before;
+        prof.updatedAt = inc.updatedAt || Date.now();
+      }
+      const seen = new Set(db.activity.filter(a => a.userId === u.id).map(a => a.at + '|' + a.type + '|' + a.ref));
+      let added = 0;
+      for (const a of Array.isArray(d.activity) ? d.activity : []) {
+        const k = a.at + '|' + a.type + '|' + a.ref;
+        if (seen.has(k)) continue;
+        seen.add(k); added++;
+        db.activity.push({ ...a, userId: u.id });
+      }
+      db.activity.sort((a, b) => a.at - b.at);
+      let writings = 0;
+      for (const s of Array.isArray(d.submissions) ? d.submissions : []) {
+        if (db.submissions.some(x => x.id === s.id)) continue;
+        db.submissions.push({ ...s, userId: u.id, status: 'inviato', teacherFeedback: '', reviewedAt: null }); writings++;
+      }
+      for (const f of Array.isArray(d.feedback) ? d.feedback : []) if (!db.feedback.some(x => x.id === f.id)) db.feedback.push({ ...f, userId: u.id });
+      if (d.user.lastLogin && (!u.lastLogin || d.user.lastLogin > u.lastLogin)) u.lastLogin = d.user.lastLogin;
+      return { ok: true, student: u.displayName, profileUpdated: newer, activityAdded: added, newWritings: writings, sentAt: d.exportedAt };
+    },
+
     async exportData(db, auth) {
       needTeacher(auth);
       const out = clone(db);
@@ -1216,7 +1326,7 @@ a.kpi:hover { border-color: var(--primary); }
   // Metodi che non modificano i dati (il server evita di salvare su disco).
   const READ_ONLY = new Set(['status', 'me', 'mySubmissions', 'myAssignments', 'myAnnouncements', 'listStudents',
     'getStudent', 'classData', 'listSubmissions', 'listAssignments', 'listAnnouncements', 'listCustomVocab',
-    'exportData', 'exportAnonymous']);
+    'exportData', 'exportAnonymous', 'inviteData', 'exportProgress']);
 
   return { call, resolveAuth, emptyDb, defaultProfile, READ_ONLY, normUsername, methods };
 });
@@ -1405,6 +1515,8 @@ a.kpi:hover { border-color: var(--primary); }
     sparkle: '<path d="M12 3.5c.7 3.9 2.6 5.8 6.5 6.5-3.9.7-5.8 2.6-6.5 6.5-.7-3.9-2.6-5.8-6.5-6.5 3.9-.7 5.8-2.6 6.5-6.5z"/><path d="M19 15.5c.3 1.5 1 2.2 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.3 2.2-1 2.5-2.5z"/>',
     play: '<path d="M7 4.5v15l12-7.5z"/>',
     stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
+    upload: '<path d="M12 15V4"/><path d="m7 9 5-5 5 5"/><path d="M5 15v4a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-4"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
     globe: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.5 3.5 5.4 3.5 8.5s-1.1 6-3.5 8.5c-2.4-2.5-3.5-5.4-3.5-8.5s1.1-6 3.5-8.5z"/>'
   };
   function icon(name, cls) {
@@ -4675,8 +4787,10 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
 (function () {
   'use strict';
   const IL2 = window.IL2 = window.IL2 || {};
-  const LS_DB = 'il2-db-v1';
-  const LS_TOKEN = 'il2-token';
+  // il sito degli studenti e quello dell'insegnante tengono archivi separati (stesso indirizzo, dati distinti)
+  const SITE = window.IL2_SITE ? '-' + window.IL2_SITE : '';
+  const LS_DB = 'il2-db-v1' + SITE;
+  const LS_TOKEN = 'il2-token' + SITE;
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
@@ -4704,7 +4818,8 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       if (alg !== 'pbkdf2') return false;
       return (await pbkdf2(secret, unhex(salt))) === key;
     },
-    token: () => hex(randomBytes(24))
+    token: () => hex(randomBytes(24)),
+    allowInvite: window.IL2_SITE === 'studenti'
   };
 
   // ---------- Adattatore locale ----------
@@ -4725,7 +4840,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       const token = memToken || lsGet(LS_TOKEN);
       const auth = IL2.handlers.resolveAuth(db, token);
       const result = await IL2.handlers.call(db, auth, method, params, localCtx);
-      if (method === 'login') { memToken = result.token; lsSet(LS_TOKEN, result.token); delete result.token; }
+      if (method === 'login' || method === 'acceptInvite') { memToken = result.token; lsSet(LS_TOKEN, result.token); delete result.token; }
       if (method === 'logout' || method === 'importData') { memToken = null; lsDel(LS_TOKEN); }
       if (!IL2.handlers.READ_ONLY.has(method)) saveLocal();
       return JSON.parse(JSON.stringify(result));
@@ -4768,7 +4883,12 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
   IL2.api = {
     mode: null,
     async init() {
-      if (window.IL2_DEMO || window.IL2_STANDALONE) { this.mode = 'local'; return this.mode; }
+      if (window.IL2_DEMO || window.IL2_STANDALONE) {
+        this.mode = 'local';
+        // chiede al browser di non cancellare i dati quando lo spazio scarseggia
+        if (window.IL2_SITE && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { /* facoltativo */ });
+        return this.mode;
+      }
       try {
         const r = await fetch('/api/status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
         const ct = r.headers.get('content-type') || '';
@@ -5622,7 +5742,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
   }
   new MutationObserver(() => { const v = document.getElementById('view'); if (v && v.querySelector('table:not(.tbl-scroll > table)')) wrapTables(v); })
     .observe(document.getElementById('app'), { childList: true, subtree: true });
-  window.addEventListener('hashchange', route);
+  window.addEventListener('hashchange', () => { if (INVITE_RE.test(location.hash)) start(); else route(); });
   // pulsanti generici (niente gestori inline: la Content-Security-Policy li blocca)
   document.addEventListener('click', e => {
     // un link alla pagina già aperta (es. "Rivedi la teoria" dopo gli esercizi) deve comunque ricaricarla
@@ -5645,10 +5765,54 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<header class="top"><a class="brand" href="#/"><span class="logo" aria-hidden="true"><i></i><i></i><i></i></span><span><b>Italiano L2</b><small>' + esc(st.settings ? st.settings.schoolName : '') + '</small></span></a>' +
       '<div class="who">' + (role === 'student' ? IL2.ui.levelBadge(E.currentLevel(st.profile)) : '<span class="tag">Insegnante</span>') +
       '<span class="name">' + esc(st.user.displayName) + '</span><button class="btn ghost small" id="logout" title="Esci">' + icon('logout') + '<span>Esci</span></button></div></header>' +
-      (IL2.api.mode === 'local' ? '<div class="mode-banner">' + (window.IL2_DEMO ? 'Demo: i dati restano in questo browser.' : 'Modalità locale: i dati restano in questo browser.') + ' Per usarla con più dispositivi serve il server (vedi guida).</div>' : '') +
+      (IL2.api.mode === 'local' ? '<div class="mode-banner">' + modeBanner(role) + '</div>' : '') +
       '<div class="layout"><nav class="nav" aria-label="Sezioni">' + NAV[role].map(([r, ic, label, alias]) => '<a href="#/' + r + '" data-r="' + r + '" data-alias="' + (alias || '') + '">' + icon(ic) + '<span>' + label + '</span></a>').join('') + '</nav>' +
       '<main id="view" class="view" tabindex="-1"></main></div>';
     $('#logout').addEventListener('click', logout);
+  }
+
+  function modeBanner(role) {
+    if (window.IL2_DEMO) return 'Demo: i dati restano in questo browser.';
+    if (window.IL2_SITE === 'studenti') return 'I tuoi progressi restano su questo dispositivo. Ogni tanto mandali all\'insegnante dalla pagina <a href="#/profilo">Io</a>.';
+    if (window.IL2_SITE === 'insegnante') return 'I dati restano in questo browser. Importa i progressi degli studenti dalla pagina <a href="#/studenti">Studenti</a> e scarica ogni tanto un backup dalle Impostazioni.';
+    return 'Modalità locale: i dati restano in questo browser. Per usarla con più dispositivi serve il server (vedi guida).';
+  }
+
+  // ---------- Link di invito (uso a distanza senza server) ----------
+  const INVITE_RE = /^#\/?invito=/;
+  IL2.invite = {
+    // JSON → base64url, leggibile in un link
+    encode(obj) {
+      const bytes = new TextEncoder().encode(JSON.stringify(obj));
+      let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    },
+    decode(str) {
+      const b = atob(str.replace(/-/g, '+').replace(/_/g, '/'));
+      const bytes = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) bytes[i] = b.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(bytes));
+    },
+    link(data) { return new URL('studenti.html', location.href).href.split('#')[0] + '#invito=' + this.encode(data); }
+  };
+  async function acceptInviteFromHash() {
+    let data;
+    try { data = IL2.invite.decode(location.hash.replace(INVITE_RE, '')); }
+    catch (e) { history.replaceState(null, '', location.pathname); toast('Il link di invito non è completo. Chiedi all\'insegnante di mandarlo di nuovo.', 'bad'); return; }
+    history.replaceState(null, '', location.pathname);
+    try { await IL2.api.call('acceptInvite', { data }); }
+    catch (e) {
+      if (e.status !== 409 || /insegnante/.test(e.message)) { toast(e.message, 'bad'); return; }
+      if (!await IL2.ui.confirm(e.message + '. Vuoi cancellare i suoi dati e usare il link di ' + data.user.displayName + '?', 'Sì, cancella', true)) return;
+      await IL2.api.call('acceptInvite', { data, replace: true });
+    }
+    toast('Ciao ' + data.user.displayName + ', il tuo spazio è pronto.', 'good');
+  }
+  function waitInviteScreen() {
+    $('#app').innerHTML = '<div class="auth"><div class="card auth-card">' +
+      '<div class="auth-head"><span class="logo big" aria-hidden="true"><i></i><i></i><i></i></span><h1>Italiano L2</h1></div>' +
+      '<p>Per cominciare apri il <b>link di invito</b> che ti ha mandato l\'insegnante.</p>' +
+      '<p class="small muted">Il link prepara l\'app su questo dispositivo con il tuo nome. Poi puoi aggiungerla alla schermata Home e aprirla come le altre app.</p>' +
+      '</div></div>';
   }
 
   // ---------- Avvisi sull'audio ----------
@@ -5696,7 +5860,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<label>Nome utente<input name="username" required minlength="3" autocomplete="username" placeholder="es. serena"></label>' +
       '<label>Password (almeno 8 caratteri)<input name="password" type="password" required minlength="8" autocomplete="new-password"></label>' +
       '<button class="btn primary big">Crea e accedi</button></form>' +
-      (local ? '<div class="divider"><span>oppure</span></div><button class="btn ghost" id="demo">Prova con una classe di esempio</button><p class="small muted">Crea un insegnante (utente <b>prof</b>, password <b>italiano2024</b>) e alcuni studenti con progressi simulati.</p>' : '') +
+      (local && !window.IL2_SITE ? '<div class="divider"><span>oppure</span></div><button class="btn ghost" id="demo">Prova con una classe di esempio</button><p class="small muted">Crea un insegnante (utente <b>prof</b>, password <b>italiano2024</b>) e alcuni studenti con progressi simulati.</p>' : '') +
       '</div></div>';
     $('#setup').addEventListener('submit', async e => {
       e.preventDefault();
@@ -5721,7 +5885,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<label>Nome utente<input name="username" required autocomplete="username" autocapitalize="off" spellcheck="false"></label>' +
       '<label>Codice segreto o password<input name="secret" type="password" required autocomplete="current-password"></label>' +
       '<button class="btn primary big">Entra</button></form>' +
-      '<p class="small muted center">Non hai un account? Chiedi all\'insegnante il tuo nome utente e il tuo codice.</p>' +
+      '<p class="small muted center">' + (window.IL2_SITE === 'studenti' ? 'Non ricordi il codice? Chiedi all\'insegnante di mandarti di nuovo il link di invito.' : 'Non hai un account? Chiedi all\'insegnante il tuo nome utente e il tuo codice.') + '</p>' +
       (window.IL2_DEMO ? '<div class="demo-hint"><b>Demo</b> · insegnante: <code>prof</code> / <code>italiano2024</code> · studente: <code>amina</code> / <code>1234</code><br><button class="btn ghost small" id="reset-demo">Ricomincia la demo da zero</button></div>' : '') +
       '</div></div>';
     $('#login').addEventListener('submit', async e => {
@@ -5738,6 +5902,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
   }
 
   async function start() {
+    if (window.IL2_SITE === 'studenti' && INVITE_RE.test(location.hash)) await acceptInviteFromHash();
     let status;
     try { status = await IL2.api.call('status'); }
     catch (e) { $('#app').innerHTML = '<div class="auth"><div class="card">Impossibile contattare il server: ' + esc(e.message) + '</div></div>'; return; }
@@ -5745,7 +5910,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       $('#app').innerHTML = '<div class="auth"><div class="card">Preparazione della classe di esempio…</div></div>';
       await IL2.demo.seed(); status = await IL2.api.call('status');
     }
-    if (!status.setup) return setupScreen();
+    if (!status.setup) return window.IL2_SITE === 'studenti' ? waitInviteScreen() : setupScreen();
     let me;
     try { me = await IL2.api.call('me'); } catch (e) { return loginScreen(status); }
     IL2.state.user = me.user; IL2.state.settings = me.settings;
@@ -6460,7 +6625,9 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
     const lv = E.currentLevel(p);
     const goal = (st.settings && st.settings.dailyGoalMinutes) || 15;
     const badges = E.BADGES.map(b => '<div class="badge' + (p.badges.includes(b.id) ? ' got' : '') + '" title="' + esc(b.desc) + '"><span>' + b.icon + '</span><small>' + esc(b.name) + '</small></div>').join('');
+    const remote = window.IL2_SITE === 'studenti';
     view.innerHTML = '<div class="page-head"><h1>' + esc(st.user.displayName) + '</h1></div>' +
+      (remote ? sendCard() : '') +
       '<div class="grid2"><div class="card"><h3>Livello attuale ' + levelBadge(lv) + '</h3><p class="small">' + esc(E.LEVEL_DESC[lv]) + '</p>' + (p.levelOverride ? '<p class="small muted">Livello impostato dall\'insegnante.</p>' : '') +
       '<h4>Andamento nei test</h4>' + IL2.ui.levelLine(p.placement.map(x => ({ at: x.at, theta: x.theta, level: x.level }))) +
       '<p class="small muted">Prossimo test: ' + (p.nextTestDue ? fmtDate(p.nextTestDue) : '—') + '</p></div>' +
@@ -6476,6 +6643,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<label class="check"><input type="checkbox" name="contrast"' + (p.prefs.contrast ? ' checked' : '') + '> Contrasto elevato</label>' +
       '</form></div>' +
       '<div class="card"><h3>Cambia il tuo codice segreto</h3><form id="pin" class="row wrap"><input name="oldSecret" type="password" placeholder="Codice attuale" required autocomplete="current-password"><input name="newSecret" type="password" placeholder="Nuovo codice (almeno 4 caratteri)" minlength="4" required autocomplete="new-password"><button class="btn">Cambia</button></form></div>';
+    if (remote) view.querySelector('#sendprog').addEventListener('click', e => sendProgress(e.currentTarget, view));
     view.querySelector('#prefs').addEventListener('change', e => {
       const f = e.currentTarget;
       p.prefs.fontScale = +f.fontScale.value; p.prefs.ttsRate = +f.ttsRate.value;
@@ -6487,6 +6655,38 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       try { await IL2.api.call('changeSecret', f); toast('Codice cambiato', 'good'); e.target.reset(); } catch (err) { toast(err.message, 'bad'); }
     });
   };
+
+  // Invio dei progressi all'insegnante (versione senza server): un file da mandare su WhatsApp o per email.
+  const LAST_SENT = 'il2-ultimo-invio';
+  function lastSent() { try { return +localStorage.getItem(LAST_SENT) || 0; } catch (e) { return 0; } }
+  function sendCard() {
+    const last = lastSent();
+    const late = !last || Date.now() - last > 7 * 86400000;
+    return '<div class="card' + (late ? ' highlight' : '') + '"><h3>' + icon('upload') + ' Invia i miei progressi</h3>' +
+      '<p class="small">L\'insegnante vede come vai solo quando le mandi questo file. Mandalo una volta a settimana, per esempio su WhatsApp o per email.</p>' +
+      '<p class="small muted">Ultimo invio: ' + (last ? fmtDate(last, true) : 'mai') + '</p>' +
+      '<button class="btn primary" id="sendprog">Invia i miei progressi</button></div>';
+  }
+  async function sendProgress(btn, view) {
+    btn.disabled = true;
+    try {
+      await IL2.save(true);
+      const d = await IL2.api.call('exportProgress');
+      // .txt: è il tipo di file che tutti i telefoni lasciano condividere
+      const name = 'progressi-' + S().user.username + '-' + new Date().toISOString().slice(0, 10) + '.txt';
+      const text = JSON.stringify(d);
+      const file = typeof File === 'function' ? new File([text], name, { type: 'text/plain' }) : null;
+      let sent = false;
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: 'Progressi di ' + S().user.displayName }); sent = true; }
+        catch (e) { if (e.name === 'AbortError') return; }
+      }
+      if (!sent) { IL2.ui.download(name, text, 'text/plain'); toast('File salvato: mandalo all\'insegnante', 'good'); }
+      try { localStorage.setItem(LAST_SENT, String(Date.now())); } catch (e) { /* nulla */ }
+      R.profilo(view);
+    } catch (err) { toast(err.message, 'bad'); }
+    finally { btn.disabled = false; }
+  }
 
   // Prova dell'audio: verifica la voce italiana e il microfono, con indicazioni se qualcosa non va.
   R.audio = async function (view) {
@@ -7201,7 +7401,10 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
   R.studenti = async function (view) {
     const list = await IL2.api.call('listStudents');
     const groups = Array.from(new Set(list.map(s => s.group).filter(Boolean))).sort();
-    view.innerHTML = head('Studenti', 'Crea gli account e consegna a ogni studente il suo codice di accesso.') +
+    const remote = window.IL2_SITE === 'insegnante';
+    view.innerHTML = head('Studenti', remote ? 'Crea gli studenti e manda a ognuno il suo link di invito. Loro ti mandano i progressi, tu li importi qui.' : 'Crea gli account e consegna a ogni studente il suo codice di accesso.') +
+      (remote ? '<div class="card highlight"><h3>' + icon('upload') + ' Importa i progressi</h3><p class="small">Scegli i file che ti hanno mandato gli studenti (anche più di uno insieme). Puoi importare lo stesso file due volte: i dati non si duplicano.</p>' +
+        '<label class="btn primary">Scegli i file<input type="file" id="impprog" accept=".txt,.json,text/plain,application/json" multiple hidden></label><div id="impres"></div></div>' : '') +
       '<div class="card"><h3>Aggiungi uno studente</h3><form id="add" class="grid-form">' +
       '<label>Nome e cognome<input name="displayName" required maxlength="60" placeholder="Es. Amina B."></label>' +
       '<label>Nome utente <small class="muted">(per l\'accesso)</small><input name="username" maxlength="30" placeholder="automatico" autocapitalize="off"></label>' +
@@ -7212,13 +7415,28 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<button class="btn primary">Aggiungi</button></form>' +
       '<details><summary>Aggiungi più studenti insieme</summary><p class="small">Una riga per studente: <code>Nome; lingua; gruppo</code>. Lingue: ' + IL2.l1.ORDER.join(', ') + ', other. Esempio: <code>Yasmine El Idrissi; ar; 2B</code></p><textarea id="bulk" rows="5"></textarea><button class="btn" id="bulkgo">Crea tutti</button></details></div>' +
       '<div id="creds"></div>' +
-      '<div class="card table-wrap"><table class="tbl"><thead><tr><th>Studente</th><th>Utente</th><th>Lingua d\'origine</th><th>Gruppo</th><th>Livello</th><th>Iscritto</th></tr></thead><tbody>' +
-      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td></tr>').join('') +
+      '<div class="card table-wrap"><table class="tbl"><thead><tr><th>Studente</th><th>Utente</th><th>Lingua d\'origine</th><th>Gruppo</th><th>Livello</th><th>Iscritto</th>' + (remote ? '<th>Ultimi progressi</th><th>Invito</th>' : '') + '</tr></thead><tbody>' +
+      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td>' + (remote ? '<td>' + (s.lastActivity ? ago(s.lastActivity) : '—') + '</td><td><button class="btn small" data-invite="' + s.id + '">' + icon('link') + ' Link</button></td>' : '') + '</tr>').join('') +
       '</tbody></table>' + (list.length ? '' : '<p class="muted">Nessuno studente.</p>') + '</div>';
     const created = [];
     function showCreds() {
-      view.querySelector('#creds').innerHTML = created.length ? '<div class="card"><div class="row between"><h3>Credenziali appena create</h3><button class="btn ghost small" id="printc">Stampa i biglietti</button></div><p class="small muted">Consegna a ogni studente il suo biglietto. I codici non sono salvati in chiaro: se si perdono, generane uno nuovo dalla scheda dello studente.</p><div class="cred-grid">' + created.map(c => '<div class="cred"><b>' + esc(c.name) + '</b><div>Utente: <code>' + esc(c.username) + '</code></div><div>Codice: <code>' + esc(c.pin) + '</code></div><small>' + esc(location.origin + location.pathname) + '</small></div>').join('') + '</div></div>' : '';
+      view.querySelector('#creds').innerHTML = created.length ? '<div class="card"><div class="row between"><h3>Credenziali appena create</h3><button class="btn ghost small" id="printc">Stampa i biglietti</button></div><p class="small muted">Consegna a ogni studente il suo biglietto. I codici non sono salvati in chiaro: se si perdono, generane uno nuovo dalla scheda dello studente.</p><div class="cred-grid">' + created.map(c => '<div class="cred"><b>' + esc(c.name) + '</b><div>Utente: <code>' + esc(c.username) + '</code></div><div>Codice: <code>' + esc(c.pin) + '</code></div><small>' + esc(remote ? 'Riceverai il link di invito' : location.origin + location.pathname) + '</small></div>').join('') + '</div></div>' : '';
       const pc = view.querySelector('#printc'); if (pc) pc.addEventListener('click', () => { document.body.classList.add('print-creds'); IL2.ui.print(); setTimeout(() => document.body.classList.remove('print-creds'), 500); });
+    }
+    if (remote) {
+      view.querySelectorAll('[data-invite]').forEach(b => b.addEventListener('click', () => showInvite(b.dataset.invite)));
+      view.querySelector('#impprog').addEventListener('change', async e => {
+        const files = Array.from(e.target.files || []); e.target.value = '';
+        const lines = [];
+        for (const file of files) {
+          try {
+            const r = await IL2.api.call('importProgress', { data: JSON.parse(await file.text()) });
+            lines.push('<li>' + icon('check') + ' <b>' + esc(r.student) + '</b>: progressi del ' + fmtDate(r.sentAt, true) + (r.activityAdded ? ', ' + r.activityAdded + (r.activityAdded === 1 ? ' attività nuova' : ' attività nuove') : ', nessuna attività nuova') + (r.newWritings ? ', ' + r.newWritings + (r.newWritings === 1 ? ' testo da leggere' : ' testi da leggere') : '') + '</li>');
+          } catch (err) { lines.push('<li class="bad-text">' + esc(file.name) + ': ' + esc(err instanceof SyntaxError ? 'non è un file di progressi' : err.message) + '</li>'); }
+        }
+        await R.studenti(view);
+        view.querySelector('#impres').innerHTML = '<ul class="plain">' + lines.join('') + '</ul>';
+      });
     }
     view.querySelector('#add').addEventListener('submit', async e => {
       e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
@@ -7227,7 +7445,9 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
         created.push({ name: u.displayName, username: u.username, pin: f.secret });
         toast('Studente aggiunto: ' + u.username, 'good');
         e.target.reset(); e.target.secret.value = genPin(); showCreds();
-        const tb = view.querySelector('tbody'); tb.insertAdjacentHTML('afterbegin', '<tr class="new"><td><a href="#/studente/' + u.id + '">' + esc(u.displayName) + '</a></td><td><code>' + esc(u.username) + '</code></td><td>' + esc(IL2.l1.name(u.l1)) + '</td><td>' + esc(u.group) + '</td><td>—</td><td>oggi</td></tr>');
+        const tb = view.querySelector('tbody'); tb.insertAdjacentHTML('afterbegin', '<tr class="new"><td><a href="#/studente/' + u.id + '">' + esc(u.displayName) + '</a></td><td><code>' + esc(u.username) + '</code></td><td>' + esc(IL2.l1.name(u.l1)) + '</td><td>' + esc(u.group) + '</td><td>—</td><td>oggi</td>' + (remote ? '<td>—</td><td><button class="btn small" data-invite="' + u.id + '">' + icon('link') + ' Link</button></td>' : '') + '</tr>');
+        const ib = tb.querySelector('[data-invite="' + u.id + '"]'); if (ib) ib.addEventListener('click', () => showInvite(u.id));
+        tb.closest('.card').querySelectorAll(':scope > p.muted').forEach(x => x.remove());
       } catch (err) { toast(err.message, 'bad'); }
     });
     view.querySelector('#bulkgo').addEventListener('click', async () => {
@@ -7248,6 +7468,29 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       toast(ok + ' studenti creati', 'good'); showCreds();
     });
   };
+
+  // Link di invito: prepara l'app sul dispositivo dello studente. Va rimandato quando l'insegnante
+  // cambia qualcosa per lui (livello, test anticipato, commenti ai testi, codice).
+  async function showInvite(id) {
+    const d = await IL2.api.call('inviteData', { id });
+    const url = IL2.invite.link(d);
+    const name = d.user.displayName;
+    const msg = 'Ciao ' + name + '! Questo è il tuo link per Italiano L2: aprilo sul tuo telefono o computer. Nome utente: ' + d.user.username + '. ' + url;
+    await modal('<h2>Link di invito per ' + esc(name) + '</h2>' +
+      '<p class="small">Mandalo a ' + esc(name) + ' su WhatsApp o per email. Aprendolo, l\'app si prepara sul suo dispositivo con il suo nome e il suo codice.</p>' +
+      '<textarea class="invite-link" rows="4" readonly>' + esc(url) + '</textarea>' +
+      '<p class="small muted">Rimandalo quando cambi il livello, chiedi un test, commenti un suo testo o generi un nuovo codice: i suoi progressi restano.</p>' +
+      '<div class="row wrap">' + (navigator.share ? '<button class="btn primary" id="inv-share">Condividi</button>' : '') + '<button class="btn" id="inv-copy">Copia il messaggio</button><button class="btn ghost" data-close="null">Chiudi</button></div>', {
+      onOpen(box) {
+        box.querySelector('#inv-copy').addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText(msg); toast('Messaggio copiato: incollalo su WhatsApp o in una email', 'good'); }
+          catch (e) { box.querySelector('textarea').select(); toast('Copia il link selezionato'); }
+        });
+        const sh = box.querySelector('#inv-share');
+        if (sh) sh.addEventListener('click', () => navigator.share({ title: 'Italiano L2', text: msg }).catch(() => { /* annullato */ }));
+      }
+    });
+  }
 
   // =================== SCRITTI ===================
   // L'insegnante legge i testi e lascia un commento: nessun voto e nessuna griglia.
