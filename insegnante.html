@@ -187,7 +187,6 @@ details.card > summary { list-style-position: outside; }
 .auth { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; background: radial-gradient(circle at 15% 10%, var(--primary-soft), transparent 45%), radial-gradient(circle at 90% 90%, var(--accent-soft), transparent 40%), var(--bg); }
 .auth-card { width: 100%; max-width: 440px; padding: 26px; }
 .auth-head { text-align: center; margin-bottom: 16px; } .auth-head h1 { margin: .35em 0 .1em; }
-.chi-sono { text-align: center; max-width: 560px; margin: 0 auto; } .chi-sono h1 { margin: .4em 0 .6em; } .chi-sono p { line-height: 1.6; }
 .firma { margin: 0 0 .4em; color: var(--muted); font-size: .9rem; font-style: italic; }
 .auth .btn.big { max-width: none; }
 .demo-hint { margin-top: 14px; padding: 10px; border-radius: 12px; background: var(--info-soft); font-size: .86rem; text-align: center; }
@@ -5652,7 +5651,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
   const E = IL2.engine;
 
   IL2.VERSION = '1.0.0';
-  // Autrice dell'app: compare sotto il titolo e nella pagina «Chi sono»
+  // Autrice dell'app: compare sotto il titolo
   IL2.AUTHOR = 'prof.ssa Serena De Gaspari';
   // Logo: puzzle tricolore con il libro (nella versione in un unico file è incorporato come immagine)
   IL2.logo = big => '<img class="logo' + (big ? ' big' : '') + '" src="' + (window.IL2_LOGO || 'icon.png') + '" alt="">';
@@ -5754,7 +5753,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
 
   // ---------- Struttura ----------
   const NAV = {
-    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test,chi-sono']],
+    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
     teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['impostazioni', 'gear', 'Impostazioni']]
   };
   function shell() {
@@ -6644,7 +6643,7 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       '<div class="card"><h3>Le tue abilità</h3>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(s => '<div class="sb"><span>' + E.SKILL_LABEL[s] + '</span>' + meter(((p.skills[s] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[s]) + '</b></div>').join('') + '</div></div></div>' +
       '<div class="card"><h3>Minuti di studio (ultime 2 settimane)</h3>' + IL2.ui.minutesBars(p.timeLog, 14, goal) + '<p class="small muted">Lezioni completate: ' + Object.keys(p.unitsDone).length + ' · parole memorizzate: ' + Object.values(p.srs).filter(c => c.box >= 3).length + '</p></div>' +
       '<div class="card"><h3>Traguardi</h3><div class="badges">' + badges + '</div></div>' +
-      '<div class="row wrap"><a class="btn ghost" href="#/elaborati">' + icon('pen') + ' I miei testi</a><a class="btn ghost" href="#/audio">' + icon('speaker') + ' Prova l\'audio</a><a class="btn ghost" href="#/chi-sono">' + icon('user') + ' Chi sono</a></div>' +
+      '<div class="row wrap"><a class="btn ghost" href="#/elaborati">' + icon('pen') + ' I miei testi</a><a class="btn ghost" href="#/audio">' + icon('speaker') + ' Prova l\'audio</a></div>' +
       '<div class="card"><h3>Impostazioni</h3><form id="prefs" class="stack">' +
       '<label>Dimensione del testo <select name="fontScale">' + [[0.9, 'Piccolo'], [1, 'Normale'], [1.15, 'Grande'], [1.3, 'Molto grande']].map(([v, l]) => '<option value="' + v + '"' + (p.prefs.fontScale == v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></label>' +
       '<label>Velocità della voce <select name="ttsRate">' + [[0.7, 'Lenta'], [0.9, 'Normale'], [1, 'Naturale']].map(([v, l]) => '<option value="' + v + '"' + (p.prefs.ttsRate == v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></label>' +
@@ -6664,14 +6663,6 @@ In questa prospettiva, i parlanti plurilingui rappresentano una risorsa preziosa
       e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
       try { await IL2.api.call('changeSecret', f); toast('Codice cambiato', 'good'); e.target.reset(); } catch (err) { toast(err.message, 'bad'); }
     });
-  };
-
-  // Chi sono: due righe sull'autrice dell'app, senza contatti personali.
-  R['chi-sono'] = async function (view) {
-    view.innerHTML = '<a class="back" href="#/profilo">' + icon('back') + 'Io</a>' +
-      '<section class="card chi-sono">' + IL2.logo(true) + '<h1>Chi sono</h1>' +
-      '<p>Sono Serena De Gaspari, insegnante di italiano. Ho creato Italiano L2 per i miei studenti, per imparare l\'italiano un passo alla volta, anche a casa.</p>' +
-      '<p>Le lezioni seguono i programmi ufficiali di italiano per stranieri, dal livello A1 al livello C1.</p></section>';
   };
 
   // Invio dei progressi all'insegnante (versione senza server): un file da mandare su WhatsApp o per email.
