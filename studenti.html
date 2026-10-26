@@ -6285,7 +6285,9 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       const bytes = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) bytes[i] = b.charCodeAt(i);
       return JSON.parse(new TextDecoder().decode(bytes));
     },
-    link(data) { return new URL('studenti.html', location.href).href.split('#')[0] + '#invito=' + this.encode(data); }
+    // L'area insegnante può essere aperta come file sul computer: allora il link porta all'app pubblicata.
+    STUDENTS_URL: 'https://profserenadegaspari.github.io/italianoL2/studenti.html',
+    link(data) { const base = location.protocol === 'file:' ? this.STUDENTS_URL : new URL('studenti.html', location.href).href.split('#')[0]; return base + '#invito=' + this.encode(data); }
   };
   async function acceptInviteFromHash() {
     let data;
