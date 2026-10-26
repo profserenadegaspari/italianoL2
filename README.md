@@ -4,13 +4,12 @@ Percorso adattivo di italiano come lingua seconda (A1–C1) per studenti stranie
 
 | Pagina | Per chi | Indirizzo |
 |---|---|---|
-| Area insegnante | l'insegnante | https://profserenadegaspari.github.io/italianoL2/insegnante.html |
 | App degli studenti | gli studenti, tramite il link di invito | https://profserenadegaspari.github.io/italianoL2/studenti.html |
 | Pagina iniziale | chiunque | https://profserenadegaspari.github.io/italianoL2/ |
 
 ## Come funziona
 
-1. L'insegnante apre l'area insegnante e crea gli studenti (pagina **Studenti**).
+1. L'insegnante apre l'area insegnante (un file che tiene sul suo computer, non pubblicato qui) e crea gli studenti (pagina **Studenti**).
 2. Per ogni studente preme **Link** e gli manda il link di invito su WhatsApp o per email.
 3. Lo studente apre il link: l'app si prepara sul suo dispositivo con il suo nome. Può aggiungerla alla schermata Home.
 4. Una volta a settimana lo studente preme **Invia i miei progressi** nella pagina *Io* e manda il file all'insegnante.
