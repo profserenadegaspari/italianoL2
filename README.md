@@ -6,7 +6,8 @@ Percorso adattivo di italiano come lingua seconda (A1–C1) per studenti stranie
 |---|---|---|
 | Area insegnante | l'insegnante | https://profserenadegaspari.github.io/italianoL2/insegnante.html |
 | App degli studenti | gli studenti, tramite il link di invito | https://profserenadegaspari.github.io/italianoL2/studenti.html |
-| Demo con dati di esempio | chiunque | https://profserenadegaspari.github.io/italianoL2/ |
+| Pagina iniziale | chiunque | https://profserenadegaspari.github.io/italianoL2/ |
+| Demo con dati di esempio (non collegata dalla pagina iniziale) | chi la riceve | https://profserenadegaspari.github.io/italianoL2/demo.html |
 
 ## Come funziona
 
