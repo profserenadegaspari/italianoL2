@@ -113,6 +113,7 @@ a.card:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line))
 .btn.primary:hover { background: var(--primary-2); border-color: var(--primary-2); }
 .btn.ghost { background: transparent; }
 .btn.danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+.btn.danger-text { color: var(--bad); }
 .btn.warn { background: var(--warn-soft); border-color: var(--warn); }
 .btn.good { background: var(--good-soft); border-color: var(--good); }
 .btn.bad { background: var(--bad-soft); border-color: var(--bad); }
@@ -371,9 +372,31 @@ a.row-item:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--li
 .test-result .lv-giant { font-size: 5rem; font-weight: 800; line-height: 1; color: var(--lv, var(--primary)); margin: 6px 0; letter-spacing: -.02em; }
 .skillbars .sb { display: grid; grid-template-columns: 90px 1fr 32px; align-items: center; gap: 8px; font-size: .88rem; }
 .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
-.badge { text-align: center; padding: 8px 4px; border-radius: 12px; background: var(--surface-2); opacity: .35; filter: grayscale(1); }
-.badge.got { opacity: 1; filter: none; background: var(--primary-soft); }
-.badge span { font-size: 1.8rem; display: block; } .badge small { font-size: .72rem; font-weight: 600; }
+.bg-h { margin: 16px 0 8px; font-size: .9rem; } .bg-h small { color: var(--muted); font-weight: 500; margin-left: 4px; }
+.badge { position: relative; text-align: center; padding: 10px 4px 8px; border-radius: 12px; background: var(--surface-2); border: 1px solid transparent; color: var(--text); font: inherit; cursor: pointer; transition: transform .12s, box-shadow .12s; }
+.badge > span, .badge > small { opacity: .4; filter: grayscale(1); }
+.badge:hover, .badge:focus-visible { transform: translateY(-2px); box-shadow: var(--shadow); }
+.badge.got { background: var(--primary-soft); border-color: color-mix(in srgb, var(--primary) 25%, transparent); }
+.badge.got > span, .badge.got > small { opacity: 1; filter: none; }
+.badge.fresh { box-shadow: 0 0 0 2px var(--primary); }
+.badge span { font-size: 1.8rem; display: block; } .badge small { font-size: .72rem; font-weight: 600; display: block; line-height: 1.2; }
+.badge .b-prog { display: block; font-style: normal; font-size: .68rem; color: var(--muted); margin-top: 2px; }
+.badge .b-new { position: absolute; top: -7px; right: -4px; font-style: normal; font-size: .62rem; font-weight: 700; background: var(--primary); color: var(--on-primary); border-radius: 999px; padding: 1px 7px; }
+.badge-detail { text-align: center; } .badge-detail h4 { margin: 14px 0 4px; } .badge-detail .row { margin-top: 16px; }
+.badge-detail .bd-icon { font-size: 3.4rem; display: block; filter: grayscale(1); opacity: .45; } .badge-detail.got .bd-icon { filter: none; opacity: 1; animation: pop .5s ease; }
+.badge-detail .bd-prog { max-width: 260px; margin: 8px auto 0; } .badge-detail .bd-prog small { color: var(--muted); }
+.nav a[data-r="profilo"] { position: relative; }
+.nav a.has-new::after { content: ''; position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: var(--bad, #d64545); box-shadow: 0 0 0 2px var(--surface); }
+#badge-pop { position: fixed; z-index: 210; left: 50%; top: 14px; transform: translate(-50%, -140%); width: calc(100% - 24px); max-width: 460px; transition: transform .35s ease; pointer-events: none; }
+#badge-pop.in { transform: translate(-50%, 0); pointer-events: auto; }
+#badge-pop .bp-card { display: flex; gap: 12px; align-items: center; background: var(--surface); color: var(--text); border: 2px solid var(--primary); border-radius: 18px; padding: 12px 12px 12px 14px; box-shadow: var(--shadow-hi); }
+#badge-pop .bp-icon { font-size: 2.3rem; animation: pop .6s ease; }
+#badge-pop .bp-body { flex: 1; display: flex; flex-direction: column; min-width: 0; } #badge-pop .bp-body small { color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: .7rem; }
+#badge-pop .bp-body span { font-size: .85rem; color: var(--muted); } #badge-pop .bp-more { font-weight: 600; }
+#badge-pop .bp-actions { display: flex; align-items: center; gap: 4px; }
+#badge-pop .bp-x { background: none; border: 0; font-size: 1.4rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 4px 6px; }
+@keyframes pop { 0% { transform: scale(.4); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { #badge-pop { transition: none; } #badge-pop .bp-icon, .badge-detail.got .bd-icon { animation: none; } }
 
 /* --- Avviso audio --- */
 .audio-alert { position: fixed; z-index: 150; right: 16px; top: 72px; max-width: 420px; display: flex; gap: 12px; align-items: flex-start; padding: 14px 14px 14px 16px; border-radius: var(--radius); background: var(--surface); border: 2px solid var(--warn); box-shadow: var(--shadow-hi); animation: rise .3s ease; }
@@ -602,7 +625,7 @@ a.kpi:hover { border-color: var(--primary); }
 @media (max-width: 860px) { .bingo-wrap, .cw-wrap { grid-template-columns: minmax(0, 1fr); } .cw-clues { max-height: none; } .bingo-call { padding: 12px; } .call-pic { font-size: 3.4rem; min-height: 4rem; } .call-ask { margin: 2px 0 8px; } .bcell .bp { font-size: .85rem; top: 2px; right: 3px; } }
 
 @media print {
-  header.top, .nav, .mode-banner, .no-print, #toasts, .audio-alert { display: none !important; }
+  header.top, .nav, .mode-banner, .no-print, #toasts, #badge-pop, .audio-alert { display: none !important; }
   body { background: #fff; } .view { padding: 0; } .layout { display: block; }
   .card { box-shadow: none; break-inside: avoid; }
   body.print-creds .view > *:not(#creds) { display: none !important; }
@@ -687,7 +710,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       l1: l1 || 'en', level: null, theta: null, levelOverride: null,
       skills: { grammatica: 0, lessico: 0, lettura: 0, ascolto: 0, scrittura: 0, parlato: 0 },
       topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {},
-      speakingDone: {}, xp: 0, streak: { count: 0, best: 0, last: null }, badges: [],
+      speakingDone: {}, xp: 0, streak: { count: 0, best: 0, last: null }, badges: [], badgeLog: {}, stats: { writings: 0 },
       placement: [], nextTestDue: null, testRequested: false, timeLog: {},
       prefs: { fontScale: 1, dyslexia: false, ttsRate: 0.9, showL1: true, contrast: false },
       updatedAt: Date.now()
@@ -696,7 +719,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 
   // Campi del profilo che lo studente può aggiornare (gli altri sono gestiti dal server o dall'insegnante).
   const STUDENT_FIELDS = ['skills', 'topics', 'srs', 'errors', 'unitsDone', 'readingsDone', 'listeningsDone',
-    'speakingDone', 'xp', 'streak', 'badges', 'timeLog', 'prefs', 'gamesDone'];
+    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone'];
 
   function publicUser(u) {
     return {
@@ -5131,27 +5154,145 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   }
   function minutesToday(profile) { return Math.round((profile.timeLog[today()] || 0) / 60); }
 
-  const BADGES = [
-    { id: 'primo-passo', icon: '👣', name: 'Primo passo', desc: 'Hai completato la prima attività', test: p => p.xp > 0 },
-    { id: 'test', icon: '🧭', name: 'So dove sono', desc: 'Hai fatto il test di livello', test: p => p.placement.length > 0 },
-    { id: 'unita-1', icon: '📘', name: 'Prima unità', desc: 'Hai superato la prima unità', test: p => Object.keys(p.unitsDone).length >= 1 },
-    { id: 'unita-5', icon: '📚', name: 'Cinque unità', desc: 'Hai superato 5 unità', test: p => Object.keys(p.unitsDone).length >= 5 },
-    { id: 'unita-15', icon: '🏛️', name: 'Quindici unità', desc: 'Hai superato 15 unità', test: p => Object.keys(p.unitsDone).length >= 15 },
-    { id: 'parole-50', icon: '🌱', name: '50 parole', desc: '50 parole memorizzate', test: p => Object.values(p.srs).filter(c => c.box >= 3).length >= 50 },
-    { id: 'parole-200', icon: '🌳', name: '200 parole', desc: '200 parole memorizzate', test: p => Object.values(p.srs).filter(c => c.box >= 3).length >= 200 },
-    { id: 'serie-3', icon: '🔥', name: '3 giorni di fila', desc: 'Hai studiato 3 giorni di seguito', test: p => (p.streak.best || 0) >= 3 },
-    { id: 'serie-7', icon: '⭐', name: 'Una settimana', desc: '7 giorni di seguito', test: p => (p.streak.best || 0) >= 7 },
-    { id: 'serie-30', icon: '🏆', name: 'Un mese', desc: '30 giorni di seguito', test: p => (p.streak.best || 0) >= 30 },
-    { id: 'lettore', icon: '📖', name: 'Lettore', desc: 'Hai letto 5 testi', test: p => Object.keys(p.readingsDone).length >= 5 },
-    { id: 'orecchio', icon: '🎧', name: 'Buon orecchio', desc: 'Hai completato 5 ascolti', test: p => Object.keys(p.listeningsDone).length >= 5 },
-    { id: 'voce', icon: '🎤', name: 'Bella voce', desc: '20 frasi pronunciate', test: p => Object.keys(p.speakingDone).length >= 20 },
-    { id: 'errori-10', icon: '🛠️', name: 'Correttore', desc: 'Hai corretto 10 errori del quaderno', test: p => p.errors.filter(e => e.resolved).length >= 10 },
-    { id: 'salita', icon: '🚀', name: 'Livello su!', desc: 'Sei salito di livello in un test', test: p => p.placement.length > 1 && LEVELS.indexOf(p.placement[p.placement.length - 1].level) > LEVELS.indexOf(p.placement[0].level) }
+  // ---------------- Traguardi ----------------
+  // Ogni traguardo: gruppo, icona, nome, come si ottiene (how), condizione (test),
+  // avanzamento facoltativo (prog → [fatto, obiettivo]) e motivo concreto da ricordare (why), calcolato quando si raggiunge.
+  const BADGE_GROUPS = [
+    ['inizio', 'Primi passi'], ['lezioni', 'Lezioni'], ['parole', 'Parole'], ['costanza', 'Costanza'],
+    ['leggere', 'Lettura e ascolto'], ['produrre', 'Scrittura e parlato'], ['errori', 'Quaderno degli errori'],
+    ['livelli', 'Livelli'], ['giochi', 'Giochi'], ['materie', 'Materie scolastiche']
   ];
-  function checkBadges(profile) {
+  const C_ = () => IL2.content || {};
+  const n = o => Object.keys(o || {}).length;
+  const memorized = p => Object.values(p.srs).filter(c => c.box >= 3).length;
+  const studyDays = p => Object.values(p.timeLog || {}).filter(s => s >= 60).length;
+  const totalMin = p => Math.round(Object.values(p.timeLog || {}).reduce((a, s) => a + s, 0) / 60);
+  const goalDays = (p, ctx) => Object.values(p.timeLog || {}).filter(s => s / 60 >= ((ctx && ctx.goal) || 15)).length;
+  const resolved = p => p.errors.filter(e => e.resolved);
+  const writings = p => (p.stats && p.stats.writings) || 0;
+  const bingos = p => ((p.gamesDone || {}).bingo || {}).count || 0;
+  const crosswords = p => Object.keys(p.gamesDone || {}).filter(k => k !== 'bingo').length;
+  const perfectUnits = p => Object.entries(p.unitsDone).filter(([, d]) => d && d.best >= 100);
+  const titleOf = (list, id) => { const x = (list || []).find(y => y.id === id); return x ? x.title : id; };
+  const latest = o => Object.entries(o || {}).sort((a, b) => ((b[1] && b[1].at) || 0) - ((a[1] && a[1].at) || 0))[0];
+  const bestLevel = p => { const all = p.placement.map(x => x.level).concat(p.levelOverride ? [p.levelOverride] : [], p.level ? [p.level] : []); return all.reduce((m, l) => Math.max(m, LEVELS.indexOf(l)), -1); };
+  const matWords = (p, m) => (C_().vocab || []).filter(t => t.materia && (!m || t.materia === m)).reduce((a, t) => a + t.words.filter(w => p.srs[w.id]).length, 0);
+  const fullThemes = p => (C_().vocab || []).filter(t => !t.custom && t.words.length && t.words.every(w => p.srs[w.id] && p.srs[w.id].box >= 3));
+  const B = [];
+  const add = (group, id, icon, name, how, test, prog, why) => B.push({ group, id, icon, name, desc: how, how, test, prog, why });
+  const count = (group, id, icon, name, how, get, target, why) => add(group, id, icon, name, how, (p, c) => get(p, c) >= target, (p, c) => [Math.min(get(p, c), target), target], why);
+
+  // Primi passi
+  add('inizio', 'primo-passo', '👣', 'Primo passo', 'Completa la tua prima attività.', p => p.xp > 0);
+  add('inizio', 'test', '🧭', 'So dove sono', 'Fai il test di livello.', p => p.placement.length > 0, null, p => p.placement.length ? 'Il test ti ha dato il livello ' + p.placement[0].level + '.' : '');
+  count('inizio', 'lettura-1', '📄', 'Prima lettura', 'Completa una lettura (testo e domande).', p => n(p.readingsDone), 1, p => { const l = latest(p.readingsDone); return l ? 'Hai letto «' + titleOf(C_().readings, l[0]) + '».' : ''; });
+  count('inizio', 'ascolto-1', '👂', 'Primo ascolto', 'Completa un ascolto.', p => n(p.listeningsDone), 1, p => { const l = latest(p.listeningsDone); return l ? 'Hai ascoltato «' + titleOf(C_().listenings, l[0]) + '».' : ''; });
+  count('inizio', 'scrittura-1', '✏️', 'Prima pagina', 'Scrivi e invia il tuo primo testo.', writings, 1);
+  count('inizio', 'voce-1', '🗣️', 'Prima frase detta', 'Pronuncia bene una frase in «Parla».', p => n(p.speakingDone), 1);
+  count('inizio', 'gioco-1', '🧩', 'Primo gioco', 'Gioca a bingo o completa un cruciverba.', p => bingos(p) + crosswords(p), 1, p => bingos(p) ? 'Hai fatto la tua prima partita a bingo.' : 'Hai completato il tuo primo cruciverba.');
+  count('inizio', 'parole-10', '🌰', 'Prime parole', 'Memorizza 10 parole (ripassale finché restano).', memorized, 10);
+
+  // Lezioni
+  count('lezioni', 'unita-1', '📘', 'Prima lezione', 'Supera la tua prima lezione.', p => n(p.unitsDone), 1, p => { const l = latest(p.unitsDone); return l ? 'Hai superato la lezione «' + titleOf(C_().units, l[0]) + '».' : ''; });
+  count('lezioni', 'unita-5', '📚', 'Cinque lezioni', 'Supera 5 lezioni.', p => n(p.unitsDone), 5);
+  count('lezioni', 'unita-15', '🏛️', 'Quindici lezioni', 'Supera 15 lezioni.', p => n(p.unitsDone), 15);
+  count('lezioni', 'unita-30', '🗺️', 'Trenta lezioni', 'Supera 30 lezioni.', p => n(p.unitsDone), 30);
+  count('lezioni', 'perfetto-1', '💯', 'Senza errori', 'Completa una lezione con il 100% di risposte giuste.', p => perfectUnits(p).length, 1, p => { const u = perfectUnits(p).sort((a, b) => b[1].at - a[1].at)[0]; return u ? 'Lezione «' + titleOf(C_().units, u[0]) + '»: tutto giusto.' : ''; });
+  count('lezioni', 'perfetto-10', '🎯', 'Precisione', 'Completa 10 lezioni con il 100% di risposte giuste.', p => perfectUnits(p).length, 10);
+  LEVELS.forEach(lv => {
+    const all = () => (C_().units || []).filter(u => u.level === lv);
+    add('lezioni', 'tutte-' + lv, ['🟢', '🔵', '🟣', '🟠', '🔴'][LEVELS.indexOf(lv)], 'Tutto il ' + lv, 'Supera tutte le lezioni del livello ' + lv + '.',
+      p => { const a = all(); return a.length > 0 && a.every(u => p.unitsDone[u.id]); },
+      p => { const a = all(); return [a.filter(u => p.unitsDone[u.id]).length, a.length]; },
+      () => 'Hai superato tutte le ' + all().length + ' lezioni del ' + lv + '.');
+  });
+
+  // Parole
+  count('parole', 'parole-50', '🌱', '50 parole', 'Memorizza 50 parole.', memorized, 50);
+  count('parole', 'parole-100', '🌿', '100 parole', 'Memorizza 100 parole.', memorized, 100);
+  count('parole', 'parole-200', '🌳', '200 parole', 'Memorizza 200 parole.', memorized, 200);
+  count('parole', 'parole-400', '🌲', '400 parole', 'Memorizza 400 parole.', memorized, 400);
+  count('parole', 'tema-1', '🗂️', 'Un tema completo', 'Memorizza tutte le parole di un tema.', p => fullThemes(p).length, 1, p => { const t = fullThemes(p)[0]; return t ? 'Sai tutte le parole del tema «' + t.title + '».' : ''; });
+  count('parole', 'tema-5', '🧺', 'Cinque temi completi', 'Memorizza tutte le parole di 5 temi.', p => fullThemes(p).length, 5);
+
+  // Costanza
+  count('costanza', 'serie-3', '🔥', '3 giorni di fila', 'Studia 3 giorni di seguito.', p => (p.streak && p.streak.best) || 0, 3);
+  count('costanza', 'serie-7', '⭐', 'Una settimana', 'Studia 7 giorni di seguito.', p => (p.streak && p.streak.best) || 0, 7);
+  count('costanza', 'serie-14', '🌟', 'Due settimane', 'Studia 14 giorni di seguito.', p => (p.streak && p.streak.best) || 0, 14);
+  count('costanza', 'serie-30', '🏆', 'Un mese', 'Studia 30 giorni di seguito.', p => (p.streak && p.streak.best) || 0, 30);
+  count('costanza', 'giorni-10', '📅', 'Dieci giorni di studio', 'Studia in 10 giorni diversi (anche non di fila).', studyDays, 10);
+  count('costanza', 'giorni-50', '🗓️', 'Cinquanta giorni di studio', 'Studia in 50 giorni diversi.', studyDays, 50);
+  count('costanza', 'obiettivo-1', '⏱️', 'Obiettivo del giorno', 'Raggiungi in un giorno i minuti di studio dell\'obiettivo.', goalDays, 1, (p, c) => 'Hai studiato almeno ' + ((c && c.goal) || 15) + ' minuti in un giorno.');
+  count('costanza', 'obiettivo-10', '⌛', 'Dieci obiettivi', 'Raggiungi l\'obiettivo di minuti in 10 giorni.', goalDays, 10);
+  count('costanza', 'ore-5', '🕐', 'Cinque ore', 'Studia in tutto 5 ore.', totalMin, 300, p => 'Finora hai studiato ' + totalMin(p) + ' minuti in tutto.');
+  count('costanza', 'ore-20', '🕰️', 'Venti ore', 'Studia in tutto 20 ore.', totalMin, 1200, p => 'Finora hai studiato ' + totalMin(p) + ' minuti in tutto.');
+
+  // Lettura e ascolto
+  count('leggere', 'lettore', '📖', 'Lettore', 'Leggi 5 testi.', p => n(p.readingsDone), 5);
+  count('leggere', 'lettore-15', '📚', 'Grande lettore', 'Leggi 15 testi.', p => n(p.readingsDone), 15);
+  count('leggere', 'lettura-100', '🔍', 'Lettura attenta', 'Rispondi bene a tutte le domande di un testo.', p => Object.values(p.readingsDone).filter(d => d && d.best >= 100).length, 1);
+  count('leggere', 'orecchio', '🎧', 'Buon orecchio', 'Completa 5 ascolti.', p => n(p.listeningsDone), 5);
+  count('leggere', 'orecchio-15', '🎶', 'Orecchio fino', 'Completa 15 ascolti.', p => n(p.listeningsDone), 15);
+  count('leggere', 'ascolto-100', '📻', 'Ascolto attento', 'Rispondi bene a tutte le domande di un ascolto.', p => Object.values(p.listeningsDone).filter(d => d && d.best >= 100).length, 1);
+
+  // Scrittura e parlato
+  count('produrre', 'scrittura-5', '🖊️', 'Penna sicura', 'Scrivi e invia 5 testi.', writings, 5);
+  count('produrre', 'scrittura-15', '📝', 'Scrittore', 'Scrivi e invia 15 testi.', writings, 15);
+  count('produrre', 'voce', '🎤', 'Bella voce', 'Pronuncia bene 20 frasi.', p => n(p.speakingDone), 20);
+  count('produrre', 'voce-50', '🎙️', 'Parlo italiano', 'Pronuncia bene 50 frasi.', p => n(p.speakingDone), 50);
+
+  // Quaderno degli errori
+  count('errori', 'errori-1', '🩹', 'Primo errore corretto', 'Correggi un errore del quaderno (rispondi bene due volte di seguito).', p => resolved(p).length, 1);
+  count('errori', 'errori-10', '🛠️', 'Correttore', 'Correggi 10 errori del quaderno.', p => resolved(p).length, 10);
+  count('errori', 'errori-50', '🧰', 'Grande correttore', 'Correggi 50 errori del quaderno.', p => resolved(p).length, 50);
+  add('errori', 'quaderno-pulito', '✨', 'Quaderno in ordine', 'Correggi tutti gli errori del quaderno (almeno 5 corretti).', p => resolved(p).length >= 5 && !p.errors.some(e => !e.resolved), p => [Math.min(resolved(p).length, 5), 5], p => 'Hai corretto ' + resolved(p).length + ' errori e non ne resta nessuno.');
+
+  // Livelli
+  add('livelli', 'salita', '🚀', 'Livello su!', 'Sali di livello in un test.', p => p.placement.length > 1 && p.placement.some((x, i) => i > 0 && LEVELS.indexOf(x.level) > LEVELS.indexOf(p.placement[i - 1].level)), null,
+    p => { const i = p.placement.findIndex((x, k) => k > 0 && LEVELS.indexOf(x.level) > LEVELS.indexOf(p.placement[k - 1].level)); return i > 0 ? 'Nel test sei passato dal ' + p.placement[i - 1].level + ' al ' + p.placement[i].level + '.' : ''; });
+  LEVELS.slice(1).forEach((lv, k) => add('livelli', 'livello-' + lv, ['🥾', '🧗', '⛰️', '🏔️'][k], 'Livello ' + lv, 'Raggiungi il livello ' + lv + '.', p => bestLevel(p) >= k + 1, null, () => 'Sei arrivato al livello ' + lv + ': ' + LEVEL_NAME[lv] + '.'));
+  count('livelli', 'test-3', '📈', 'Tre test', 'Fai il test di livello 3 volte.', p => p.placement.length, 3);
+
+  // Giochi
+  count('giochi', 'bingo-1', '🎲', 'Primo bingo', 'Fai una partita a bingo.', bingos, 1);
+  count('giochi', 'bingo-10', '🎱', 'Dieci partite', 'Fai 10 partite a bingo.', bingos, 10);
+  count('giochi', 'cruciverba-1', '🔤', 'Primo cruciverba', 'Completa un cruciverba.', crosswords, 1, p => { const l = latest(Object.fromEntries(Object.entries(p.gamesDone || {}).filter(([k]) => k !== 'bingo'))); const cw = l && IL2.games && (IL2.games.CROSSWORDS || []).find(s => s.id === l[0]); return cw ? 'Hai completato il cruciverba «' + cw.title + '».' : ''; });
+  count('giochi', 'cruciverba-5', '🧠', 'Cinque cruciverba', 'Completa 5 cruciverba.', crosswords, 5);
+
+  // Materie scolastiche (facoltative)
+  [['scienze', '🔬', 'Piccolo scienziato'], ['storia', '🏺', 'Piccolo storico'], ['geografia', '🌍', 'Piccolo geografo']].forEach(([m, ic, nm]) =>
+    count('materie', 'materia-' + m, ic, nm, 'Studia 10 parole di ' + m + ' in «Materie scolastiche».', p => matWords(p, m), 10));
+  count('materie', 'materie-50', '🎓', 'Parole di scuola', 'Studia 50 parole delle materie scolastiche.', p => matWords(p), 50);
+
+  const BADGES = B;
+  // Controlla i traguardi nuovi; registra quando e perché sono stati raggiunti (badgeLog).
+  function checkBadges(profile, ctx) {
     const fresh = [];
-    for (const b of BADGES) if (!profile.badges.includes(b.id) && b.test(profile)) { profile.badges.push(b.id); fresh.push(b); }
+    profile.badges = profile.badges || [];
+    const log = profile.badgeLog || (profile.badgeLog = {});
+    for (const b of BADGES) {
+      if (profile.badges.includes(b.id)) continue;
+      let ok = false; try { ok = b.test(profile, ctx); } catch (e) { ok = false; }
+      if (!ok) continue;
+      profile.badges.push(b.id);
+      let why = ''; try { why = b.why ? b.why(profile, ctx) : ''; } catch (e) { why = ''; }
+      log[b.id] = { at: Date.now(), why: why || badgeDone(b), seen: false };
+      fresh.push(b);
+    }
     return fresh;
+  }
+  // «Supera 5 lezioni.» → «Hai superato 5 lezioni.»: motivo di base quando non c'è un dettaglio più preciso
+  const PAST = [['Scrivi e invia', 'Hai scritto e inviato'], ['Supera', 'Hai superato'], ['Leggi', 'Hai letto'], ['Completa', 'Hai completato'],
+    ['Memorizza', 'Hai memorizzato'], ['Studia', 'Hai studiato'], ['Pronuncia', 'Hai pronunciato'], ['Correggi', 'Hai corretto'],
+    ['Raggiungi', 'Hai raggiunto'], ['Fai', 'Hai fatto'], ['Gioca', 'Hai giocato'], ['Rispondi', 'Hai risposto'], ['Sali', 'Sei salito/a'], ['Scrivi', 'Hai scritto']];
+  function badgeDone(b) {
+    const how = b.how.replace(/ \([^)]*\)/, '');
+    const m = PAST.find(([a]) => how.startsWith(a + ' '));
+    return m ? m[1] + how.slice(m[0].length) : how;
+  }
+  function badgeProgress(profile, b, ctx) {
+    if (!b.prog) return null;
+    try { return b.prog(profile, ctx); } catch (e) { return null; }
   }
 
   // ---------------- Raccomandazioni ----------------
@@ -5274,7 +5415,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   IL2.engine = {
     LEVELS, LEVEL_B, SKILLS, SKILL_LABEL, LEVEL_NAME, LEVEL_DESC, levelFromTheta, sublevel, itemB,
     PlacementTest, recordAnswer, topicMastery, addError, resolveError, srsReview, dueWords, INTERVALS,
-    touchStreak, addTime, minutesToday, today, BADGES, checkBadges, currentLevel, nextUnit, weakTopics,
+    touchStreak, addTime, minutesToday, today, BADGES, BADGE_GROUPS, checkBadges, badgeProgress, badgeDone, currentLevel, nextUnit, weakTopics,
     weakestSkill, dailyPlan, nextVocabTheme, testDue, logistic, eap, unlocked, levelProgress, levelUpReady, unitsFor
   };
 })();
@@ -6140,7 +6281,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         p.streak = { count: c, best: Math.max(c, Math.round(rnd(5, 12))), last: dayKey(now - DAY) };
       }
       p.xp = Math.round(rnd(150, 900));
-      p.badges = E.BADGES.filter(b => b.test(p)).map(b => b.id);
+      p.badges = []; p.badgeLog = {}; p.stats = { writings: 0 }; E.checkBadges(p); Object.values(p.badgeLog).forEach(x => { x.seen = true; });
     }
     // scritti e segnalazioni
     db.submissions.push({ id: 'w_demo1', userId: ids.amina, taskId: 'w-a2-1', title: 'Le mie ultime vacanze', level: 'A2', text: 'L\'estate scorsa sono andata in Marocco con la mia famiglia. Abbiamo visitato i miei nonni a Fes. Fa molto caldo e ogni giorno andavamo al mercato. Mi è piaciuto molto perchè ho visto i miei cugini. Un giorno siamo andati al mare, l\'acqua era bellissima. Sono tornata in Italia a settembre, un po triste.', autoFeedback: { stats: { words: 62 }, issues: 3, tips: [] }, status: 'inviato', at: now - DAY, teacherFeedback: '', reviewedAt: null, seen: false });
@@ -6196,10 +6337,58 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   IL2.award = function (xp) {
     const p = IL2.state.profile; if (!p) return [];
     p.xp += xp;
-    const fresh = E.checkBadges(p);
-    fresh.forEach(b => toast(b.icon + ' Nuovo traguardo: ' + b.name, 'good'));
+    const fresh = IL2.checkBadges();
     IL2.save();
     return fresh;
+  };
+
+  // ---------- Traguardi: notifica e dettaglio ----------
+  const badgeCtx = () => ({ goal: (IL2.state.settings && IL2.state.settings.dailyGoalMinutes) || 15 });
+  IL2.checkBadges = function () {
+    const p = IL2.state.profile; if (!p || !IL2.state.user || IL2.state.user.role !== 'student') return [];
+    const fresh = E.checkBadges(p, badgeCtx());
+    if (fresh.length) { IL2.notifyBadges(fresh); IL2.save(); }
+    return fresh;
+  };
+  IL2.badgeDot = function () {
+    const p = IL2.state.profile; const a = document.querySelector('.nav a[data-r="profilo"]');
+    if (!a || !p) return;
+    a.classList.toggle('has-new', Object.values(p.badgeLog || {}).some(x => x && x.seen === false));
+  };
+  let popTimer = null, popQueue = [];
+  IL2.notifyBadges = function (list) {
+    popQueue = popQueue.concat(list);
+    let box = document.getElementById('badge-pop');
+    if (!box) { box = document.createElement('div'); box.id = 'badge-pop'; box.setAttribute('role', 'status'); box.setAttribute('aria-live', 'polite'); document.body.appendChild(box); }
+    const p = IL2.state.profile, b = popQueue[0], more = popQueue.length - 1;
+    const why = (p.badgeLog && p.badgeLog[b.id] && p.badgeLog[b.id].why) || E.badgeDone(b);
+    box.innerHTML = '<div class="bp-card"><span class="bp-icon" aria-hidden="true">' + b.icon + '</span><div class="bp-body"><small>' + (more ? 'Nuovi traguardi!' : 'Nuovo traguardo!') + '</small><b>' + esc(b.name) + '</b><span>' + esc(why) + '</span>' +
+      (more ? '<span class="bp-more">e ' + (more === 1 ? 'un altro' : 'altri ' + more) + '</span>' : '') + '</div>' +
+      '<div class="bp-actions"><button class="btn small primary" data-bp="open">' + (more ? 'Vedi tutti' : 'Perché?') + '</button><button class="bp-x" data-bp="close" aria-label="Chiudi">×</button></div></div>';
+    box.classList.remove('out'); box.classList.add('in');
+    const hide = () => { box.classList.add('out'); box.classList.remove('in'); popQueue = []; setTimeout(() => { if (!box.classList.contains('in')) box.innerHTML = ''; }, 400); };
+    box.querySelector('[data-bp="close"]').onclick = hide;
+    box.querySelector('[data-bp="open"]').onclick = () => { const one = popQueue.length === 1 ? popQueue[0] : null; hide(); if (one) IL2.showBadge(one.id); else location.hash = '#/profilo?traguardi'; };
+    clearTimeout(popTimer); popTimer = setTimeout(hide, 8000);
+    IL2.badgeDot();
+  };
+  IL2.showBadge = function (id) {
+    const p = IL2.state.profile, b = E.BADGES.find(x => x.id === id); if (!b || !p) return;
+    const got = p.badges.includes(id), log = (p.badgeLog || {})[id];
+    const grp = (E.BADGE_GROUPS.find(g => g[0] === b.group) || [])[1] || '';
+    const prog = E.badgeProgress(p, b, badgeCtx());
+    let h = '<div class="badge-detail' + (got ? ' got' : '') + '"><span class="bd-icon" aria-hidden="true">' + b.icon + '</span><p class="eyebrow">' + esc(grp) + '</p><h2>' + esc(b.name) + '</h2>';
+    if (got) {
+      h += '<p class="ok-line">' + IL2.ui.icon('check') + ' Traguardo raggiunto' + (log && log.at ? ' il ' + IL2.ui.fmtDate(log.at, true) : '') + '</p>' +
+        '<h4>Perché l\'hai raggiunto</h4><p>' + esc(log && log.why ? log.why : E.badgeDone(b)) + '</p>' +
+        '<p class="small muted">Come si ottiene: ' + esc(b.how) + '</p>';
+    } else {
+      h += '<p class="muted">Non ancora raggiunto.</p><h4>Come si ottiene</h4><p>' + esc(b.how) + '</p>' +
+        (prog && prog[1] > 1 ? '<div class="bd-prog">' + IL2.ui.meter(prog[0], prog[1]) + '<small>' + prog[0] + ' su ' + prog[1] + '</small></div>' : '');
+    }
+    h += '<div class="row end"><button class="btn primary" data-close="ok">Chiudi</button></div></div>';
+    if (log && log.seen === false) { log.seen = true; IL2.save(); IL2.badgeDot(); }
+    IL2.ui.modal(h);
   };
   window.addEventListener('beforeunload', () => { if (saveTimer) { clearTimeout(saveTimer); IL2.save(true); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden && saveTimer) { clearTimeout(saveTimer); IL2.save(true); } });
@@ -6464,6 +6653,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     shell();
     if (me.user.role === 'student' && !IL2.state.profile.placement.length && !location.hash.includes('test')) location.hash = '#/test';
     route();
+    // traguardi nuovi (anche quelli aggiunti con un aggiornamento dell'app) e pallino su «Io»
+    if (me.user.role === 'student') { IL2.checkBadges(); IL2.badgeDot(); }
   }
 
   // ---------- Avvio ----------
@@ -7049,6 +7240,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         const density = chk.issues.length / Math.max(1, n / 100);
         E.recordAnswer(p, { skill: 'scrittura', lv: t.level }, density < 3 && n >= t.min * 0.8, { logError: false });
         done({ type: 'writing', ref: t.id, skill: 'scrittura', correct: n >= t.min ? 1 : 0, total: 1, durationSec: Math.round((Date.now() - started) / 1000) });
+        p.stats = p.stats || {}; p.stats.writings = (p.stats.writings || 0) + 1;
         IL2.award(10);
         try { localStorage.removeItem(key); } catch (e) { /* nulla */ }
         if (window.IL2_SITE === 'studenti') {
@@ -7068,6 +7260,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   R.elaborati = async function (view) {
     const subs = await IL2.api.call('mySubmissions');
+    // testi scritti prima che l'app li contasse per i traguardi
+    { const p = P(); p.stats = p.stats || {}; if (subs.length > (p.stats.writings || 0)) { p.stats.writings = subs.length; IL2.checkBadges(); IL2.save(); } }
     view.innerHTML = '<a class="back" href="#/profilo">' + icon('back') + 'Io</a><h1>I miei testi</h1>' + (subs.length ? subs.map(s => '<div class="card sub"><div class="row between wrap"><b>' + esc(s.title) + '</b><span>' + levelBadge(s.level) + ' <span class="tag ' + (s.status === 'corretto' ? 'good' : subState(s) === 'da mandare' ? 'warn' : '') + '">' + (s.status === 'corretto' ? 'letto dall\'insegnante' : subState(s)) + '</span></span></div><p class="small muted">Scritto il ' + fmtDate(s.at, true) + '</p>' + (subState(s) === 'da mandare' ? '<p class="small warn-text">Non è ancora arrivato all\'insegnante: manda il file dei progressi dalla pagina <a href="#/profilo">Io</a>.</p>' : '') +
       '<details><summary>Il mio testo</summary><p class="pre">' + esc(s.text) + '</p></details>' +
       (s.status === 'corretto' ? '<div class="teacher-fb"><b>Commento dell\'insegnante</b><p class="pre">' + esc(s.teacherFeedback) + '</p>' + (s.corrected ? '<details open><summary>Il testo con le correzioni</summary><p class="pre">' + esc(s.corrected) + '</p></details>' : '') + '</div>' : '') + '</div>').join('') : '<div class="card empty-state"><p>Non hai ancora inviato testi.</p>' + btn('scrivi', 'Inizia a scrivere', 'primary') + '</div>');
@@ -7172,11 +7366,21 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   };
 
   // =================== IO (PROFILO) ===================
-  R.profilo = async function (view) {
+  R.profilo = async function (view, parts, q) {
     const p = P(), st = S();
     const lv = E.currentLevel(p);
     const goal = (st.settings && st.settings.dailyGoalMinutes) || 15;
-    const badges = E.BADGES.map(b => '<div class="badge' + (p.badges.includes(b.id) ? ' got' : '') + '" title="' + esc(b.desc) + '"><span>' + b.icon + '</span><small>' + esc(b.name) + '</small></div>').join('');
+    const blog = p.badgeLog || {};
+    const gotN = E.BADGES.filter(b => p.badges.includes(b.id)).length;
+    const badges = E.BADGE_GROUPS.map(([g, label]) => {
+      const list = E.BADGES.filter(b => b.group === g); if (!list.length) return '';
+      return '<h4 class="bg-h">' + esc(label) + ' <small>' + list.filter(b => p.badges.includes(b.id)).length + '/' + list.length + '</small></h4><div class="badges">' + list.map(b => {
+        const got = p.badges.includes(b.id), fresh = got && blog[b.id] && blog[b.id].seen === false;
+        const pr = got ? null : E.badgeProgress(p, b, { goal });
+        return '<button type="button" class="badge' + (got ? ' got' : '') + (fresh ? ' fresh' : '') + '" data-badge="' + b.id + '" aria-label="' + esc(b.name + (got ? ', raggiunto' : ', da raggiungere')) + '">' + (fresh ? '<i class="b-new">nuovo</i>' : '') + '<span>' + b.icon + '</span><small>' + esc(b.name) + '</small>' +
+          (pr && pr[1] > 1 && pr[0] > 0 ? '<em class="b-prog">' + pr[0] + '/' + pr[1] + '</em>' : '') + '</button>';
+      }).join('') + '</div>';
+    }).join('');
     const remote = window.IL2_SITE === 'studenti';
     view.innerHTML = '<div class="page-head"><h1>' + esc(st.user.displayName) + '</h1></div>' +
       (remote ? sendCard() : '') +
@@ -7185,7 +7389,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<p class="small muted">Prossimo test: ' + (p.nextTestDue ? fmtDate(p.nextTestDue) : '—') + '</p></div>' +
       '<div class="card"><h3>Le tue abilità</h3>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(s => '<div class="sb"><span>' + E.SKILL_LABEL[s] + '</span>' + meter(((p.skills[s] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[s]) + '</b></div>').join('') + '</div></div></div>' +
       '<div class="card"><h3>Minuti di studio (ultime 2 settimane)</h3>' + IL2.ui.minutesBars(p.timeLog, 14, goal) + '<p class="small muted">Lezioni completate: ' + Object.keys(p.unitsDone).length + ' · parole memorizzate: ' + Object.values(p.srs).filter(c => c.box >= 3).length + '</p></div>' +
-      '<div class="card"><h3>Traguardi</h3><div class="badges">' + badges + '</div></div>' +
+      '<div class="card" id="traguardi"><h3>Traguardi <small class="muted">' + gotN + ' su ' + E.BADGES.length + '</small></h3><p class="small muted">Tocca un traguardo per sapere perché l\'hai raggiunto o come si ottiene.</p>' + badges + '</div>' +
       '<div class="row wrap"><a class="btn ghost" href="#/elaborati">' + icon('pen') + ' I miei testi</a><a class="btn ghost" href="#/audio">' + icon('speaker') + ' Prova l\'audio</a></div>' +
       '<div class="card"><h3>Impostazioni</h3><form id="prefs" class="stack">' +
       '<label>Dimensione del testo <select name="fontScale">' + [[0.9, 'Piccolo'], [1, 'Normale'], [1.15, 'Grande'], [1.3, 'Molto grande']].map(([v, l]) => '<option value="' + v + '"' + (p.prefs.fontScale == v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></label>' +
@@ -7196,6 +7400,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '</form></div>' +
       // nella versione con i link di invito lo studente non conosce il codice: entra sempre dal link
       (remote ? '' : '<div class="card"><h3>Cambia il tuo codice segreto</h3><form id="pin" class="row wrap"><input name="oldSecret" type="password" placeholder="Codice attuale" required autocomplete="current-password"><input name="newSecret" type="password" placeholder="Nuovo codice (almeno 4 caratteri)" minlength="4" required autocomplete="new-password"><button class="btn">Cambia</button></form></div>');
+    view.querySelectorAll('[data-badge]').forEach(b => b.addEventListener('click', () => { IL2.showBadge(b.dataset.badge); b.classList.remove('fresh'); const t = b.querySelector('.b-new'); if (t) t.remove(); }));
+    if (q && 'traguardi' in q) { const t = view.querySelector('#traguardi'); if (t) t.scrollIntoView({ block: 'start' }); }
     if (remote) view.querySelector('#sendprog').addEventListener('click', e => sendProgress(e.currentTarget, () => R.profilo(view)));
     view.querySelector('#prefs').addEventListener('change', e => {
       const f = e.currentTarget;
@@ -7735,6 +7941,15 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const b = view.querySelector('#bkgo');
     if (b) b.addEventListener('click', async () => { await downloadBackup(); toast('Backup scaricato', 'good'); view.querySelector('#bkrem').remove(); });
   }
+  // Eliminazione di uno studente (dall'elenco Studenti o dalla sua scheda), sempre con conferma
+  const delCell = s => '<td><button class="btn small ghost danger-text" data-del="' + s.id + '" data-name="' + esc(s.displayName) + '" title="Elimina ' + esc(s.displayName) + '">Elimina</button></td>';
+  async function removeStudent(id, name, after) {
+    if (!await confirm('Eliminare definitivamente ' + name + ' e tutti i suoi dati (progressi, scritti, note)? L\'operazione non si può annullare.', 'Elimina', true)) return;
+    try { await IL2.api.call('deleteStudent', { id }); } catch (e) { toast(e.message, 'bad'); return; }
+    setLinkDue(id, false);
+    toast('Eliminato: ' + name, 'good');
+    if (after) after();
+  }
   function genPin() { const a = new Uint32Array(1); crypto.getRandomValues(a); return String(1000 + (a[0] % 9000)); }
   function l1Options(sel) { return (sel ? '' : '<option value="" selected disabled>Scegli la lingua…</option>') + IL2.l1.list().map(o => '<option value="' + o.code + '"' + (o.code === sel ? ' selected' : '') + '>' + esc(o.name) + (o.native !== '—' ? ' · ' + esc(o.native) : '') + '</option>').join(''); }
   function testState(s) {
@@ -7874,7 +8089,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<section class="st-head card"><div class="who big"><span class="avatar">' + esc(s.displayName.slice(0, 1).toUpperCase()) + '</span><div><h1>' + esc(s.displayName) + ' ' + levelBadge(s.level) + '</h1>' +
       '<p class="muted small">Utente <code>' + esc(s.username) + '</code> · ' + esc(IL2.l1.name(s.l1)) + (s.group ? ' · gruppo ' + esc(s.group) : '') + (s.birthYear ? ' · nato/a nel ' + s.birthYear : '') + ' · iscritto il ' + fmtDate(s.createdAt) + ' · ultimo accesso ' + ago(s.lastLogin) + '</p></div></div>' +
       '<div class="row wrap actions"><button class="btn ghost small" id="edit">' + icon('pen') + ' Modifica</button><button class="btn ghost small" id="pin">' + icon('lock') + ' Nuovo codice</button><button class="btn ghost small" id="lvl">' + icon('star') + ' Livello</button>' +
-      '<button class="btn small ' + (s.testRequested ? 'warn' : 'ghost') + '" id="req">' + icon('compass') + ' ' + (s.testRequested ? 'Annulla richiesta test' : 'Richiedi test ora') + '</button><a class="btn ghost small" href="#/studente/' + s.id + '?print=1">' + icon('read') + ' Scheda stampabile</a>' + (REMOTE ? '<button class="btn small ' + (linkDue()[s.id] ? 'warn' : 'ghost') + '" id="inv">' + icon('link') + (linkDue()[s.id] ? ' Link da rimandare' : ' Link di invito') + '</button>' : '') + '</div>' +
+      '<button class="btn small ' + (s.testRequested ? 'warn' : 'ghost') + '" id="req">' + icon('compass') + ' ' + (s.testRequested ? 'Annulla richiesta test' : 'Richiedi test ora') + '</button><a class="btn ghost small" href="#/studente/' + s.id + '?print=1">' + icon('read') + ' Scheda stampabile</a><button class="btn ghost small danger-text" id="delhead">Elimina studente</button>' + (REMOTE ? '<button class="btn small ' + (linkDue()[s.id] ? 'warn' : 'ghost') + '" id="inv">' + icon('link') + (linkDue()[s.id] ? ' Link da rimandare' : ' Link di invito') + '</button>' : '') + '</div>' +
       '<div class="kpis compact">' +
       '<div class="kpi">' + ring(m.lp.pct, m.lp.done + '/' + m.lp.total, 'lezioni ' + (s.level || ''), 'sm') + '</div>' +
       '<div class="kpi">' + icon('clock') + '<div><b>' + s.week.minutes + '<small> min</small></b><span>ultimi 7 giorni · ' + totalMin + ' in tutto</span></div></div>' +
@@ -7889,6 +8104,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (sez === 'scritti') { box.innerHTML = secWritings(s, d); bindNotes(view, s, d); }
 
     const refresh = () => R.studente(view, parts, q);
+    view.querySelector('#delhead').addEventListener('click', () => removeStudent(s.id, s.displayName, () => IL2.go('studenti')));
     const inv = view.querySelector('#inv'); if (inv) inv.addEventListener('click', async () => { await showInvite(s.id); refresh(); });
     view.querySelector('#req').addEventListener('click', async () => { await IL2.api.call('updateStudent', { id: s.id, testRequested: !s.testRequested }); await changed(s.id, s.displayName, s.testRequested ? 'Richiesta di test annullata' : (REMOTE ? 'Richiesta di test salvata' : 'Lo studente vedrà la richiesta di test al prossimo accesso')); refresh(); });
     view.querySelector('#edit').addEventListener('click', async () => {
@@ -8009,14 +8225,15 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<button class="btn primary">Aggiungi</button></form>' +
       '<details><summary>Aggiungi più studenti insieme</summary><p class="small">Una riga per studente: <code>Nome; lingua; gruppo</code>. Lingue: ' + IL2.l1.ORDER.join(', ') + ', other. Esempio: <code>Yasmine El Idrissi; ar; 2B</code></p><textarea id="bulk" rows="5"></textarea><button class="btn" id="bulkgo">Crea tutti</button></details></div>' +
       '<div id="creds"></div>' +
-      '<div class="card table-wrap"><table class="tbl"><thead><tr><th>Studente</th><th>Utente</th><th>Lingua d\'origine</th><th>Gruppo</th><th>Livello</th><th>Iscritto</th>' + (remote ? '<th>Ultimi progressi</th><th>Invito</th>' : '') + '</tr></thead><tbody>' +
-      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td>' + (remote ? '<td>' + (s.lastActivity ? ago(s.lastActivity) : '—') + '</td><td><button class="btn small' + (due[s.id] ? ' warn' : '') + '" data-invite="' + s.id + '">' + icon('link') + ' Link</button>' + (due[s.id] ? '<br><small class="warn-text">da rimandare</small>' : '') + '</td>' : '') + '</tr>').join('') +
+      '<div class="card table-wrap"><table class="tbl"><thead><tr><th>Studente</th><th>Utente</th><th>Lingua d\'origine</th><th>Gruppo</th><th>Livello</th><th>Iscritto</th>' + (remote ? '<th>Ultimi progressi</th><th>Invito</th>' : '') + '<th></th></tr></thead><tbody>' +
+      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td>' + (remote ? '<td>' + (s.lastActivity ? ago(s.lastActivity) : '—') + '</td><td><button class="btn small' + (due[s.id] ? ' warn' : '') + '" data-invite="' + s.id + '">' + icon('link') + ' Link</button>' + (due[s.id] ? '<br><small class="warn-text">da rimandare</small>' : '') + '</td>' : '') + delCell(s) + '</tr>').join('') +
       '</tbody></table>' + (list.length ? '' : '<p class="muted">Nessuno studente.</p>') + '</div>';
     const created = [];
     function showCreds() {
       view.querySelector('#creds').innerHTML = created.length ? '<div class="card"><div class="row between"><h3>Credenziali appena create</h3><button class="btn ghost small" id="printc">Stampa i biglietti</button></div><p class="small muted">Consegna a ogni studente il suo biglietto. I codici non sono salvati in chiaro: se si perdono, generane uno nuovo dalla scheda dello studente.</p><div class="cred-grid">' + created.map(c => '<div class="cred"><b>' + esc(c.name) + '</b><div>Utente: <code>' + esc(c.username) + '</code></div><div>Codice: <code>' + esc(c.pin) + '</code></div><small>' + esc(remote ? 'Riceverai il link di invito' : location.origin + location.pathname) + '</small></div>').join('') + '</div></div>' : '';
       const pc = view.querySelector('#printc'); if (pc) pc.addEventListener('click', () => { document.body.classList.add('print-creds'); IL2.ui.print(); setTimeout(() => document.body.classList.remove('print-creds'), 500); });
     }
+    view.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => removeStudent(b.dataset.del, b.dataset.name, () => R.studenti(view))));
     if (remote) {
       view.querySelectorAll('[data-invite]').forEach(b => b.addEventListener('click', () => showInvite(b.dataset.invite)));
       view.querySelector('#impprog').addEventListener('change', async e => {
@@ -8039,7 +8256,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         created.push({ name: u.displayName, username: u.username, pin: f.secret });
         toast('Studente aggiunto: ' + u.username, 'good');
         e.target.reset(); e.target.secret.value = genPin(); showCreds();
-        const tb = view.querySelector('tbody'); tb.insertAdjacentHTML('afterbegin', '<tr class="new"><td><a href="#/studente/' + u.id + '">' + esc(u.displayName) + '</a></td><td><code>' + esc(u.username) + '</code></td><td>' + esc(IL2.l1.name(u.l1)) + '</td><td>' + esc(u.group) + '</td><td>—</td><td>oggi</td>' + (remote ? '<td>—</td><td><button class="btn small" data-invite="' + u.id + '">' + icon('link') + ' Link</button></td>' : '') + '</tr>');
+        const tb = view.querySelector('tbody'); tb.insertAdjacentHTML('afterbegin', '<tr class="new"><td><a href="#/studente/' + u.id + '">' + esc(u.displayName) + '</a></td><td><code>' + esc(u.username) + '</code></td><td>' + esc(IL2.l1.name(u.l1)) + '</td><td>' + esc(u.group) + '</td><td>—</td><td>oggi</td>' + (remote ? '<td>—</td><td><button class="btn small" data-invite="' + u.id + '">' + icon('link') + ' Link</button></td>' : '') + delCell(u) + '</tr>');
+        const db = tb.querySelector('[data-del="' + u.id + '"]'); if (db) db.addEventListener('click', () => removeStudent(u.id, u.displayName, () => R.studenti(view)));
         const ib = tb.querySelector('[data-invite="' + u.id + '"]'); if (ib) ib.addEventListener('click', () => showInvite(u.id));
         tb.closest('.card').querySelectorAll(':scope > p.muted').forEach(x => x.remove());
       } catch (err) { toast(err.message, 'bad'); }
