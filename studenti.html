@@ -97,6 +97,8 @@ header.top .who { display: flex; gap: 8px; align-items: center; } header.top .wh
   .view { padding: 12px 16px 100px; }
   header.top .who .name { display: none; }
   header.top { padding: 8px 16px; }
+  /* la firma va a capo invece di essere tagliata */
+  .brand small { white-space: normal; max-width: none; line-height: 1.25; }
   h1 { font-size: 1.4rem; }
 }
 
@@ -228,6 +230,12 @@ a.banner:hover { box-shadow: var(--shadow-hi); }
 .review-card.empty { display: block !important; }
 .review-card.empty p { display: flex; gap: 8px; align-items: center; margin: 0 0 8px; }
 .review-card.empty .ic { color: var(--good); }
+.review-empty { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; } .review-empty .ic { color: var(--good); }
+.next-lesson { display: flex !important; align-items: center; gap: 14px; flex-wrap: wrap; text-decoration: none; color: var(--text); border-left: 5px solid var(--primary); }
+.next-lesson .nl-icon { font-size: 2rem; line-height: 1; }
+.next-lesson .nl-body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 180px; }
+.next-lesson .nl-body small { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+.next-lesson .nl-body b { font-size: 1.1rem; }
 .rc-counts { display: flex; gap: 22px; }
 .rc-counts div { display: flex; flex-direction: column; }
 .rc-counts b { font-size: 2rem; font-weight: 700; line-height: 1; color: var(--c-err); }
@@ -393,6 +401,9 @@ a.row-item:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--li
 .opt.right { border-color: var(--good); background: var(--good-soft); }
 .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
 .opt.dont { color: var(--muted); border-style: dashed; border-bottom-width: 2px; }
+.session-actions .dont-know { border-style: dashed; white-space: nowrap; flex: none; background: var(--surface); }
+.session-actions .dont-know:disabled { visibility: hidden; }
+@media (max-width: 420px) { .session-actions .go { min-width: 0; flex: 1; } }
 .gap-in { display: inline-block; width: 11em; max-width: 100%; padding: 6px 10px; min-height: 40px; font-size: 1.05rem; border: 2px solid var(--primary); border-radius: 10px; vertical-align: baseline; }
 .gap-in.short { width: 4em; }
 .gap-in.wide { display: block; width: 100%; margin: 8px 0; }
@@ -1804,31 +1815,31 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       can: 'Posso salutare, presentarmi e chiedere come sta una persona.',
       topics: ['saluti', 'essere', 'pronomi-soggetto'], vocab: 'a1-saluti',
       theory: `
-<p>Per <b>salutare</b> in italiano:</p>
-<table><tr><th>Informale (amici, compagni)</th><th>Formale (insegnanti, adulti)</th></tr>
-<tr><td>Ciao! · Ciao, come stai?</td><td>Buongiorno! · Buonasera! · Come sta?</td></tr>
-<tr><td>Ci vediamo! · A domani!</td><td>Arrivederci! · ArrivederLa!</td></tr></table>
-<p>Con i compagni usiamo <b>tu</b>. Con un adulto che non conosciamo bene usiamo <b>Lei</b> (con il verbo alla 3ª persona): <i>Lei come si chiama?</i></p>
-<p><b>Il verbo essere</b> (presente)</p>
+<p>👋 <b>Salutare</b></p>
+<table><tr><th>🧒 Amici e compagni</th><th>🧑‍🏫 Insegnanti e adulti</th></tr>
+<tr><td><i>Ciao!</i> · <i>Come stai?</i></td><td><i>Buongiorno!</i> · <i>Buonasera!</i> · <i>Come sta?</i></td></tr>
+<tr><td><i>Ciao!</i> · <i>A domani!</i></td><td><i>Arrivederci!</i></td></tr></table>
+<p>🧒 → <b>tu</b>: <i>Come ti chiami?</i><br>🧑‍🏫 → <b>Lei</b>: <i>Come si chiama?</i></p>
+<p><b>essere</b></p>
 <table><tr><td>io</td><td><b>sono</b></td><td>noi</td><td><b>siamo</b></td></tr>
 <tr><td>tu</td><td><b>sei</b></td><td>voi</td><td><b>siete</b></td></tr>
 <tr><td>lui / lei / Lei</td><td><b>è</b></td><td>loro</td><td><b>sono</b></td></tr></table>
-<p>Attenzione: <b>è</b> (verbo, con accento) ≠ <b>e</b> (congiunzione: <i>io e te</i>).</p>
-<p>In italiano il pronome soggetto spesso <b>non si dice</b>: <i>Sono Amir</i> = <i>Io sono Amir</i>.</p>
-<p><b>Frasi utili</b>: <i>Mi chiamo…</i> · <i>Sono di…</i> (città) / <i>Sono…</i> (nazionalità) · <i>Ho … anni</i> · <i>Piacere!</i></p>`,
+<p>⚠️ <b>è</b> = essere: <i>Marco è italiano.</i><br>⚠️ <b>e</b> = ➕: <i>io e te</i></p>
+<p>✅ <i>Io sono Amir.</i> = ✅ <i>Sono Amir.</i></p>
+<p>🗣️ <i>Mi chiamo Amir.</i> · <i>Sono di Kiev.</i> · <i>Ho quattordici anni.</i> · <i>Piacere!</i></p>`,
       items: [
-        { t: 'mc', q: 'Entri in classe alle 9 e saluti la professoressa. Dici:', o: ['Buongiorno, professoressa!', 'Ciao, prof!', 'Buonanotte!'], a: 0, topic: 'saluti', exp: 'Con un adulto e in un contesto scolastico si usa il registro formale: Buongiorno.' },
-        { t: 'mc', q: 'Il tuo compagno ti chiede: "Come stai?". Rispondi:', o: ['Sto bene, grazie! E tu?', 'Mi chiamo bene.', 'Sono quindici anni.'], a: 0, topic: 'saluti' },
+        { t: 'mc', q: '🏫 Sono le 9. Saluti la professoressa:', o: ['Buongiorno, professoressa!', 'Ciao, prof!', 'Buonanotte!'], a: 0, topic: 'saluti', exp: 'Con un adulto: Buongiorno!' },
+        { t: 'mc', q: '🧒 «Come stai?» Rispondi:', o: ['Sto bene, grazie! E tu?', 'Mi chiamo bene.', 'Sono quindici anni.'], a: 0, topic: 'saluti' },
         { t: 'gap', q: 'Io ___ Amir.', hint: 'essere', a: ['sono'], topic: 'essere' },
         { t: 'gap', q: 'Tu ___ di Kiev?', hint: 'essere', a: ['sei'], topic: 'essere' },
         { t: 'gap', q: 'Noi ___ compagni di classe.', hint: 'essere', a: ['siamo'], topic: 'essere' },
         { t: 'gap', q: 'Fatima e Lin ___ in classe.', hint: 'essere', a: ['sono'], topic: 'essere', exp: 'Fatima e Lin = loro → sono.' },
-        { t: 'mc', q: 'Marco ___ italiano.', o: ['è', 'e', 'é'], a: 0, topic: 'essere', exp: '"è" con l\'accento grave è il verbo essere. "e" senza accento significa "and".' },
-        { t: 'mc', q: 'Parli con il preside. Che domanda fai?', o: ['Come si chiama?', 'Come ti chiami?', 'Come vi chiamate?'], a: 0, topic: 'pronomi-soggetto', exp: 'Con il "Lei" di cortesia il verbo è alla 3ª persona singolare: si chiama.' },
+        { t: 'mc', q: 'Marco ___ italiano.', o: ['è', 'e', 'é'], a: 0, topic: 'essere', exp: 'è = essere (Marco è italiano). e = ➕ (io e te).' },
+        { t: 'mc', q: '🧑‍🏫 Chiedi il nome al preside:', o: ['Come si chiama?', 'Come ti chiami?', 'Come vi chiamate?'], a: 0, topic: 'pronomi-soggetto', exp: 'Con un adulto usiamo Lei: Come si chiama?' },
         { t: 'order', words: ['Mi', 'chiamo', 'Sofia', 'e', 'sono', 'rumena'], a: 'Mi chiamo Sofia e sono rumena', topic: 'saluti' },
         { t: 'gap', q: 'Voi ___ pronti?', hint: 'essere', a: ['siete'], topic: 'essere' },
         { t: 'dict', say: 'Buongiorno, come sta?', a: ['buongiorno, come sta?', 'buongiorno come sta'], topic: 'saluti', skill: 'ascolto' },
-        { t: 'mc', q: 'Alla fine della lezione dici all\'insegnante:', o: ['Arrivederci!', 'Ciao bello!', 'Piacere!'], a: 0, topic: 'saluti' }
+        { t: 'mc', q: '🔚 La lezione finisce. Saluti l\'insegnante:', o: ['Arrivederci!', 'Ciao bello!', 'Piacere!'], a: 0, topic: 'saluti' }
       ]
     },
     {
@@ -1836,17 +1847,17 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       can: 'Posso riconoscere il genere dei nomi e accordare gli aggettivi.',
       topics: ['genere-numero', 'aggettivi'], vocab: 'a1-scuola',
       theory: `
-<p>In italiano tutti i nomi sono <b>maschili</b> o <b>femminili</b>.</p>
-<table><tr><th></th><th>singolare</th><th>plurale</th></tr>
+<p>Ogni nome è <b>maschile</b> (<i>il libro</i>) o <b>femminile</b> (<i>la penna</i>).</p>
+<table><tr><th></th><th>singolare (1)</th><th>plurale (2, 3…)</th></tr>
 <tr><td>maschile in -o</td><td>libr<b>o</b></td><td>libr<b>i</b></td></tr>
 <tr><td>femminile in -a</td><td>penn<b>a</b></td><td>penn<b>e</b></td></tr>
 <tr><td>maschile o femminile in -e</td><td>studente / chiave</td><td>student<b>i</b> / chiav<b>i</b></td></tr></table>
-<p>Alcuni nomi non cambiano al plurale: <i>il caffè → i caffè</i>, <i>la città → le città</i>, <i>il bar → i bar</i>, <i>lo sport → gli sport</i>.</p>
-<p>Attenzione: <i>il problema</i> e <i>il tema</i> sono maschili; <i>la mano</i> e <i>la radio</i> sono femminili.</p>
-<p><b>Aggettivi</b>: si accordano con il nome.</p>
+<p>Non cambiano: <i>il caffè → i caffè</i> · <i>la città → le città</i> · <i>il bar → i bar</i></p>
+<p>⚠️ <i>il problema</i>, <i>il tema</i> (maschili) · <i>la mano</i>, <i>la radio</i> (femminili)</p>
+<p><b>Aggettivi</b> (<i>alto</i>, <i>gentile</i>…): cambiano come il nome.</p>
 <ul><li>-o/-a/-i/-e: <i>il ragazzo alto, la ragazza alta, i ragazzi alti, le ragazze alte</i></li>
 <li>-e/-i: <i>il ragazzo gentile, la ragazza gentile, i ragazzi gentili, le ragazze gentili</i></li></ul>
-<p>Gli aggettivi di solito vanno <b>dopo</b> il nome: <i>una casa grande</i>.</p>`,
+<p>L'aggettivo va <b>dopo</b> il nome: <i>una casa grande</i>.</p>`,
       items: [
         { t: 'mc', q: 'Qual è il plurale di "quaderno"?', o: ['quaderni', 'quaderne', 'quadernos'], a: 0, topic: 'genere-numero' },
         { t: 'mc', q: 'Qual è il plurale di "matita"?', o: ['matite', 'matiti', 'matitas'], a: 0, topic: 'genere-numero' },
@@ -1866,15 +1877,15 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       can: 'Posso descrivere la mia classe e dire che cosa c\'è.',
       topics: ['articoli', 'ce-ci-sono'], vocab: 'a1-scuola',
       theory: `
-<p><b>Articoli determinativi</b> (la cosa è conosciuta, specifica)</p>
-<table><tr><th></th><th>singolare</th><th>plurale</th><th>quando</th></tr>
+<p><b>il, lo, la</b> = una cosa precisa: <i>il libro di Ana</i></p>
+<table><tr><th></th><th>singolare (1)</th><th>plurale (2, 3…)</th><th>quando</th></tr>
 <tr><td rowspan="3">maschile</td><td><b>il</b> libro</td><td><b>i</b> libri</td><td>davanti a consonante</td></tr>
 <tr><td><b>lo</b> zaino, <b>lo</b> studente</td><td><b>gli</b> zaini, <b>gli</b> studenti</td><td>davanti a z, s+consonante, gn, ps, x, y</td></tr>
 <tr><td><b>l'</b>amico</td><td><b>gli</b> amici</td><td>davanti a vocale</td></tr>
 <tr><td rowspan="2">femminile</td><td><b>la</b> penna</td><td><b>le</b> penne</td><td>davanti a consonante</td></tr>
 <tr><td><b>l'</b>aula</td><td><b>le</b> aule</td><td>davanti a vocale</td></tr></table>
-<p><b>Articoli indeterminativi</b> (una cosa qualsiasi, nuova): <b>un</b> libro, <b>un</b> amico, <b>uno</b> zaino, <b>una</b> penna, <b>un'</b>aula.</p>
-<p>Attenzione all'apostrofo: <i>un amico</i> (maschile, senza apostrofo) ma <i>un'amica</i> (femminile, con apostrofo).</p>
+<p><b>un, uno, una</b> = una cosa qualsiasi: <b>un</b> libro, <b>un</b> amico, <b>uno</b> zaino, <b>una</b> penna, <b>un'</b>aula.</p>
+<p>⚠️ <i>un amico</i> (maschile) · <i>un'amica</i> (femminile, con ')</p>
 <p><b>C'è / ci sono</b>: <i>In classe <b>c'è</b> una lavagna. In classe <b>ci sono</b> venti banchi.</i></p>`,
       items: [
         { t: 'mc', q: '___ zaino è pesante.', o: ['Lo', 'Il', 'La'], a: 0, topic: 'articoli', exp: 'Davanti a z si usa "lo".' },
@@ -2220,7 +2231,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
         { t: 'gap', q: 'La mia scuola in Perù ___ molto grande.', hint: 'essere', a: ['era'], topic: 'imperfetto' },
         { t: 'gap', q: 'Ogni estate noi ___ al mare.', hint: 'andare', a: ['andavamo'], topic: 'imperfetto' },
         { t: 'gap', q: 'Quando ___ sei anni, non parlavi italiano.', hint: 'tu, avere', a: ['avevi'], topic: 'imperfetto' },
-        { t: 'gap', q: 'Ieri ___ molto caldo.', hint: 'fare', a: ['faceva'], topic: 'imperfetto' },
+        { t: 'gap', q: 'Ieri ___ molto caldo.', hint: 'fare', a: ['faceva', 'ha fatto'], topic: 'imperfetto' },
         { t: 'gap', q: 'I bambini ___ il latte ogni mattina.', hint: 'bere', a: ['bevevano'], topic: 'imperfetto' },
         { t: 'gap', q: 'Mentre voi ___, io leggevo.', hint: 'dormire', a: ['dormivate'], topic: 'imperfetto' },
         { t: 'mc', q: 'Mia nonna ___ sempre storie bellissime.', o: ['raccontava', 'ha raccontato', 'raccontò'], a: 0, topic: 'imperfetto', exp: '"Sempre" indica un\'abitudine → imperfetto.' },
@@ -2668,7 +2679,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
         { t: 'gap', q: 'Voglio che tu ___ la verità.', hint: 'dire', a: ['dica'], topic: 'congiuntivo-presente' },
         { t: 'gap', q: 'Benché ___ stanco, continuo a studiare.', hint: 'essere, io', a: ['sia'], topic: 'congiuntivo-presente' },
         { t: 'mc', q: 'So che Luca ___ in biblioteca.', o: ['è', 'sia', 'fosse'], a: 0, topic: 'congiuntivo-presente', exp: '"So che" esprime certezza → indicativo.' },
-        { t: 'mc', q: 'Penso ___ domani.', o: ['di partire', 'che parta', 'che io parto'], a: 0, topic: 'congiuntivo-presente', exp: 'Stesso soggetto (io penso, io parto) → di + infinito.' },
+        { t: 'mc', q: 'Penso ___ domani.', o: ['di partire', 'a partire', 'che io parto'], a: 0, topic: 'congiuntivo-presente', exp: 'Stesso soggetto (io penso, io parto) → di + infinito.' },
         { t: 'mc', q: 'Ho paura che ___ a piovere.', o: ['cominci', 'comincia', 'cominciare'], a: 0, topic: 'congiuntivo-presente' },
         { t: 'mc', q: 'Il prof ripete la spiegazione affinché tutti ___.', o: ['capiscano', 'capiscono', 'capire'], a: 0, topic: 'congiuntivo-presente' },
         { t: 'mc', q: 'Non so se Fatima ___ venire.', o: ['possa', 'potere', 'possono'], a: 0, topic: 'congiuntivo-presente' },
@@ -2900,17 +2911,17 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 <tr><td>raddoppiare (× 2) / dimezzarsi (÷ 2)</td><td>il raddoppio</td></tr></table>
 <p>Le quantità: <i>il 50% = <b>la metà</b> · il 33% ≈ <b>un terzo</b> · il 25% = <b>un quarto</b> · più del 50% = <b>la maggior parte</b>, la maggioranza · meno del 50% = una minoranza</i>. Si legge <i>cinquanta <b>per cento</b></i>.</p>
 <p>Per confrontare: <i>più… di, meno… di, rispetto a</i>; per un contrasto: <i>mentre, invece</i>. <i>Rispetto al 2020 gli iscritti sono aumentati <b>del</b> 10%. Al Nord piove molto, <b>mentre</b> al Sud piove poco.</i></p>
-<p>I tipi di grafico: <i>grafico a barre (istogramma), grafico a torta (aerogramma), grafico a linee</i>. Per cominciare: <i>Dal grafico si vede che… · La tabella mostra…</i></p>`,
+<p>I tipi di grafico: <i>grafico a barre (istogramma), grafico a torta (areogramma), grafico a linee</i>. Per cominciare: <i>Dal grafico si vede che… · La tabella mostra…</i></p>`,
       items: [
         { t: 'mc', q: 'Nel 2020 gli iscritti erano 100, nel 2024 sono 200: il numero è ___.', o: ['raddoppiato', 'dimezzato', 'rimasto stabile'], a: 0, topic: 'lingua-studio' },
         { t: 'mc', q: 'Il 50% degli studenti è:', o: ['la metà', 'un terzo', 'un quarto'], a: 0, topic: 'lingua-studio' },
         { t: 'mc', q: 'Il 25% corrisponde a:', o: ['un quarto', 'un terzo', 'la metà'], a: 0, topic: 'lingua-studio' },
-        { t: 'gap', q: 'Le vendite sono passate da 80 a 60: c\'è stata una ___.', a: ['diminuzione'], topic: 'lingua-studio' },
+        { t: 'gap', q: 'Le vendite sono passate da 80 a 60: c\'è stata una ___.', a: ['diminuzione', 'riduzione'], topic: 'lingua-studio' },
         { t: 'gap', q: 'La temperatura è passata da 10 a 15 gradi: è ___ di cinque gradi.', a: ['aumentata', 'cresciuta', 'salita'], topic: 'lingua-studio' },
         { t: 'mc', q: 'Il 70% dei ragazzi usa lo smartphone ogni giorno. Quindi:', o: ['la maggior parte dei ragazzi lo usa', 'solo una minoranza lo usa', 'quasi nessuno lo usa'], a: 0, topic: 'lingua-studio' },
         { t: 'mc', q: 'Le ragazze che leggono sono più numerose ___ ragazzi.', o: ['dei', 'che i', 'come i'], a: 0, topic: 'comparativi' },
         { t: 'mc', q: 'Al Nord piove molto, ___ al Sud piove poco.', o: ['mentre', 'perché', 'quindi'], a: 0, topic: 'connettivi-base' },
-        { t: 'mc', q: 'Un grafico a torta si chiama anche:', o: ['aerogramma', 'istogramma', 'termometro'], a: 0, topic: 'lingua-studio' },
+        { t: 'mc', q: 'Un grafico a torta si chiama anche:', o: ['areogramma', 'istogramma', 'termometro'], a: 0, topic: 'lingua-studio' },
         { t: 'match', pairs: [['aumento', 'aumentare'], ['diminuzione', 'diminuire'], ['crescita', 'crescere'], ['calo', 'calare']], topic: 'lingua-studio', prompt: 'Abbina il nome al verbo' },
         { t: 'order', words: ['Dal', 'grafico', 'si', 'vede', 'che', 'i', 'prezzi', 'sono', 'aumentati'], a: 'Dal grafico si vede che i prezzi sono aumentati', topic: 'lingua-studio' },
         { t: 'dict', say: 'Rispetto all\'anno scorso, gli iscritti sono aumentati del dieci per cento.', a: ['rispetto all\'anno scorso, gli iscritti sono aumentati del dieci per cento', 'rispetto all\'anno scorso gli iscritti sono aumentati del dieci per cento', 'rispetto all\'anno scorso gli iscritti sono aumentati del 10 per cento', 'rispetto all\'anno scorso gli iscritti sono aumentati del 10%'], topic: 'lingua-studio', skill: 'ascolto' }
@@ -2952,7 +2963,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
         { t: 'gap', q: 'Era necessario che tutti ___ il modulo.', hint: 'firmare', a: ['firmassero'], topic: 'congiuntivo-passato-imperfetto' },
         { t: 'gap', q: 'Non sapevo che Giulia ___ a Londra l\'anno scorso.', hint: 'trasferirsi', a: ['si fosse trasferita'], topic: 'concordanza' },
         { t: 'mc', q: 'Speravo che mi ___ ieri.', o: ['chiamassi', 'chiami', 'abbia chiamato'], a: 0, topic: 'concordanza' },
-        { t: 'mc', q: 'Mi sembra che ieri Marco ___ un po\' strano.', o: ['sia stato', 'fosse', 'sia'], a: 0, topic: 'concordanza', exp: 'Principale al presente, azione anteriore → congiuntivo passato.' },
+        { t: 'mc', q: 'Mi sembra che ieri Marco ___ un po\' strano.', o: ['sia stato', 'sarà', 'sia'], a: 0, topic: 'concordanza', exp: 'Principale al presente, azione anteriore → congiuntivo passato.' },
         { t: 'mc', q: 'Pensavo che il treno ___ in ritardo, invece era puntuale.', o: ['sarebbe arrivato', 'arrivi', 'arriverà'], a: 0, topic: 'concordanza', exp: 'Futuro nel passato → condizionale passato.' },
         { t: 'mc', q: 'Benché ___ molto, non ha superato l\'esame.', o: ['avesse studiato', 'aveva studiato', 'ha studiato'], a: 0, topic: 'congiuntivo-passato-imperfetto' },
         { t: 'mc', q: 'Il professore voleva che noi ___ il testo a memoria.', o: ['imparassimo', 'impariamo', 'imparavamo'], a: 0, topic: 'concordanza' },
@@ -3041,7 +3052,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
         { t: 'mc', q: '"Hai fratelli?" → Mi ha chiesto ___ fratelli.', o: ['se avevo', 'che avevo', 'se hai'], a: 0, topic: 'discorso-indiretto' },
         { t: 'mc', q: '"Vengo qui ogni giorno." → Ha detto che andava ___ ogni giorno.', o: ['lì', 'qui', 'qua'], a: 0, topic: 'discorso-indiretto' },
         { t: 'mc', q: '"Ieri ho visto Paolo." → Ha raccontato che ___ aveva visto Paolo.', o: ['il giorno prima', 'ieri', 'il giorno dopo'], a: 0, topic: 'discorso-indiretto' },
-        { t: 'mc', q: '"Dove abiti?" → Mi ha chiesto dove ___.', o: ['abitavo', 'abiti', 'abitassi'], a: 0, topic: 'discorso-indiretto' },
+        { t: 'mc', q: '"Dove abiti?" → Mi ha chiesto dove ___.', o: ['abitavo', 'abiti', 'abitato'], a: 0, topic: 'discorso-indiretto' },
         { t: 'gap', q: '"Questa è la mia bici." → Ha detto che quella era ___ bici.', a: ['la sua'], topic: 'discorso-indiretto' },
         { t: 'mc', q: '"Sono stanco." → Marco dice che ___ stanco.', o: ['è', 'era', 'fosse'], a: 0, topic: 'discorso-indiretto', exp: 'Il verbo introduttivo è al presente ("dice"): il tempo non cambia.' },
         { t: 'mc', q: '"Spero che tu venga." → Ha detto che sperava che io ___.', o: ['venissi', 'venga', 'verrò'], a: 0, topic: 'discorso-indiretto' },
@@ -3067,7 +3078,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       items: [
         { t: 'mc', q: '___ molto, ha imparato in fretta.', o: ['Leggendo', 'Letto', 'Leggere'], a: 0, topic: 'forme-implicite' },
         { t: 'mc', q: '___ i compiti, Lin è uscita con le amiche.', o: ['Finiti', 'Finendo', 'Finire'], a: 0, topic: 'forme-implicite', exp: 'Participio passato: azione conclusa prima, si accorda con "i compiti".' },
-        { t: 'mc', q: 'Dopo ___ cena, abbiamo guardato un film.', o: ['aver mangiato', 'mangiando', 'mangiato'], a: 0, topic: 'forme-implicite' },
+        { t: 'mc', q: 'Dopo ___, abbiamo guardato un film.', o: ['aver cenato', 'cenando', 'cenato'], a: 0, topic: 'forme-implicite' },
         { t: 'mc', q: '___ in ritardo, abbiamo perso il treno.', o: ['Essendo arrivati', 'Avendo arrivato', 'Arrivando stati'], a: 0, topic: 'forme-implicite' },
         { t: 'mc', q: 'È uscito senza ___ niente.', o: ['dire', 'detto', 'dicendo'], a: 0, topic: 'forme-implicite' },
         { t: 'mc', q: 'Mi scuso per ___ in ritardo.', o: ['essere arrivato', 'arrivando', 'arrivare stato'], a: 0, topic: 'forme-implicite' },
@@ -3329,12 +3340,12 @@ consegna|instruction / task|consigne|consigna|enunciado|cerință|detyrë / udh�
     { id: 'a1-scuola', level: 'A1', title: 'A scuola', icon: '🏫', rows: `
 scuola|school|école|escuela|escola|școală|shkollë|школа|школа|مدرسة|学校|স্কুল|اسکول|La scuola comincia alle otto.
 classe|class / classroom|classe|clase|turma|clasă|klasë|клас|класс|صف|班级|শ্রেণি|جماعت|La mia classe è al secondo piano.
-aula|classroom|salle de classe|aula|sala de aula|sală de clasă|klasë / sallë|аудиторія|аудитория|قاعة|教室|শ্রেণিকক্ষ|کمرہ جماعت|L'aula di scienze è grande.
+aula|classroom|salle de classe|aula|sala de aula|sală de clasă|klasë / sallë|клас|класс|قاعة|教室|শ্রেণিকক্ষ|کمرہ جماعت|L'aula di scienze è grande.
 banco|school desk|pupitre|pupitre|carteira|bancă|bankë|парта|парта|طاولة الدراسة|课桌|বেঞ্চ|ڈیسک|Metti lo zaino sotto il banco.
 lavagna|blackboard|tableau|pizarra|quadro|tablă|dërrasë e zezë|дошка|доска|سبورة|黑板|ব্ল্যাকবোর্ড|تختہ سیاہ|Scrivi alla lavagna, per favore.
 libro|book|livre|libro|livro|carte|libër|книга|книга|كتاب|书|বই|کتاب|Apri il libro a pagina venti.
 quaderno|notebook|cahier|cuaderno|caderno|caiet|fletore|зошит|тетрадь|دفتر|练习本|খাতা|کاپی|Scrivo gli esercizi sul quaderno.
-penna|pen|stylo|bolígrafo|caneta|pix|stilolaps|ручка|ручка|قلم|钢笔|কলম|قلم|Mi presti una penna?
+penna|pen|stylo|bolígrafo|caneta|pix|stilolaps|ручка|ручка|قلم|笔 / 圆珠笔|কলম|قلم|Mi presti una penna?
 matita|pencil|crayon|lápiz|lápis|creion|laps|олівець|карандаш|قلم رصاص|铅笔|পেন্সিল|پنسل|Disegno con la matita.
 gomma|eraser|gomme|goma|borracha|radieră|gomë|гумка|ластик|ممحاة|橡皮|রাবার|ربڑ|Uso la gomma per cancellare.
 zaino|backpack|sac à dos|mochila|mochila|ghiozdan|çantë shpine|рюкзак|рюкзак|حقيبة ظهر|书包|ব্যাকপ্যাক|بستہ|Il mio zaino è pesante.
@@ -3461,11 +3472,11 @@ piovere|to rain|pleuvoir|llover|chover|a ploua|bie shi|йде дощ|идёт д
   C.vocabRaw.push(
     { id: 'a2-tempo-libero', level: 'A2', title: 'Tempo libero e sport', icon: '⚽', rows: `
 tempo libero|free time|temps libre|tiempo libre|tempo livre|timp liber|kohë e lirë|вільний час|свободное время|وقت الفراغ|业余时间|অবসর সময়|فارغ وقت|Nel tempo libero leggo fumetti.
-giocare|to play|jouer|jugar|jogar|a se juca|luaj|грати|играть|يلعب|玩|খেলা|کھیلنا|Giochiamo a pallavolo.
+giocare|to play|jouer|jugar|jogar|a juca / a se juca|luaj|грати|играть|يلعب|玩|খেলা|کھیلنا|Giochiamo a pallavolo.
 squadra|team|équipe|equipo|equipe / time|echipă|skuadër|команда|команда|فريق|球队|দল|ٹیم|La mia squadra ha vinto.
 partita|match / game|match|partido|partida / jogo|meci|ndeshje|матч|матч|مباراة|比赛|ম্যাচ|میچ|Stasera c'è la partita.
 vincere|to win|gagner|ganar|ganhar|a câștiga|fitoj|перемагати|побеждать|يفوز|赢|জেতা|جیتنا|Abbiamo vinto tre a uno.
-perdere|to lose|perdre|perder|perder|a pierde|humb|програвати / губити|проигрывать / терять|يخسر|输 / 丢|হারানো|ہارنا / کھونا|Ho perso le chiavi.
+perdere|to lose|perdre|perder|perder|a pierde|humb|програвати / губити|проигрывать / терять|يخسر / يفقد|输 / 丢|হারানো|ہارنا / کھونا|Ho perso le chiavi.
 nuotare|to swim|nager|nadar|nadar|a înota|notoj|плавати|плавать|يسبح|游泳|সাঁতার কাটা|تیرنا|D'estate nuoto al mare.
 correre|to run|courir|correr|correr|a alerga|vrapoj|бігати|бегать|يركض|跑|দৌড়ানো|دوڑنا|Corro nel parco ogni mattina.
 ballare|to dance|danser|bailar|dançar|a dansa|kërcej|танцювати|танцевать|يرقص|跳舞|নাচা|ناچنا|Mi piace ballare.
@@ -3600,11 +3611,11 @@ verifica|written test|contrôle|prueba / control|prova|test|test|контрол�
 iscriversi|to enrol|s'inscrire|inscribirse|inscrever-se|a se înscrie|regjistrohem|записатися|записаться|يسجّل|报名|ভর্তি হওয়া|داخلہ لینا|Mi iscrivo al liceo scientifico.
 diploma|diploma|diplôme|título / diploma|diploma|diplomă|diplomë|атестат / диплом|аттестат / диплом|شهادة|毕业证书|ডিপ্লোমা|ڈپلومہ|Con il diploma posso andare all'università.
 scegliere|to choose|choisir|elegir|escolher|a alege|zgjedh|обирати|выбирать|يختار|选择|বেছে নেওয়া|چننا|Devo scegliere la scuola superiore.
-impegnarsi|to commit / make an effort|s'engager|esforzarse|esforçar-se|a se strădui|angazhohem|старатися|стараться|يجتهد|努力|চেষ্টা করা|محنت کرنا|Se ti impegni, ce la fai.
+impegnarsi|to commit / make an effort|s'appliquer / faire des efforts|esforzarse|esforçar-se|a se strădui|angazhohem|старатися|стараться|يجتهد|努力|চেষ্টা করা|محنت کرنا|Se ti impegni, ce la fai.
 riuscire|to manage / succeed|réussir|lograr|conseguir|a reuși|ia dal|вдаватися|удаваться|ينجح|成功做到|সফল হওয়া|کامیاب ہونا|Sono riuscito a finire il compito.
 sbagliare|to make a mistake|se tromper|equivocarse|errar|a greși|gaboj|помилятися|ошибаться|يخطئ|弄错|ভুল করা|غلطی کرنا|Non avere paura di sbagliare.
 errore|mistake|erreur|error|erro|greșeală|gabim|помилка|ошибка|خطأ|错误|ভুল|غلطی|Dagli errori si impara.
-colloquio|interview / meeting|entretien|entrevista|entrevista|interviu|intervistë|співбесіда|собеседование|مقابلة|面试 / 面谈|সাক্ষাৎকার|انٹرویو|I genitori hanno il colloquio con i professori.
+colloquio|interview / meeting|entretien|entrevista|entrevista|întâlnire / interviu|takim / intervistë|зустріч / співбесіда|встреча / собеседование|لقاء / مقابلة|面试 / 面谈|সাক্ষাৎকার|انٹرویو|I genitori hanno il colloquio con i professori.
 ` },
     { id: 'b1-casa-regole', level: 'B1', title: 'Regole e convivenza', icon: '📋', rows: `
 regola|rule|règle|regla|regra|regulă|rregull|правило|правило|قاعدة|规则|নিয়ম|قاعدہ|Rispettiamo le regole della classe.
@@ -3636,7 +3647,7 @@ esempio|example|exemple|ejemplo|exemplo|exemplu|shembull|приклад|прим
 ambiente|environment|environnement|medio ambiente|meio ambiente|mediu|mjedis|довкілля|окружающая среда|بيئة|环境|পরিবেশ|ماحول|Dobbiamo proteggere l'ambiente.
 inquinamento|pollution|pollution|contaminación|poluição|poluare|ndotje|забруднення|загрязнение|تلوث|污染|দূষণ|آلودگی|L'inquinamento dell'aria è un problema.
 rifiuti|waste|déchets|residuos|lixo|deșeuri|mbeturina|відходи|отходы|نفايات|垃圾|বর্জ্য|کچرا|Riduciamo i rifiuti.
-riciclare|to recycle|recycler|reciclar|reciclar|a recicla|riciklon|переробляти|перерабатывать|يعيد التدوير|回收|পুনর্ব্যবহার করা|ری سائیکل کرنا|Ricicliamo carta e vetro.
+riciclare|to recycle|recycler|reciclar|reciclar|a recicla|ricikloj|переробляти|перерабатывать|يعيد التدوير|回收|পুনর্ব্যবহার করা|ری سائیکل کرنا|Ricicliamo carta e vetro.
 energia|energy|énergie|energía|energia|energie|energji|енергія|энергия|طاقة|能源|শক্তি|توانائی|L'energia solare è pulita.
 clima|climate|climat|clima|clima|climă|klimë|клімат|климат|مناخ|气候|জলবায়ু|آب و ہوا|Il clima sta cambiando.
 risparmiare|to save|économiser|ahorrar|economizar|a economisi|kursej|заощаджувати|экономить|يوفر|节省|সঞ্চয় করা|بچانا|Risparmiamo acqua.
@@ -3708,7 +3719,7 @@ permesso di soggiorno|residence permit|titre de séjour|permiso de residencia|au
 codice fiscale|tax code (Italian ID number)|code fiscal|código fiscal|número de contribuinte|cod fiscal|kodi fiskal|податковий код|налоговый код|الرمز الضريبي|税号|কর কোড|ٹیکس کوڈ|Per iscriversi a scuola serve il codice fiscale.
 ` },
     { id: 'b1-salute', level: 'B1', title: 'Salute e benessere', icon: '🌿', rows: `
-benessere|well-being|bien-être|bienestar|bem-estar|bunăstare|mirëqenie|добре самопочуття|хорошее самочувствие|العافية|健康|সুস্থতা|تندرستی|Lo sport è importante per il benessere.
+benessere|well-being|bien-être|bienestar|bem-estar|stare de bine|mirëqenie|добре самопочуття|хорошее самочувствие|العافية|健康|সুস্থতা|تندرستی|Lo sport è importante per il benessere.
 sano|healthy|sain|sano|saudável|sănătos|i shëndetshëm|здоровий|здоровый|صحي|健康的|স্বাস্থ্যকর|صحت مند|Cerco di mangiare in modo sano.
 alimentazione|diet / nutrition|alimentation|alimentación|alimentação|alimentație|ushqyerje|харчування|питание|التغذية|饮食|খাদ্যাভ্যাস|خوراک|Una buona alimentazione aiuta a studiare.
 sintomo|symptom|symptôme|síntoma|sintoma|simptom|simptomë|симптом|симптом|عَرَض|症状|উপসর্গ|علامت|Quali sintomi ha?
@@ -3839,7 +3850,7 @@ ironia|modo di dire il contrario di ciò che si pensa, per scherzo o critica|iro
 ` },
     { id: 'c1-idiomi', level: 'C1', title: 'Modi di dire', icon: '🐺', mono: true, rows: `
 in bocca al lupo|augurio di buona fortuna (si risponde "crepi!")|good luck|In bocca al lupo per l'esame!
-essere al verde|non avere più soldi|to be broke|Fine mese, sono al verde.
+essere al verde|non avere più soldi|to be broke|A fine mese sono al verde.
 avere le mani in pasta|essere coinvolto in molte attività|to have a finger in every pie|Lui ha le mani in pasta ovunque.
 non vedere l'ora|desiderare molto qualcosa|to look forward to|Non vedo l'ora di partire!
 costare un occhio della testa|costare moltissimo|to cost an arm and a leg|Quella borsa costa un occhio della testa.
@@ -5775,7 +5786,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (item.say) head += '<div class="listen-row">' + speakBtn(item.say, 'Ascolta') + '<button type="button" class="btn ghost small" data-say="' + esc(item.say) + '" data-slow="1">' + IL2.ui.icon('slow') + ' Più lento</button></div>';
     box.innerHTML = head + '<p class="q">' + esc(item.q) + '</p>' + l1Line('chooseAnswer') +
       '<div class="options" role="radiogroup">' + options.map((o, k) => '<button type="button" role="radio" aria-checked="false" class="opt" data-k="' + k + '">' + esc(o.t) + '</button>').join('') +
-      (opts.allowDontKnow ? '<button type="button" class="opt dont" data-k="-1">Non lo so</button>' : '') + '</div>';
+      '</div>';
     bindSay(box);
     if (item.say && opts.autoplay !== false) setTimeout(() => IL2.speech.say(item.say), 300);
     box.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
@@ -5786,6 +5797,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     }));
     return {
       ready: () => chosen !== null,
+      dontKnow() { chosen = -1; },
       check() {
         const correct = item.o[item.a];
         const ok = chosen >= 0 && options[chosen].i === item.a;
@@ -5929,15 +5941,20 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         (opts.title ? '<h2 class="session-title">' + esc(opts.title) + '</h2>' : '') +
         '<div class="card exercise" aria-live="polite"></div>' +
         '<div class="fb" hidden></div>' +
-        '<div class="session-actions"><button type="button" class="btn ghost small report" title="Segnala un problema con questo esercizio">' + IL2.ui.icon('flag') + ' Segnala</button>' +
+        // «Non lo so» sta nella barra in basso, sempre visibile anche sui telefoni piccoli
+        '<div class="session-actions">' + (opts.allowDontKnow ? '<button type="button" class="btn dont-know">Non lo so</button>' : '<button type="button" class="btn ghost small report" title="Segnala un problema con questo esercizio">' + IL2.ui.icon('flag') + ' Segnala</button>') +
         '<button type="button" class="btn primary go" disabled>Controlla</button></div></div>';
       const box = root.querySelector('.exercise'), fb = root.querySelector('.fb'), go = root.querySelector('.go');
       const bar = root.querySelector('.progress span'), count = root.querySelector('.count');
 
+      // opts.leaveGuard: messaggio di conferma se lo studente cambia pagina a metà (test di livello)
+      if (opts.leaveGuard) IL2.leaveGuard = opts.leaveGuard;
       root.querySelector('.quit').addEventListener('click', async () => {
-        if (done === 0 || await IL2.ui.confirm('Vuoi uscire? I progressi delle risposte date sono già salvati.', 'Esci')) finish(true);
+        if (done === 0 || await IL2.ui.confirm(opts.leaveGuard ? 'Vuoi interrompere il test?' : 'Vuoi uscire? I progressi delle risposte date sono già salvati.', 'Esci')) finish(true);
       });
-      root.querySelector('.report').addEventListener('click', () => report(current, opts));
+      const rep = root.querySelector('.report'); if (rep) rep.addEventListener('click', () => report(current, opts));
+      const dk = root.querySelector('.dont-know');
+      if (dk) dk.addEventListener('click', () => { if (phase === 'answer' && renderer.dontKnow) { renderer.dontKnow(); submit(); } });
 
       function progress() {
         const p = opts.engine ? opts.engine.progress() : results.length / Math.max(1, results.length + queue.length + 1);
@@ -5950,6 +5967,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         current = opts.engine ? opts.engine.next() : queue.shift();
         if (!current) return finish(false);
         phase = 'answer'; fb.hidden = true; fb.innerHTML = '';
+        if (dk) dk.disabled = false;
         go.textContent = 'Controlla';
         go.disabled = true;
         const fn = R[current.t] || R.mc;
@@ -5965,6 +5983,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
       function submit() {
         phase = 'feedback';
+        if (dk) dk.disabled = true;
         const res = renderer.check();
         if (opts.engine) opts.engine.answer(current, res.ok);
         const firstTime = !missedOnce.has(current.uid || current.id);
@@ -5997,6 +6016,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
       function finish(aborted) {
         IL2.speech.stop();
+        if (opts.leaveGuard) IL2.leaveGuard = null;
         resolve({ aborted, total: done, correct: firstTryOk, results, misses, durationSec: Math.round((Date.now() - started) / 1000) });
       }
       next();
@@ -6206,6 +6226,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   IL2.go = function (path) { if (location.hash === '#/' + path) route(); else location.hash = '#/' + path; };
 
   async function route() {
+    curHash = location.hash;
     const { parts, q } = parseHash();
     const st = IL2.state;
     if (!st.user) return;
@@ -6235,12 +6256,28 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   }
   new MutationObserver(() => { const v = document.getElementById('view'); if (v && v.querySelector('table:not(.tbl-scroll > table)')) wrapTables(v); })
     .observe(document.getElementById('app'), { childList: true, subtree: true });
-  window.addEventListener('hashchange', () => { if (INVITE_RE.test(location.hash)) start(); else route(); });
+  // Durante il test di livello (IL2.leaveGuard) si chiede conferma prima di cambiare pagina: le risposte andrebbero perse.
+  let curHash = location.hash;
+  IL2.confirmLeave = async function () {
+    if (!IL2.leaveGuard) return true;
+    if (!await IL2.ui.confirm(IL2.leaveGuard, 'Sì, esci', true)) return false;
+    IL2.leaveGuard = null; return true;
+  };
+  window.addEventListener('hashchange', async () => {
+    if (INVITE_RE.test(location.hash)) return start();
+    if (IL2.leaveGuard && location.hash !== curHash) {
+      const target = location.hash;
+      history.replaceState(null, '', curHash || location.pathname);
+      if (!await IL2.confirmLeave()) return;
+      location.hash = target; return;
+    }
+    route();
+  });
   // pulsanti generici (niente gestori inline: la Content-Security-Policy li blocca)
   document.addEventListener('click', e => {
     // un link alla pagina già aperta (es. "Rivedi la teoria" dopo gli esercizi) deve comunque ricaricarla
     const a = e.target.closest('a[href^="#/"]');
-    if (a && a.getAttribute('href') === location.hash && !e.ctrlKey && !e.metaKey) { e.preventDefault(); route(); return; }
+    if (a && a.getAttribute('href') === location.hash && !e.ctrlKey && !e.metaKey) { e.preventDefault(); IL2.confirmLeave().then(ok => { if (ok) route(); }); return; }
     if (e.target.closest('[data-print]')) IL2.ui.print();
     else if (e.target.closest('[data-reload]')) location.reload();
   });
@@ -6333,6 +6370,13 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   });
 
   async function logout() {
+    const student = IL2.state.user && IL2.state.user.role === 'student';
+    const msg = IL2.leaveGuard ? 'Vuoi uscire? Il test si interrompe e le risposte date finora andranno perse.'
+      : student && window.IL2_SITE === 'studenti' ? 'Vuoi uscire? Per entrare di nuovo dovrai aprire il link che ti ha mandato l\'insegnante.'
+      : student ? 'Vuoi uscire? Per entrare di nuovo servono il tuo nome utente e il tuo codice.'
+      : 'Vuoi uscire? Per entrare di nuovo servono il tuo nome utente e la password.';
+    if (!await IL2.ui.confirm(msg, 'Sì, esci', true)) return;
+    IL2.leaveGuard = null;
     await IL2.save(true);
     try { await IL2.api.call('logout'); } catch (e) { /* nulla */ }
     logoutLocal();
@@ -6380,7 +6424,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<label>Nome utente<input name="username" required autocomplete="username" autocapitalize="off" spellcheck="false"></label>' +
       '<label>Codice segreto o password<input name="secret" type="password" required autocomplete="current-password"></label>' +
       '<button class="btn primary big">Entra</button></form>' +
-      '<p class="small muted center">' + (window.IL2_SITE === 'studenti' ? 'Non ricordi il codice? Chiedi all\'insegnante di mandarti di nuovo il link di invito.' : 'Non hai un account? Chiedi all\'insegnante il tuo nome utente e il tuo codice.') + '</p>' +
+      '<p class="small muted center">' + (window.IL2_SITE === 'studenti' ? 'Per entrare apri di nuovo il <b>link di invito</b> che ti ha mandato l\'insegnante (per esempio su WhatsApp). Se non lo trovi, chiedile di mandartelo di nuovo.' : 'Non hai un account? Chiedi all\'insegnante il tuo nome utente e il tuo codice.') + '</p>' +
       (window.IL2_DEMO ? '<div class="demo-hint"><b>Demo</b> · insegnante: <code>prof</code> / <code>italiano2024</code> · studente: <code>amina</code> / <code>1234</code><br><button class="btn ghost small" id="reset-demo">Ricomincia la demo da zero</button></div>' : '') +
       '</div></div>';
     $('#login').addEventListener('submit', async e => {
@@ -6527,14 +6571,17 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const due = E.dueWords(p).filter(wordById).length;
     const errs = p.errors.filter(e => !e.resolved && C.itemByUid[e.key] && open(C.itemByUid[e.key].lv || 'A1')).length;
     h += '<section class="plan-sec"><div class="sec-head"><span class="sec-ic review">' + icon('repeat') + '</span><div><h2>Ripasso</h2><p class="muted">Parole da rinfrescare ed esercizi da correggere.</p></div></div>';
+    // la prossima lezione è ben visibile: è la strada principale per chi ha appena cominciato
+    const nu = E.nextUnit(p);
+    const lessonCard = nu ? '<a class="card next-lesson" href="#/unita/' + nu.unit.id + '"><span class="nl-icon" aria-hidden="true">' + nu.unit.icon + '</span><span class="nl-body"><small>' + (prog.done ? 'Prossima lezione' : 'La tua prima lezione') + '</small><b>' + esc(nu.unit.title) + '</b><span class="small muted">' + esc(nu.unit.can) + '</span></span><span class="btn primary">' + (prog.done ? 'Continua' : 'Comincia') + '</span></a>' : '';
     if (due || errs) {
       h += '<a class="card review-card" href="#/ripasso-misto"><div class="rc-counts">' +
         '<div><b>' + due + '</b><span>' + (due === 1 ? 'parola' : 'parole') + '</span></div><div><b>' + errs + '</b><span>' + (errs === 1 ? 'errore' : 'errori') + '</span></div></div>' +
         '<span class="btn primary">Inizia il ripasso</span></a>';
     } else {
-      const nu = E.nextUnit(p);
-      h += '<div class="card review-card empty"><p>' + icon('check') + ' Niente da ripassare adesso: le parole e gli errori torneranno al momento giusto.</p>' + (nu ? '<a class="btn ghost" href="#/unita/' + nu.unit.id + '">Continua le lezioni: ' + esc(nu.unit.title) + '</a>' : '') + '</div>';
+      h += (prog.done ? '<p class="review-empty small muted">' + icon('check') + ' Niente da ripassare adesso: le parole e gli errori torneranno al momento giusto.</p>' : '') + lessonCard;
     }
+    if ((due || errs) && !prog.done) h += lessonCard;
     h += '</section>';
 
     // 2. Nuovo contenuto, a scelta fra scrittura, ascolto e parlato
@@ -6964,7 +7011,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const p = P();
     if (!parts[0]) {
       const subs = await IL2.api.call('mySubmissions').catch(() => []);
-      const sent = {}; subs.forEach(s => { sent[s.taskId] = { best: s.status === 'corretto' ? 'letto' : 'inviato' }; });
+      const sent = {}; subs.forEach(s => { sent[s.taskId] = { best: s.status === 'corretto' ? 'letto' : subState(s) }; });
       listByLevel(view, 'Scrivere', 'pen', C.writing, sent, 'scrivi');
       view.insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="#/elaborati">I miei testi (' + subs.length + ')</a></p>');
       return;
@@ -6978,7 +7025,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<div class="card prompt"><p>' + esc(t.prompt) + '</p>' + (t.use && t.use.length ? '<p class="small">Prova a usare: ' + t.use.map(u => '<span class="chip small">' + esc(u) + '</span>').join(' ') + '</p>' : '') + '</div>' +
       (t.model ? '<details class="card"><summary>Vedi un esempio</summary><p><i>' + esc(t.model) + '</i></p></details>' : '') +
       '<textarea id="txt" rows="10" class="writing" placeholder="Scrivi qui il tuo testo…" spellcheck="false" lang="it">' + esc(draft) + '</textarea>' + X.accentBar() +
-      '<div class="row between wrap"><span class="small muted" id="wc"></span><span class="row wrap"><button class="btn ghost" id="chk">' + icon('search') + ' Controlla</button><button class="btn primary" id="send">Invia all\'insegnante</button></span></div><div id="fbk"></div>';
+      '<div class="row between wrap"><span class="small muted" id="wc"></span><span class="row wrap"><button class="btn ghost" id="chk">' + icon('search') + ' Controlla</button><button class="btn primary" id="send">' + (window.IL2_SITE === 'studenti' ? 'Salva e manda all\'insegnante' : 'Invia all\'insegnante') + '</button></span></div><div id="fbk"></div>';
     const ta = view.querySelector('#txt'), wc = view.querySelector('#wc');
     X.bindAccents(view, ta);
     const upd = () => { const n = (ta.value.match(/[a-zà-ÿ']+/gi) || []).length; wc.textContent = n + ' parole'; wc.className = 'small ' + (n < t.min ? 'muted' : n > t.max * 1.25 ? 'warn-text' : 'ok-text'); try { localStorage.setItem(key, ta.value); } catch (e) { /* nulla */ } };
@@ -7007,7 +7054,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
         if (window.IL2_SITE === 'studenti') {
           // senza server il testo arriva all'insegnante dentro il file dei progressi
           const shown = () => {
-            view.innerHTML = '<section class="result card">' + icon('pen', 'big') + '<h2>Testo pronto</h2><p>Il testo arriva all\'insegnante insieme ai tuoi progressi. Se non hai ancora mandato il file, premi il pulsante e mandalo su WhatsApp o per email.</p>' +
+            view.innerHTML = '<section class="result card">' + icon('pen', 'big') + '<h2>Testo salvato. Ultimo passo: manda il file!</h2><p>Il testo arriva all\'insegnante <b>solo dentro il file dei tuoi progressi</b>. Mandale il file su WhatsApp o per email. Se non l\'hai ancora fatto, premi il pulsante qui sotto.</p>' +
               '<p class="small muted">Quando l\'insegnante ti rimanda il link di invito, trovi il suo commento in «I miei testi».</p>' +
               '<div class="row center wrap"><button class="btn primary" id="sendw">' + icon('upload') + ' Manda il file all\'insegnante</button>' + btn('elaborati', 'I miei testi') + btn('oggi', 'Torna a Oggi') + '</div></section>';
             view.querySelector('#sendw').addEventListener('click', e => sendProgress(e.currentTarget, () => toast('Grazie! Il file è pronto per l\'insegnante.', 'good')));
@@ -7021,7 +7068,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   R.elaborati = async function (view) {
     const subs = await IL2.api.call('mySubmissions');
-    view.innerHTML = '<a class="back" href="#/profilo">' + icon('back') + 'Io</a><h1>I miei testi</h1>' + (subs.length ? subs.map(s => '<div class="card sub"><div class="row between wrap"><b>' + esc(s.title) + '</b><span>' + levelBadge(s.level) + ' <span class="tag ' + (s.status === 'corretto' ? 'good' : '') + '">' + (s.status === 'corretto' ? 'letto dall\'insegnante' : 'inviato') + '</span></span></div><p class="small muted">Inviato il ' + fmtDate(s.at, true) + '</p>' +
+    view.innerHTML = '<a class="back" href="#/profilo">' + icon('back') + 'Io</a><h1>I miei testi</h1>' + (subs.length ? subs.map(s => '<div class="card sub"><div class="row between wrap"><b>' + esc(s.title) + '</b><span>' + levelBadge(s.level) + ' <span class="tag ' + (s.status === 'corretto' ? 'good' : subState(s) === 'da mandare' ? 'warn' : '') + '">' + (s.status === 'corretto' ? 'letto dall\'insegnante' : subState(s)) + '</span></span></div><p class="small muted">Scritto il ' + fmtDate(s.at, true) + '</p>' + (subState(s) === 'da mandare' ? '<p class="small warn-text">Non è ancora arrivato all\'insegnante: manda il file dei progressi dalla pagina <a href="#/profilo">Io</a>.</p>' : '') +
       '<details><summary>Il mio testo</summary><p class="pre">' + esc(s.text) + '</p></details>' +
       (s.status === 'corretto' ? '<div class="teacher-fb"><b>Commento dell\'insegnante</b><p class="pre">' + esc(s.teacherFeedback) + '</p>' + (s.corrected ? '<details open><summary>Il testo con le correzioni</summary><p class="pre">' + esc(s.corrected) + '</p></details>' : '') + '</div>' : '') + '</div>').join('') : '<div class="card empty-state"><p>Non hai ancora inviato testi.</p>' + btn('scrivi', 'Inizia a scrivere', 'primary') + '</div>');
     for (const s of subs) if (s.status === 'corretto' && !s.seen) IL2.api.call('markSubmissionSeen', { id: s.id }).catch(() => { });
@@ -7092,7 +7139,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const begin = async (startTheta, selfLabel) => {
       const recent = last ? last.ids || [] : [];
       const engine = new E.PlacementTest(C.placement, { startTheta, recentIds: recent, length: st.settings && st.settings.placementLength });
-      const r = await X.runSession(view, { title: 'Test di livello', engine, feedback: false, allowDontKnow: true, requeue: false });
+      const r = await X.runSession(view, { title: 'Test di livello', engine, feedback: false, allowDontKnow: true, requeue: false, leaveGuard: 'Vuoi uscire dal test? Le risposte date finora andranno perse.' });
       if (r.aborted && engine.responses.length < 8) { toast('Test interrotto: potrai riprenderlo quando vuoi.'); return IL2.go('oggi'); }
       const res = engine.result(); res.selfAssessment = selfLabel || '';
       const skills = {};
@@ -7147,7 +7194,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<label class="check"><input type="checkbox" name="dyslexia"' + (p.prefs.dyslexia ? ' checked' : '') + '> Carattere ad alta leggibilità (DSA)</label>' +
       '<label class="check"><input type="checkbox" name="contrast"' + (p.prefs.contrast ? ' checked' : '') + '> Contrasto elevato</label>' +
       '</form></div>' +
-      '<div class="card"><h3>Cambia il tuo codice segreto</h3><form id="pin" class="row wrap"><input name="oldSecret" type="password" placeholder="Codice attuale" required autocomplete="current-password"><input name="newSecret" type="password" placeholder="Nuovo codice (almeno 4 caratteri)" minlength="4" required autocomplete="new-password"><button class="btn">Cambia</button></form></div>';
+      // nella versione con i link di invito lo studente non conosce il codice: entra sempre dal link
+      (remote ? '' : '<div class="card"><h3>Cambia il tuo codice segreto</h3><form id="pin" class="row wrap"><input name="oldSecret" type="password" placeholder="Codice attuale" required autocomplete="current-password"><input name="newSecret" type="password" placeholder="Nuovo codice (almeno 4 caratteri)" minlength="4" required autocomplete="new-password"><button class="btn">Cambia</button></form></div>');
     if (remote) view.querySelector('#sendprog').addEventListener('click', e => sendProgress(e.currentTarget, () => R.profilo(view)));
     view.querySelector('#prefs').addEventListener('change', e => {
       const f = e.currentTarget;
@@ -7155,7 +7203,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       p.prefs.showL1 = f.showL1.checked; p.prefs.dyslexia = f.dyslexia.checked; p.prefs.contrast = f.contrast.checked;
       IL2.applyPrefs(); IL2.save(); toast('Impostazioni salvate', 'good');
     });
-    view.querySelector('#pin').addEventListener('submit', async e => {
+    if (!remote) view.querySelector('#pin').addEventListener('submit', async e => {
       e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
       try { await IL2.api.call('changeSecret', f); toast('Codice cambiato', 'good'); e.target.reset(); } catch (err) { toast(err.message, 'bad'); }
     });
@@ -7163,6 +7211,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   // Invio dei progressi all'insegnante (versione senza server): un file da mandare su WhatsApp o per email.
   const LAST_SENT = 'il2-ultimo-invio';
+  // Senza server un testo è "inviato" solo dopo che lo studente ha mandato il file dei progressi.
+  function subState(s) { return window.IL2_SITE === 'studenti' && s.at > lastSent() ? 'da mandare' : 'inviato'; }
   function lastSent() { try { return +localStorage.getItem(LAST_SENT) || 0; } catch (e) { return 0; } }
   function sendCard() {
     const last = lastSent();
@@ -7652,8 +7702,41 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   const DAY = 86400000;
   const R = IL2.routes.teacher = {};
 
+  // Senza server (area insegnante sul computer) le modifiche arrivano allo studente solo con un nuovo link di invito:
+  // l'app lo ricorda finché il link non viene riaperto qui.
+  const REMOTE = window.IL2_SITE === 'insegnante';
+  const LINK_DUE = 'il2-link-da-rimandare';
+  function linkDue() { try { return JSON.parse(localStorage.getItem(LINK_DUE) || '{}'); } catch (e) { return {}; } }
+  function setLinkDue(id, on) { const d = linkDue(); if (on) d[id] = Date.now(); else delete d[id]; try { localStorage.setItem(LINK_DUE, JSON.stringify(d)); } catch (e) { /* nulla */ } }
+  async function changed(id, name, what) {
+    if (!REMOTE) { toast(what, 'good'); return; }
+    setLinkDue(id, true);
+    const r = await modal('<h3>' + esc(what) + '</h3><p>' + esc(name) + ' lo vedrà solo quando riceve di nuovo il <b>link di invito</b>. I progressi restano.</p>' +
+      '<div class="row end wrap"><button class="btn ghost" data-close="null">Più tardi</button><button class="btn primary" data-close="ok">' + icon('link') + ' Manda il link ora</button></div>');
+    if (r === 'ok') await showInvite(id);
+  }
+  // Backup: senza server i dati sono solo in questo browser, quindi l'app ricorda quando è stato fatto l'ultimo.
+  const LAST_BACKUP = 'il2-ultimo-backup';
+  function lastBackup() { try { return +localStorage.getItem(LAST_BACKUP) || 0; } catch (e) { return 0; } }
+  async function downloadBackup() {
+    const d = await IL2.api.call('exportData');
+    download('italiano-l2-backup-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(d));
+    try { localStorage.setItem(LAST_BACKUP, String(Date.now())); } catch (e) { /* nulla */ }
+  }
+  function backupReminder() {
+    if (IL2.api.mode !== 'local' || window.IL2_DEMO) return '';
+    const last = lastBackup(), days = last ? Math.floor((Date.now() - last) / DAY) : null;
+    if (days !== null && days < 14) return '';
+    return '<div class="card highlight row between wrap" id="bkrem"><div><b>' + icon('alert') + ' ' + (last ? 'L\'ultimo backup è di ' + days + ' giorni fa' : 'Non hai ancora fatto un backup') + '</b>' +
+      '<p class="small">I dati degli studenti sono solo in questo browser: se cancelli i dati di navigazione o cambi computer, li perdi. Il backup è un file da tenere in una cartella sicura.</p></div>' +
+      '<button class="btn primary" id="bkgo">Scarica il backup ora</button></div>';
+  }
+  function bindBackupReminder(view) {
+    const b = view.querySelector('#bkgo');
+    if (b) b.addEventListener('click', async () => { await downloadBackup(); toast('Backup scaricato', 'good'); view.querySelector('#bkrem').remove(); });
+  }
   function genPin() { const a = new Uint32Array(1); crypto.getRandomValues(a); return String(1000 + (a[0] % 9000)); }
-  function l1Options(sel) { return IL2.l1.list().map(o => '<option value="' + o.code + '"' + (o.code === sel ? ' selected' : '') + '>' + esc(o.name) + (o.native !== '—' ? ' · ' + esc(o.native) : '') + '</option>').join(''); }
+  function l1Options(sel) { return (sel ? '' : '<option value="" selected disabled>Scegli la lingua…</option>') + IL2.l1.list().map(o => '<option value="' + o.code + '"' + (o.code === sel ? ' selected' : '') + '>' + esc(o.name) + (o.native !== '—' ? ' · ' + esc(o.native) : '') + '</option>').join(''); }
   function testState(s) {
     if (!s.lastTest) return '<span class="tag warn">da fare</span>';
     if (s.testRequested) return '<span class="tag warn">richiesto</span>';
@@ -7717,6 +7800,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const fbNew = data.feedback.filter(f => f.status === 'nuovo').length;
 
     view.innerHTML = head('Panoramica', 'L\'andamento di tutti gli studenti, aggiornato a ogni apertura della pagina.', '<button class="btn ghost" id="csv">' + icon('chart') + ' Esporta CSV</button>') +
+      backupReminder() +
       '<div id="kpi"></div>' +
       '<div class="filters row wrap"><label class="search">' + icon('search') + '<input id="q" type="search" placeholder="Cerca uno studente" aria-label="Cerca uno studente"></label>' +
       (groups.length ? '<select id="grp" aria-label="Gruppo"><option value="">Tutti i gruppi</option>' + groups.map(x => '<option' + (x === g ? ' selected' : '') + '>' + esc(x) + '</option>').join('') + '</select>' : '') +
@@ -7768,6 +7852,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const gs = view.querySelector('#grp'); if (gs) gs.addEventListener('change', () => { g = gs.value; draw(); });
     view.querySelector('#lvf').addEventListener('change', e => { lvF = e.target.value; draw(); });
     draw();
+    bindBackupReminder(view);
     view.querySelector('#csv').addEventListener('click', () => {
       const out = [['Studente', 'Utente', 'Gruppo', 'Lingua d\'origine', 'Livello', 'Livello del test', 'Lezioni del livello', 'Ultimo test', 'Prossimo test', 'Minuti 7gg', 'Precisione 7gg', 'Precisione 7gg precedenti', 'Errori aperti', 'Da consolidare', 'Parole memorizzate', 'Ultima attività']];
       filtered().forEach(({ s, m }) => out.push([s.displayName, s.username, s.group, IL2.l1.name(s.l1), s.level || '', s.levelFromTest || '', m.lp.done + '/' + m.lp.total, s.lastTest ? fmtDate(s.lastTest.at) : '', fmtDate(s.nextTestDue), s.week.minutes, accTxt(m.acc7), accTxt(m.accPrev), s.openErrors, m.weakest ? topicName(m.weakest.t) : '', s.wordsLearned, s.lastActivity ? fmtDate(s.lastActivity, true) : '']));
@@ -7789,7 +7874,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<section class="st-head card"><div class="who big"><span class="avatar">' + esc(s.displayName.slice(0, 1).toUpperCase()) + '</span><div><h1>' + esc(s.displayName) + ' ' + levelBadge(s.level) + '</h1>' +
       '<p class="muted small">Utente <code>' + esc(s.username) + '</code> · ' + esc(IL2.l1.name(s.l1)) + (s.group ? ' · gruppo ' + esc(s.group) : '') + (s.birthYear ? ' · nato/a nel ' + s.birthYear : '') + ' · iscritto il ' + fmtDate(s.createdAt) + ' · ultimo accesso ' + ago(s.lastLogin) + '</p></div></div>' +
       '<div class="row wrap actions"><button class="btn ghost small" id="edit">' + icon('pen') + ' Modifica</button><button class="btn ghost small" id="pin">' + icon('lock') + ' Nuovo codice</button><button class="btn ghost small" id="lvl">' + icon('star') + ' Livello</button>' +
-      '<button class="btn small ' + (s.testRequested ? 'warn' : 'ghost') + '" id="req">' + icon('compass') + ' ' + (s.testRequested ? 'Annulla richiesta test' : 'Richiedi test ora') + '</button><a class="btn ghost small" href="#/studente/' + s.id + '?print=1">' + icon('read') + ' Scheda stampabile</a></div>' +
+      '<button class="btn small ' + (s.testRequested ? 'warn' : 'ghost') + '" id="req">' + icon('compass') + ' ' + (s.testRequested ? 'Annulla richiesta test' : 'Richiedi test ora') + '</button><a class="btn ghost small" href="#/studente/' + s.id + '?print=1">' + icon('read') + ' Scheda stampabile</a>' + (REMOTE ? '<button class="btn small ' + (linkDue()[s.id] ? 'warn' : 'ghost') + '" id="inv">' + icon('link') + (linkDue()[s.id] ? ' Link da rimandare' : ' Link di invito') + '</button>' : '') + '</div>' +
       '<div class="kpis compact">' +
       '<div class="kpi">' + ring(m.lp.pct, m.lp.done + '/' + m.lp.total, 'lezioni ' + (s.level || ''), 'sm') + '</div>' +
       '<div class="kpi">' + icon('clock') + '<div><b>' + s.week.minutes + '<small> min</small></b><span>ultimi 7 giorni · ' + totalMin + ' in tutto</span></div></div>' +
@@ -7804,24 +7889,26 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (sez === 'scritti') { box.innerHTML = secWritings(s, d); bindNotes(view, s, d); }
 
     const refresh = () => R.studente(view, parts, q);
-    view.querySelector('#req').addEventListener('click', async () => { await IL2.api.call('updateStudent', { id: s.id, testRequested: !s.testRequested }); toast(s.testRequested ? 'Richiesta annullata' : 'Lo studente vedrà la richiesta di test al prossimo accesso', 'good'); refresh(); });
+    const inv = view.querySelector('#inv'); if (inv) inv.addEventListener('click', async () => { await showInvite(s.id); refresh(); });
+    view.querySelector('#req').addEventListener('click', async () => { await IL2.api.call('updateStudent', { id: s.id, testRequested: !s.testRequested }); await changed(s.id, s.displayName, s.testRequested ? 'Richiesta di test annullata' : (REMOTE ? 'Richiesta di test salvata' : 'Lo studente vedrà la richiesta di test al prossimo accesso')); refresh(); });
     view.querySelector('#edit').addEventListener('click', async () => {
       let form;
       const r = await modal('<h3>Modifica studente</h3><form class="stack" id="ef"><label>Nome<input name="displayName" value="' + esc(s.displayName) + '" required></label><label>Lingua d\'origine <small class="muted">(usata solo per le traduzioni nel dizionario)</small><select name="l1">' + l1Options(s.l1) + '</select></label><label>Gruppo<input name="group" value="' + esc(s.group) + '"></label><label>Anno di nascita<input name="birthYear" type="number" min="1990" max="2025" value="' + (s.birthYear || '') + '"></label></form><div class="row end"><button class="btn ghost" data-close="null">Annulla</button><button class="btn primary" data-close="ok">Salva</button></div>', { onOpen: mm => { form = mm.querySelector('#ef'); } });
       if (r !== 'ok') return;
-      try { await IL2.api.call('updateStudent', Object.assign({ id: s.id }, Object.fromEntries(new FormData(form)))); toast('Salvato', 'good'); refresh(); } catch (e) { toast(e.message, 'bad'); }
+      try { await IL2.api.call('updateStudent', Object.assign({ id: s.id }, Object.fromEntries(new FormData(form)))); await changed(s.id, s.displayName, 'Modifiche salvate'); refresh(); } catch (e) { toast(e.message, 'bad'); }
     });
     view.querySelector('#pin').addEventListener('click', async () => {
       const pin = genPin();
       if (!await confirm('Il nuovo codice di ' + s.displayName + ' sarà ' + pin + '. Il vecchio codice non funzionerà più. Procedere?', 'Imposta ' + pin)) return;
       await IL2.api.call('updateStudent', { id: s.id, secret: pin });
       await modal('<h3>Nuovo codice</h3><div class="cred"><div>Utente: <b>' + esc(s.username) + '</b></div><div>Codice: <b class="pinbig">' + pin + '</b></div></div><p class="small muted">Annotalo ora: per sicurezza non viene salvato in chiaro.</p><div class="row end"><button class="btn primary" data-close="ok">Fatto</button></div>');
+      if (REMOTE) { await changed(s.id, s.displayName, 'Nuovo codice salvato'); refresh(); }
     });
     view.querySelector('#lvl').addEventListener('click', async () => {
       let sel;
       const r = await modal('<h3>Livello di lavoro</h3><p class="small">Di norma il livello viene dal test e decide quali lezioni sono sbloccate. Puoi impostarlo a mano (per esempio dopo una prova orale o in base a una certificazione). Verrà sostituito dal prossimo test.</p><select id="lv"><option value="">Automatico (dal test: ' + esc(s.levelFromTest || '—') + ')</option>' + E.LEVELS.map(l => '<option' + (l === s.levelOverride ? ' selected' : '') + '>' + l + '</option>').join('') + '</select><div class="row end"><button class="btn ghost" data-close="null">Annulla</button><button class="btn primary" data-close="ok">Salva</button></div>', { onOpen: mm => { sel = mm.querySelector('#lv'); } });
       if (r !== 'ok') return;
-      await IL2.api.call('updateStudent', { id: s.id, levelOverride: sel.value || null }); toast('Livello aggiornato', 'good'); refresh();
+      await IL2.api.call('updateStudent', { id: s.id, levelOverride: sel.value || null }); await changed(s.id, s.displayName, 'Livello aggiornato'); refresh();
     });
   };
 
@@ -7908,13 +7995,14 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const list = await IL2.api.call('listStudents');
     const groups = Array.from(new Set(list.map(s => s.group).filter(Boolean))).sort();
     const remote = window.IL2_SITE === 'insegnante';
+    const due = remote ? linkDue() : {};
     view.innerHTML = head('Studenti', remote ? 'Crea gli studenti e manda a ognuno il suo link di invito. Loro ti mandano i progressi, tu li importi qui.' : 'Crea gli account e consegna a ogni studente il suo codice di accesso.') +
       (remote ? '<div class="card highlight"><h3>' + icon('upload') + ' Importa i progressi</h3><p class="small">Scegli i file che ti hanno mandato gli studenti (anche più di uno insieme). Puoi importare lo stesso file due volte: i dati non si duplicano.</p>' +
         '<label class="btn primary">Scegli i file<input type="file" id="impprog" accept=".txt,.json,text/plain,application/json" multiple hidden></label><div id="impres"></div></div>' : '') +
       '<div class="card"><h3>Aggiungi uno studente</h3><form id="add" class="grid-form">' +
       '<label>Nome e cognome<input name="displayName" required maxlength="60" placeholder="Es. Amina B."></label>' +
       '<label>Nome utente <small class="muted">(per l\'accesso)</small><input name="username" maxlength="30" placeholder="automatico" autocapitalize="off"></label>' +
-      '<label>Lingua d\'origine <small class="muted">(per il dizionario)</small><select name="l1">' + l1Options('ar') + '</select></label>' +
+      '<label>Lingua d\'origine <small class="muted">(per il dizionario)</small><select name="l1" required>' + l1Options('') + '</select></label>' +
       '<label>Gruppo <small class="muted">(facoltativo)</small><input name="group" list="groups" maxlength="40" placeholder="Es. 2B"><datalist id="groups">' + groups.map(g => '<option>' + esc(g) + '</option>').join('') + '</datalist></label>' +
       '<label>Anno di nascita<input name="birthYear" type="number" min="1990" max="2025"></label>' +
       '<label>Codice segreto<input name="secret" value="' + genPin() + '" required minlength="4" maxlength="32"></label>' +
@@ -7922,7 +8010,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<details><summary>Aggiungi più studenti insieme</summary><p class="small">Una riga per studente: <code>Nome; lingua; gruppo</code>. Lingue: ' + IL2.l1.ORDER.join(', ') + ', other. Esempio: <code>Yasmine El Idrissi; ar; 2B</code></p><textarea id="bulk" rows="5"></textarea><button class="btn" id="bulkgo">Crea tutti</button></details></div>' +
       '<div id="creds"></div>' +
       '<div class="card table-wrap"><table class="tbl"><thead><tr><th>Studente</th><th>Utente</th><th>Lingua d\'origine</th><th>Gruppo</th><th>Livello</th><th>Iscritto</th>' + (remote ? '<th>Ultimi progressi</th><th>Invito</th>' : '') + '</tr></thead><tbody>' +
-      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td>' + (remote ? '<td>' + (s.lastActivity ? ago(s.lastActivity) : '—') + '</td><td><button class="btn small" data-invite="' + s.id + '">' + icon('link') + ' Link</button></td>' : '') + '</tr>').join('') +
+      list.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(s => '<tr><td><a href="#/studente/' + s.id + '">' + esc(s.displayName) + '</a></td><td><code>' + esc(s.username) + '</code></td><td>' + esc(IL2.l1.name(s.l1)) + '</td><td>' + esc(s.group) + '</td><td>' + levelBadge(s.level) + '</td><td>' + fmtDate(s.createdAt) + '</td>' + (remote ? '<td>' + (s.lastActivity ? ago(s.lastActivity) : '—') + '</td><td><button class="btn small' + (due[s.id] ? ' warn' : '') + '" data-invite="' + s.id + '">' + icon('link') + ' Link</button>' + (due[s.id] ? '<br><small class="warn-text">da rimandare</small>' : '') + '</td>' : '') + '</tr>').join('') +
       '</tbody></table>' + (list.length ? '' : '<p class="muted">Nessuno studente.</p>') + '</div>';
     const created = [];
     function showCreds() {
@@ -7980,6 +8068,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   async function showInvite(id) {
     const d = await IL2.api.call('inviteData', { id });
     const url = IL2.invite.link(d);
+    setLinkDue(id, false);
     const name = d.user.displayName;
     const msg = 'Ciao ' + name + '! Questo è il tuo link per Italiano L2: aprilo sul tuo telefono o computer. Nome utente: ' + d.user.username + '. ' + url;
     await modal('<h2>Link di invito per ' + esc(name) + '</h2>' +
@@ -8024,13 +8113,13 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<label>Commento per lo studente<textarea name="feedback" rows="6" required placeholder="Cosa va bene, cosa migliorare, un consiglio concreto…">' + esc(s.teacherFeedback || '') + '</textarea></label>' +
       '<div class="row wrap small">Frasi rapide: ' + ['Bel lavoro! ', 'Attenzione agli accenti. ', 'Rivedi l\'accordo tra nome e aggettivo. ', 'Usa più connettivi per collegare le frasi. ', 'Il testo è chiaro e ben organizzato. ', 'Ripassa l\'uso di passato prossimo e imperfetto. '].map(t => '<button type="button" class="chip" data-add="' + esc(t) + '">' + esc(t.trim()) + '</button>').join('') + '</div>' +
       '<details' + (s.corrected && s.corrected !== s.text ? ' open' : '') + '><summary>Mostra allo studente il testo corretto (facoltativo)</summary><textarea name="corrected" rows="8">' + esc(s.corrected || s.text) + '</textarea></details>' +
-      '<button class="btn primary">Invia il commento</button></form></div></div>';
+      '<button class="btn primary">' + (REMOTE ? 'Salva il commento' : 'Invia il commento') + '</button></form></div></div>';
     const f = view.querySelector('#rv');
     view.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => { f.feedback.value += b.dataset.add; }));
     f.addEventListener('submit', async e => {
       e.preventDefault();
       const corrected = f.corrected.value.trim() === s.text.trim() ? '' : f.corrected.value;
-      try { await IL2.api.call('reviewSubmission', { id: s.id, feedback: f.feedback.value, grade: null, corrected, rubric: null }); toast('Commento inviato', 'good'); IL2.go('scritti'); }
+      try { await IL2.api.call('reviewSubmission', { id: s.id, feedback: f.feedback.value, grade: null, corrected, rubric: null }); await changed(s.userId, s.studentName, REMOTE ? 'Commento salvato' : 'Commento inviato'); IL2.go('scritti'); }
       catch (err) { toast(err.message, 'bad'); }
     });
   };
@@ -8166,7 +8255,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<label>Obiettivo giornaliero<select name="dailyGoalMinutes">' + [10, 15, 20, 30, 45].map(m => '<option value="' + m + '"' + (m === s.dailyGoalMinutes ? ' selected' : '') + '>' + m + ' minuti</option>').join('') + '</select></label></div>' +
       '<label class="check"><input type="checkbox" name="allowSelfRetest"' + (s.allowSelfRetest ? ' checked' : '') + '> Gli studenti possono rifare il test di livello quando vogliono <small class="muted">(altrimenti solo alla scadenza, su tua richiesta o dopo aver completato l\'80% delle lezioni del livello)</small></label>' +
       '<button class="btn primary">Salva</button></form></div>' +
-      '<div class="card"><h3>Backup dei dati</h3><p class="small">Scarica regolarmente una copia completa (studenti, progressi, scritti). ' + (IL2.api.mode === 'server' ? 'Il server salva anche una copia automatica ogni giorno nella cartella <code>data/backup</code>.' : 'In modalità locale i dati sono solo in questo browser: il backup è importante.') + '</p>' +
+      '<div class="card"><h3>Backup dei dati</h3><p class="small">Scarica regolarmente una copia completa (studenti, progressi, scritti). ' + (IL2.api.mode === 'server' ? 'Il server salva anche una copia automatica ogni giorno nella cartella <code>data/backup</code>.' : 'In modalità locale i dati sono solo in questo browser: il backup è importante. Fallo almeno ogni due settimane.') + '</p>' +
+      '<p class="small"><b>Ultimo backup:</b> ' + (lastBackup() ? fmtDate(lastBackup(), true) : 'mai') + '</p>' +
       '<div class="row wrap"><button class="btn" id="exp">Scarica backup</button><label class="btn ghost">Ripristina da backup<input type="file" id="imp" accept="application/json" hidden></label></div></div>' +
       '<div class="card"><h3>Cambia la tua password</h3><form id="pw" class="row wrap"><input name="oldSecret" type="password" placeholder="Password attuale" required autocomplete="current-password"><input name="newSecret" type="password" placeholder="Nuova password (min. 8)" minlength="8" required autocomplete="new-password"><button class="btn">Cambia</button></form></div>' +
       '<div class="card"><h3>Privacy e protezione dei dati</h3><ul class="small"><li>L\'app raccoglie solo i dati necessari alla didattica: nome, lingua d\'origine, gruppo, anno di nascita facoltativo e attività svolte. Non servono email né numeri di telefono.</li><li>I codici di accesso sono salvati solo in forma cifrata (hash).</li><li>Con il server, i dati restano sul computer o server della scuola; nessun dato viene inviato a terzi. La sintesi e il riconoscimento vocale usano le funzioni del browser: in alcuni browser (es. Chrome) il riconoscimento vocale passa dai server del produttore del browser.</li><li>Puoi eliminare in ogni momento uno studente e tutti i suoi dati dalla sua scheda.</li><li>Per l\'uso con minori, la scuola deve inserire l\'app nel proprio registro dei trattamenti e informare le famiglie (vedi guida, sezione Privacy).</li></ul></div>' +
@@ -8176,7 +8266,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       try { IL2.state.settings = await IL2.api.call('updateSettings', { settings: { schoolName: f.schoolName.value, retestWeeks: f.retestWeeks.value, placementLength: f.placementLength.value, dailyGoalMinutes: f.dailyGoalMinutes.value, allowSelfRetest: f.allowSelfRetest.checked } }); toast('Impostazioni salvate', 'good'); }
       catch (err) { toast(err.message, 'bad'); }
     });
-    view.querySelector('#exp').addEventListener('click', async () => { const d = await IL2.api.call('exportData'); download('italiano-l2-backup-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(d)); });
+    view.querySelector('#exp').addEventListener('click', async () => { await downloadBackup(); R.impostazioni(view); });
     view.querySelector('#imp').addEventListener('change', async e => {
       const file = e.target.files[0]; if (!file) return;
       if (!await confirm('Il ripristino sostituisce TUTTI i dati attuali con quelli del backup. Dovrai accedere di nuovo. Procedere?', 'Ripristina', true)) return;
