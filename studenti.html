@@ -371,6 +371,16 @@ a.row-item:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--li
 .result .skillbars { max-width: 380px; margin: 14px auto; text-align: left; }
 .test-result .lv-giant { font-size: 5rem; font-weight: 800; line-height: 1; color: var(--lv, var(--primary)); margin: 6px 0; letter-spacing: -.02em; }
 .skillbars .sb { display: grid; grid-template-columns: 90px 1fr 32px; align-items: center; gap: 8px; font-size: .88rem; }
+.pr-rows { margin: 8px 0 4px; }
+.pr-row { display: grid; grid-template-columns: 90px 1fr 64px 22px; align-items: center; gap: 8px; font-size: .88rem; min-height: 30px; }
+.pr-row b { text-align: right; white-space: nowrap; } .pr-row b small { font-weight: 500; }
+.pr-arrow { text-align: center; font-weight: 700; font-size: 1.05rem; }
+.pr-up { color: var(--good); } .pr-eq { color: var(--muted); } .pr-down { color: var(--bad); }
+.tag-soft { display: inline-block; font-size: .72rem; padding: 2px 9px; border-radius: 99px; background: var(--surface-2); color: var(--muted); margin-left: 6px; vertical-align: middle; font-weight: 600; }
+.lv-test { display: flex; align-items: center; gap: 14px; margin: 6px 0 12px; }
+.lv-test .lv-big { font-size: 2.1rem; font-weight: 800; color: #fff; background: var(--lv, var(--primary)); border-radius: 14px; padding: 4px 16px; line-height: 1.2; }
+.pr-ready { display: flex; gap: 12px; align-items: center; margin-top: 12px; font-size: .88rem; }
+.pr-ready .ring { flex: none; width: 76px; height: 76px; }
 .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
 .bg-h { margin: 16px 0 8px; font-size: .9rem; } .bg-h small { color: var(--muted); font-weight: 500; margin-left: 4px; }
 .badge { position: relative; text-align: center; padding: 10px 4px 8px; border-radius: 12px; background: var(--surface-2); border: 1px solid transparent; color: var(--text); font: inherit; cursor: pointer; transition: transform .12s, box-shadow .12s; }
@@ -711,7 +721,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
       skills: { grammatica: 0, lessico: 0, lettura: 0, ascolto: 0, scrittura: 0, parlato: 0 },
       topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {},
       speakingDone: {}, xp: 0, streak: { count: 0, best: 0, last: null }, badges: [], badgeLog: {}, stats: { writings: 0 },
-      placement: [], nextTestDue: null, testRequested: false, timeLog: {},
+      placement: [], nextTestDue: null, testRequested: false, timeLog: {}, practice: {},
       prefs: { fontScale: 1, dyslexia: false, ttsRate: 0.9, showL1: true, contrast: false },
       updatedAt: Date.now()
     };
@@ -719,7 +729,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 
   // Campi del profilo che lo studente può aggiornare (gli altri sono gestiti dal server o dall'insegnante).
   const STUDENT_FIELDS = ['skills', 'topics', 'srs', 'errors', 'unitsDone', 'readingsDone', 'listeningsDone',
-    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone'];
+    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice'];
 
   function publicUser(u) {
     return {
@@ -1444,6 +1454,24 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
     return '<svg viewBox="0 0 220 205" class="chart radar" role="img" aria-label="Profilo delle abilità">' + g + '</svg>';
   }
 
+  // Righe dell'andamento della pratica. sum = IL2.engine.practiceSummary(profile).
+  // Scrittura e parlato mostrano quante prove sono state fatte; le altre abilità la percentuale di risposte giuste.
+  function practiceRows(sum, opts) {
+    const E = IL2.engine; const teacher = opts && opts.teacher;
+    const ARROW = { up: ['↑', 'meglio di prima'], eq: ['=', 'come prima'], down: ['↓', 'peggio di prima'] };
+    const COUNT = { scrittura: ['testo', 'testi'], parlato: ['frase', 'frasi'] };
+    const rows = E.SKILLS.map(s => {
+      const x = sum[s]; const a = x.trend ? ARROW[x.trend] : null;
+      const arrow = '<span class="pr-arrow pr-' + (x.trend || 'none') + '"' + (a ? ' title="' + a[1] + '" aria-label="' + a[1] + '"' : '') + '>' + (a ? a[0] : '') + '</span>';
+      let mid;
+      if (COUNT[s]) mid = '<span class="small' + (x.n ? '' : ' muted') + '">' + (x.n ? x.n + ' ' + COUNT[s][x.n === 1 ? 0 : 1] : 'nessuna prova') + '</span><b></b>';
+      else if (x.n) mid = meter(x.pct, 100) + '<b>' + x.pct + '%' + (teacher ? ' <small class="muted">(' + x.n + ')</small>' : '') + '</b>';
+      else mid = '<span class="small muted">nessun esercizio</span><b></b>';
+      return '<div class="pr-row"><span>' + esc(E.SKILL_LABEL[s]) + '</span>' + mid + arrow + '</div>';
+    }).join('');
+    return '<div class="pr-rows">' + rows + '</div><p class="small muted">↑ meglio di prima · = come prima · ↓ peggio di prima' + (teacher ? ' · tra parentesi le risposte date' : '') + '</p>';
+  }
+
   // Linea del livello nel tempo. points: [{at, theta, level}]
   function levelLine(points) {
     if (!points.length) return '<p class="muted">Nessun test ancora.</p>';
@@ -1558,7 +1586,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
     return '<div class="ring ' + (cls || '') + '"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="' + r + '"/><circle class="ring-fg" cx="50" cy="50" r="' + r + '" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + (c * (1 - v / 100)).toFixed(1) + '"/></svg><div class="ring-txt"><b>' + label + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</div></div>';
   }
 
-  IL2.ui = { icon, ring, print, esc, $, $$, toast, modal, confirm, shuffle, fmtDate, ago, pct, radar, levelLine, minutesBars, meter, download, csv, levelBadge };
+  IL2.ui = { icon, ring, print, esc, $, $$, toast, modal, confirm, shuffle, fmtDate, ago, pct, radar, levelLine, practiceRows, minutesBars, meter, download, csv, levelBadge };
 })();
 
 ;
@@ -5094,10 +5122,55 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   function recordAnswer(profile, item, correct, ctx) {
     const b = itemB(item, ctx && ctx.level);
-    updateSkill(profile, item.skill || (ctx && ctx.skill) || 'grammatica', b, correct);
+    const skill = item.skill || (ctx && ctx.skill) || 'grammatica';
+    updateSkill(profile, skill, b, correct);
+    logPractice(profile, skill, correct);
     if (item.topic) updateTopic(profile, item.topic, b, correct);
     if (!correct && ctx && ctx.logError !== false) addError(profile, item, ctx);
     if (correct && item.uid) resolveError(profile, item.uid);
+  }
+
+  // ---------------- Andamento della pratica ----------------
+  // Registro giornaliero delle risposte date negli esercizi (non nel test): {AAAA-MM-GG: {abilità: [giuste, totali]}}.
+  // Serve solo a mostrare come va la pratica: il livello lo danno il test e l'insegnante.
+  const PRACTICE_DAYS = 60;
+  function dayKey(ms) { const d = new Date(ms); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function logPractice(profile, skill, correct) {
+    if (!SKILLS.includes(skill)) return;
+    const log = profile.practice || (profile.practice = {});
+    const d = log[today()] || (log[today()] = {});
+    const c = d[skill] || (d[skill] = [0, 0]);
+    if (correct) c[0]++; c[1]++;
+    const keys = Object.keys(log).sort();
+    if (keys.length > PRACTICE_DAYS) for (const k of keys.slice(0, keys.length - PRACTICE_DAYS)) delete log[k];
+  }
+  // Riassunto delle ultime `days` giornate confrontate con le `days` precedenti.
+  // trend: 'up' | 'eq' | 'down', oppure null se le risposte sono troppo poche per confrontare.
+  function practiceSummary(profile, days) {
+    days = days || 14;
+    const log = profile.practice || {}; const now = Date.now();
+    const cur = new Set(), prev = new Set();
+    for (let i = 0; i < days; i++) { cur.add(dayKey(now - i * DAY)); prev.add(dayKey(now - (i + days) * DAY)); }
+    const out = {};
+    for (const s of SKILLS) {
+      const a = [0, 0], b = [0, 0];
+      for (const [k, d] of Object.entries(log)) {
+        const v = d && d[s]; if (!v) continue;
+        const t = cur.has(k) ? a : prev.has(k) ? b : null; if (!t) continue;
+        t[0] += v[0]; t[1] += v[1];
+      }
+      const pct = a[1] ? Math.round(100 * a[0] / a[1]) : null, pctPrev = b[1] ? Math.round(100 * b[0] / b[1]) : null;
+      let trend = null;
+      if (a[1] >= 5 && b[1] >= 5) trend = pct - pctPrev >= 5 ? 'up' : pctPrev - pct >= 5 ? 'down' : 'eq';
+      out[s] = { ok: a[0], n: a[1], pct, prevN: b[1], pctPrev, trend };
+    }
+    return out;
+  }
+  // Livello stabilito dal test (o dall'insegnante) con la data e il sottolivello dell'ultimo test.
+  function testLevel(profile) {
+    const last = profile.placement && profile.placement.length ? profile.placement[profile.placement.length - 1] : null;
+    const level = currentLevel(profile);
+    return { level, override: !!profile.levelOverride, at: last ? last.at : null, sublevel: last && last.level === level ? last.sublevel : null };
   }
 
   // ---------------- Quaderno degli errori ----------------
@@ -5416,7 +5489,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     LEVELS, LEVEL_B, SKILLS, SKILL_LABEL, LEVEL_NAME, LEVEL_DESC, levelFromTheta, sublevel, itemB,
     PlacementTest, recordAnswer, topicMastery, addError, resolveError, srsReview, dueWords, INTERVALS,
     touchStreak, addTime, minutesToday, today, BADGES, BADGE_GROUPS, checkBadges, badgeProgress, badgeDone, currentLevel, nextUnit, weakTopics,
-    weakestSkill, dailyPlan, nextVocabTheme, testDue, logistic, eap, unlocked, levelProgress, levelUpReady, unitsFor
+    weakestSkill, dailyPlan, nextVocabTheme, testDue, logistic, eap, unlocked, levelProgress, levelUpReady, unitsFor,
+    logPractice, practiceSummary, testLevel
   };
 })();
 
@@ -6260,6 +6334,19 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       for (const it of errItems) {
         const solved = Math.random() < 0.3, at = now - rnd(1, 15) * DAY;
         p.errors.push({ key: it.uid, src: it.uid.split('#')[0], topic: it.topic, at, count: Math.ceil(rnd(0, 3)), streak: solved ? 2 : Math.random() < 0.3 ? 1 : 0, given: wrongOf(it), resolved: solved, resolvedAt: solved ? at + rnd(1, 3) * DAY : undefined });
+      }
+      // andamento della pratica (ultime 4 settimane)
+      p.practice = {};
+      if (s.active) for (let d = 27; d >= 0; d--) {
+        if (Math.random() < 0.35) continue;
+        const day = {}, base = E.logistic(s.theta + 1.4) * (d < 14 ? 1.05 : 0.95);
+        for (const k of E.SKILLS) {
+          const n = k === 'scrittura' ? (Math.random() < 0.15 ? 1 : 0) : k === 'parlato' ? (Math.random() < 0.3 ? Math.round(rnd(2, 6)) : 0) : Math.round(rnd(k === 'grammatica' || k === 'lessico' ? 4 : 0, k === 'grammatica' || k === 'lessico' ? 14 : 4));
+          if (!n) continue;
+          let ok = 0; for (let i = 0; i < n; i++) if (Math.random() < Math.min(0.97, base + rnd(-0.1, 0.1))) ok++;
+          day[k] = [ok, n];
+        }
+        if (Object.keys(day).length) { const t = new Date(now - d * DAY); p.practice[t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0')] = day; }
       }
       // tempo e attività
       for (let d = 20; d >= 0; d--) {
@@ -7369,6 +7456,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   R.profilo = async function (view, parts, q) {
     const p = P(), st = S();
     const lv = E.currentLevel(p);
+    const dl = l => (/^A/.test(l) ? 'dell\'' : 'del ') + l, al = l => (/^A/.test(l) ? 'all\'' : 'al ') + l;
+    const tl = E.testLevel(p), lp = E.levelProgress(p, lv), nextLv = E.LEVELS[E.LEVELS.indexOf(lv) + 1], need = Math.ceil(lp.total * 0.8);
     const goal = (st.settings && st.settings.dailyGoalMinutes) || 15;
     const blog = p.badgeLog || {};
     const gotN = E.BADGES.filter(b => p.badges.includes(b.id)).length;
@@ -7384,11 +7473,16 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const remote = window.IL2_SITE === 'studenti';
     view.innerHTML = '<div class="page-head"><h1>' + esc(st.user.displayName) + '</h1></div>' +
       (remote ? sendCard() : '') +
-      '<div class="grid2"><div class="card"><h3>Livello attuale ' + levelBadge(lv) + '</h3><p class="small">' + esc(E.LEVEL_DESC[lv]) + '</p>' + (p.levelOverride ? '<p class="small muted">Livello impostato dall\'insegnante.</p>' : '') +
+      '<div class="grid2"><div class="card"><h3>Il tuo livello</h3>' +
+      '<div class="lv-test lvl-' + lv + '"><span class="lv-big">' + lv + '</span><div><b>' + lv + (tl.sublevel ? ' ' + esc(tl.sublevel) : '') + '</b><br><span class="small muted">' + (tl.override ? 'impostato dalla tua insegnante' : tl.at ? 'dal test di livello del ' + fmtDate(tl.at) : 'fai il test di livello') + '</span></div></div>' +
+      '<p class="small">' + esc(E.LEVEL_DESC[lv]) + '</p>' +
       '<h4>Andamento nei test</h4>' + IL2.ui.levelLine(p.placement.map(x => ({ at: x.at, theta: x.theta, level: x.level }))) +
       '<p class="small muted">Prossimo test: ' + (p.nextTestDue ? fmtDate(p.nextTestDue) : '—') + '</p></div>' +
-      '<div class="card"><h3>Le tue abilità</h3>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(s => '<div class="sb"><span>' + E.SKILL_LABEL[s] + '</span>' + meter(((p.skills[s] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[s]) + '</b></div>').join('') + '</div></div></div>' +
-      '<div class="card"><h3>Minuti di studio (ultime 2 settimane)</h3>' + IL2.ui.minutesBars(p.timeLog, 14, goal) + '<p class="small muted">Lezioni completate: ' + Object.keys(p.unitsDone).length + ' · parole memorizzate: ' + Object.values(p.srs).filter(c => c.box >= 3).length + '</p></div>' +
+      '<div class="card"><h3>Le tue abilità <span class="tag-soft">dalla pratica</span></h3><p class="small muted">Questo grafico si muove con gli esercizi che fai. È una stima: il tuo livello lo conferma il prossimo test, e potrebbe cambiare.</p>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(s => '<div class="sb"><span>' + E.SKILL_LABEL[s] + '</span>' + meter(((p.skills[s] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[s]) + '</b></div>').join('') + '</div></div></div>' +
+      '<div class="grid2"><div class="card"><h3>Come va la pratica <span class="tag-soft">ultime 2 settimane</span></h3><p class="small muted">Le risposte giuste negli esercizi, nelle letture e negli ascolti.</p>' + IL2.ui.practiceRows(E.practiceSummary(p)) +
+      (lv !== 'C1' && p.placement.length ? '<div class="pr-ready">' + IL2.ui.ring(lp.pct, lp.done + '/' + lp.total) + '<div><b>Lezioni ' + dl(lv) + ' completate: ' + lp.done + ' su ' + lp.total + '</b><br><span class="small muted">' + (E.levelUpReady(p) ? 'Puoi già rifare il test per passare ' + al(nextLv) + '.' : 'Quando arrivi a ' + need + ' puoi rifare il test per passare ' + al(nextLv) + '.') + '</span></div></div>' : '') +
+      '</div>' +
+      '<div class="card"><h3>Minuti di studio (ultime 2 settimane)</h3>' + IL2.ui.minutesBars(p.timeLog, 14, goal) + '<p class="small muted">Lezioni completate: ' + Object.keys(p.unitsDone).length + ' · parole memorizzate: ' + Object.values(p.srs).filter(c => c.box >= 3).length + '</p></div></div>' +
       '<div class="card" id="traguardi"><h3>Traguardi <small class="muted">' + gotN + ' su ' + E.BADGES.length + '</small></h3><p class="small muted">Tocca un traguardo per sapere perché l\'hai raggiunto o come si ottiene.</p>' + badges + '</div>' +
       '<div class="row wrap"><a class="btn ghost" href="#/elaborati">' + icon('pen') + ' I miei testi</a><a class="btn ghost" href="#/audio">' + icon('speaker') + ' Prova l\'audio</a></div>' +
       '<div class="card"><h3>Impostazioni</h3><form id="prefs" class="stack">' +
@@ -8135,12 +8229,16 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       const lp = E.levelProgress(p, lv), locked = cur < 0 || i > cur;
       return '<div class="lv-prog' + (locked ? ' locked' : '') + '">' + levelBadge(lv) + '<div>' + meter(lp.done, lp.total, lp.pct >= 80 ? 'ok' : '') + '<small>' + (locked ? icon('lock') + ' bloccato · ' : '') + lp.done + ' lezioni su ' + lp.total + '</small></div></div>';
     }).join('');
-    return '<div class="grid2"><div class="card"><h3>Livello nei test</h3>' + IL2.ui.levelLine(p.placement.map(x => ({ at: x.at, theta: x.theta, level: x.level }))) +
+    const tl = E.testLevel(p);
+    return '<div class="grid2"><div class="card"><h3>Livello</h3>' +
+      (s.level ? '<div class="lv-test lvl-' + esc(s.level) + '"><span class="lv-big">' + esc(s.level) + '</span><div><b>' + esc(s.level) + (tl.sublevel && !tl.override ? ' ' + esc(tl.sublevel) : '') + '</b><br><span class="small muted">' + (s.levelOverride ? 'impostato da te a mano' : tl.at ? 'dal test di livello del ' + fmtDate(tl.at) : '') + '</span></div></div>' : '') +
+      '<h4>Andamento nei test</h4>' + IL2.ui.levelLine(p.placement.map(x => ({ at: x.at, theta: x.theta, level: x.level }))) +
       '<div class="table-wrap"><table class="tbl small"><tr><th>Data</th><th>Tipo</th><th>Livello</th><th>Gramm.</th><th>Lessico</th><th>Lettura</th><th>Ascolto</th><th>Risposte</th></tr>' + (p.placement.slice().reverse().map(x => '<tr><td>' + fmtDate(x.at) + '</td><td>' + esc(x.kind || '') + '</td><td>' + levelBadge(x.level) + ' <small>' + esc(x.sublevel || '') + '</small></td>' + ['grammatica', 'lessico', 'lettura', 'ascolto'].map(k => '<td>' + (x.perSkill && x.perSkill[k] ? x.perSkill[k].level : '—') + '</td>').join('') + '<td>' + x.correct + '/' + x.items + '</td></tr>').join('') || '<tr><td colspan="8" class="muted">Nessun test.</td></tr>') + '</table></div>' +
       '<p class="small muted">Prossimo test: ' + testState(s) + (E.levelUpReady(p) ? ' · <b>ha completato almeno l\'80% delle lezioni del livello e può anticipare il test</b>' : '') + '</p></div>' +
-      '<div class="card"><h3>Profilo delle abilità</h3>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(k => '<div class="sb"><span>' + E.SKILL_LABEL[k] + '</span>' + meter(((p.skills[k] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[k]) + '</b></div>').join('') + '</div><p class="small muted">Stima continua aggiornata da test e pratica.</p></div></div>' +
-      '<div class="grid2"><div class="card"><h3>Lezioni completate per livello</h3><div class="lv-progs">' + levels + '</div><p class="small muted">Lo studente vede il proprio livello e quelli precedenti; i successivi si sbloccano con il test.</p></div>' +
-      '<div class="card"><h3>Minuti di studio al giorno</h3>' + IL2.ui.minutesBars(p.timeLog, 21, (IL2.state.settings || {}).dailyGoalMinutes) + '<p class="small muted">Ultime tre settimane; la linea è l\'obiettivo giornaliero.</p></div></div>' +
+      '<div class="card"><h3>Abilità <span class="tag-soft">dalla pratica</span></h3>' + IL2.ui.radar(p.skills, { labels: E.SKILL_LABEL }) + '<div class="skillbars">' + E.SKILLS.map(k => '<div class="sb"><span>' + E.SKILL_LABEL[k] + '</span>' + meter(((p.skills[k] + 3) / 5.5) * 100, 100) + '<b>' + E.levelFromTheta(p.skills[k]) + '</b></div>').join('') + '</div><p class="small muted">Stima che si muove con gli esercizi. Il livello lo danno il test (o tu, se lo imposti a mano) e può confermarla o cambiarla.</p></div></div>' +
+      '<div class="grid2"><div class="card"><h3>Come va la pratica <span class="tag-soft">ultime 2 settimane</span></h3><p class="small muted">Risposte giuste negli esercizi, nelle letture e negli ascolti, confrontate con le due settimane prima. La pratica non cambia il livello.</p>' + IL2.ui.practiceRows(E.practiceSummary(p), { teacher: true }) + '</div>' +
+      '<div class="card"><h3>Lezioni completate per livello</h3><div class="lv-progs">' + levels + '</div><p class="small muted">Lo studente vede il proprio livello e quelli precedenti; i successivi si sbloccano con il test.</p></div></div>' +
+      '<div class="grid2"><div class="card"><h3>Minuti di studio al giorno</h3>' + IL2.ui.minutesBars(p.timeLog, 21, (IL2.state.settings || {}).dailyGoalMinutes) + '<p class="small muted">Ultime tre settimane; la linea è l\'obiettivo giornaliero.</p></div></div>' +
       '<div class="card"><h3>Padronanza degli argomenti</h3>' + (topics.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Argomento</th><th>Liv.</th><th>Padronanza</th><th>Risposte giuste</th><th>Ultima pratica</th></tr>' + topics.map(x => '<tr><td>' + esc(C.topics[x.id].name) + '</td><td>' + C.topics[x.id].lv + '</td><td class="mcell">' + meter(Math.round(x.m * 100), 100, x.m >= 0.7 ? 'ok' : x.m < 0.45 ? 'bad' : '') + '<small>' + Math.round(x.m * 100) + '%</small></td><td>' + x.t.ok + '/' + x.t.n + '</td><td>' + (x.t.last ? ago(x.t.last) : '—') + '</td></tr>').join('') + '</table></div><p class="small muted">Dal più debole al più solido. La padronanza tiene conto della difficoltà degli esercizi rispetto al livello dell\'argomento.</p>' : '<p class="muted">Ancora pochi dati.</p>') + '</div>';
   }
 
@@ -8197,7 +8295,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<table class="tbl"><tr><th>Studente</th><td>' + esc(s.displayName) + '</td><th>Lingua d\'origine</th><td>' + esc(IL2.l1.name(s.l1)) + '</td></tr><tr><th>Gruppo</th><td>' + esc(s.group || '—') + '</td><th>In piattaforma dal</th><td>' + fmtDate(s.createdAt) + '</td></tr></table>' +
       '<h2>Livello QCER rilevato: ' + esc(s.level || '—') + (last ? ' (' + esc(last.sublevel || '') + ')' : '') + '</h2><p>' + esc(E.LEVEL_DESC[s.level] || '') + '</p>' +
       '<h3>Storico dei test di livello</h3><table class="tbl"><tr><th>Data</th><th>Tipo</th><th>Livello</th><th>Grammatica</th><th>Lessico</th><th>Lettura</th><th>Ascolto</th></tr>' + p.placement.map(x => '<tr><td>' + fmtDate(x.at) + '</td><td>' + esc(x.kind) + '</td><td>' + x.level + '</td>' + ['grammatica', 'lessico', 'lettura', 'ascolto'].map(k => '<td>' + (x.perSkill && x.perSkill[k] ? x.perSkill[k].level : '—') + '</td>').join('') + '</tr>').join('') + '</table>' +
-      '<h3>Profilo per abilità (stima attuale)</h3><table class="tbl"><tr>' + E.SKILLS.map(k => '<th>' + E.SKILL_LABEL[k] + '</th>').join('') + '</tr><tr>' + E.SKILLS.map(k => '<td>' + E.levelFromTheta(p.skills[k]) + '</td>').join('') + '</tr></table>' +
+      '<h3>Profilo per abilità (stima dalla pratica, da confermare con il prossimo test)</h3><table class="tbl"><tr>' + E.SKILLS.map(k => '<th>' + E.SKILL_LABEL[k] + '</th>').join('') + '</tr><tr>' + E.SKILLS.map(k => '<td>' + E.levelFromTheta(p.skills[k]) + '</td>').join('') + '</tr></table>' +
       (shownLv.length ? '<h3>Lezioni completate</h3><table class="tbl"><tr>' + shownLv.map(l => '<th>' + l + '</th>').join('') + '</tr><tr>' + shownLv.map(l => { const lp = E.levelProgress(p, l); return '<td>' + lp.done + ' su ' + lp.total + '</td>'; }).join('') + '</tr></table>' : '') +
       '<div class="grid2"><div><h3>Punti di forza</h3><ul>' + (strong.map(x => '<li>' + esc(C.topics[x.id].name) + '</li>').join('') || '<li>—</li>') + '</ul></div><div><h3>Aspetti da consolidare</h3><ul>' + (weak.map(x => '<li>' + esc(C.topics[x.id].name) + '</li>').join('') || '<li>—</li>') + '</ul></div></div>' +
       '<h3>Impegno</h3><p>Tempo totale di studio registrato: ' + totalMin + ' minuti · lezioni completate: ' + Object.keys(p.unitsDone).length + ' · parole memorizzate: ' + Object.values(p.srs).filter(c => c.box >= 3).length + ' · testi letti: ' + Object.keys(p.readingsDone).length + ' · ascolti: ' + Object.keys(p.listeningsDone).length + ' · scritti inviati: ' + d.submissions.length + '.</p>' +
