@@ -661,6 +661,23 @@ a.kpi:hover { border-color: var(--primary); }
 .invite-link { width: 100%; font-family: ui-monospace, monospace; font-size: .8rem; word-break: break-all; }
 ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { margin: .25rem 0; }
 
+/* Testi da completare (cloze) */
+.passage.cloze { line-height: 2.4; }
+.cz { white-space: nowrap; }
+.cz sup { font-size: .7em; color: var(--muted, #777); margin-right: 2px; }
+.cz-in.gap-in { width: 11em; max-width: 70vw; display: inline-block; padding: 2px 6px; margin: 0 2px; }
+.cz .hint { font-size: .85em; }
+.cz-fix { color: var(--good, #1a7f4b); margin: 0 4px; white-space: normal; }
+/* Scrittura e parlato come all'esame */
+.w-points { margin: .3em 0 .6em 1.2em; }
+.w-check { display: flex; flex-direction: column; gap: .45em; }
+.w-check label { display: flex; gap: .5em; align-items: flex-start; }
+.sc-time { font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums; margin: .2em 0; }
+.sc-turn { margin: 1em 0; }
+.sc-stage audio { width: 100%; margin: .5em 0; }
+.w-check label { display: flex !important; flex-direction: row; font-weight: 400; margin: 0; }
+.w-check label input { width: auto; flex: none; margin: .2em 0 0; }
+
 </style>
 </head>
 <body>
@@ -4736,6 +4753,403 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 })();
 
 ;
+/* js/content/esame-a2b1.js */
+/*
+ * Contenuti in più per A2 e B1, presi dai sillabi delle certificazioni (CILS A2 e UNO B1, CELI 1 e 2, PLIDA).
+ * Sono AGGIUNTE in fondo a ogni livello ("extra: true" serve solo a riconoscerle nell'area insegnante).
+ * Per scelta dell'insegnante (11/11/2026) contano nel percorso del livello come le altre lezioni.
+ * Contiene: lezioni sugli argomenti mancanti, testi da completare (cloze), compiti di scrittura
+ * come all'esame (tre punti da sviluppare) e schede di parlato guidato (dialogo e monologo).
+ */
+(function () {
+  const C = (window.IL2 = window.IL2 || {}).content = window.IL2.content || {};
+
+  Object.assign(C.topics, {
+    'pronomi-tonici': { name: 'Pronomi tonici (a me, con te)', lv: 'A2' },
+    'relativo-che': { name: 'Il relativo che', lv: 'A2' },
+    'indefiniti': { name: 'Indefiniti: qualche, ogni, nessuno, niente', lv: 'A2' },
+    'si-impersonale-a2': { name: 'Si impersonale: si mangia, si dice', lv: 'A2' },
+    'se-prima-di': { name: 'Frasi con se e con prima di', lv: 'A2' },
+    'connettivi-a2': { name: 'Connettivi: o, invece, allora, infatti', lv: 'A2' },
+    'testo-a2': { name: 'Completare un testo (A2)', lv: 'A2' },
+    'accordo-participio': { name: 'Accordo del participio con lo, la, li, le, ne', lv: 'B1' },
+    'relativo-chi': { name: 'Il relativo chi', lv: 'B1' },
+    'indefiniti-b1': { name: 'Indefiniti: alcuni, ciascuno, qualsiasi', lv: 'B1' },
+    'testo-b1': { name: 'Completare un testo (B1)', lv: 'B1' }
+  });
+
+  C.units = C.units || [];
+  C.units.push(
+    // ============================ A2 ============================
+    {
+      id: 'a2-x1', level: 'A2', extra: true, title: 'A me, con te: i pronomi tonici', icon: '🫵',
+      can: 'Posso usare me, te, lui, lei dopo con, per, a, di.',
+      topics: ['pronomi-tonici'],
+      theory: `
+<p>Dopo una <b>preposizione</b> (<i>a, di, da, con, per, tra…</i>) si usano i pronomi <b>tonici</b>:</p>
+<table><tr><th>soggetto</th><th>tonico</th><th>esempio</th></tr>
+<tr><td>io</td><td><b>me</b></td><td><i>Vieni con me?</i></td></tr>
+<tr><td>tu</td><td><b>te</b></td><td><i>Questo regalo è per te.</i></td></tr>
+<tr><td>lui / lei</td><td><b>lui / lei</b></td><td><i>Esco con lei.</i></td></tr>
+<tr><td>Lei</td><td><b>Lei</b></td><td><i>Posso parlare con Lei?</i></td></tr>
+<tr><td>noi / voi</td><td><b>noi / voi</b></td><td><i>Lavora per noi.</i></td></tr>
+<tr><td>loro</td><td><b>loro</b></td><td><i>Penso a loro.</i></td></tr></table>
+<p>Con <i>piacere</i>, per rispondere: <i>Mi piace il calcio. — <b>Anche a me!</b></i> <i>Non mi piace il pesce. — <b>Neanche a me.</b></i></p>
+<p>Il tonico serve anche per mettere in evidenza: <i>Cerco <b>te</b>, non lui!</i></p>`,
+      items: [
+        { t: 'mc', q: 'Vieni al cinema con ___?', o: ['me', 'mi', 'io'], a: 0, topic: 'pronomi-tonici', exp: 'Dopo una preposizione (con, per, a, di…) si usa il pronome tonico: me.' },
+        { t: 'mc', q: 'Questo regalo è per ___, Giulia!', o: ['te', 'ti', 'tu'], a: 0, topic: 'pronomi-tonici' },
+        { t: 'mc', q: 'Mi piace la pizza. — Anche ___!', o: ['a me', 'me', 'io'], a: 0, topic: 'pronomi-tonici', exp: 'Con piacere si risponde: anche a me.' },
+        { t: 'mc', q: 'Non mi piace il pesce. — Neanche ___.', o: ['a me', 'a mi', 'mi'], a: 0, topic: 'pronomi-tonici' },
+        { t: 'mc', q: 'Omar abita vicino a me. Vado a scuola con ___.', o: ['lui', 'gli', 'lo'], a: 0, topic: 'pronomi-tonici', exp: 'Dopo con: lui (non gli o lo).' },
+        { t: 'mc', q: 'Sara è simpatica: esco spesso con ___.', o: ['lei', 'le', 'la'], a: 0, topic: 'pronomi-tonici' },
+        { t: 'gap', q: 'Ragazzi, questo messaggio è per ___.', hint: 'voi', a: ['voi'], topic: 'pronomi-tonici' },
+        { t: 'gap', q: 'I miei nonni abitano lontano: penso spesso a ___.', hint: 'i nonni', a: ['loro'], topic: 'pronomi-tonici' },
+        { t: 'mc', q: 'Professoressa, posso parlare con ___ dopo la lezione?', o: ['Lei', 'te', 'ti'], a: 0, topic: 'pronomi-tonici', exp: 'Con il Lei di cortesia: con Lei.' },
+        { t: 'tf', q: '«Vieni con mi?» è corretto.', a: false, topic: 'pronomi-tonici', exp: 'Si dice: vieni con me?' },
+        { t: 'match', pairs: [['io', 'con me'], ['tu', 'con te'], ['noi', 'con noi'], ['loro', 'con loro']], topic: 'pronomi-tonici', prompt: 'Abbina il pronome alla forma dopo «con»' },
+        { t: 'order', words: ['Domani', 'studio', 'con', 'te'], a: 'Domani studio con te', topic: 'pronomi-tonici' },
+        { t: 'dict', say: 'A me piace leggere, e a te?', a: ['a me piace leggere, e a te', 'a me piace leggere e a te'], topic: 'pronomi-tonici', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x2', level: 'A2', extra: true, title: 'La ragazza che canta: il relativo che', icon: '🔗',
+      can: 'Posso unire due frasi con che.',
+      topics: ['relativo-che'],
+      theory: `
+<p><b>Che</b> unisce due frasi e sostituisce un nome. Così non lo ripeti:</p>
+<p><i>Ho un'amica. L'amica abita a Roma.</i> → <i>Ho un'amica <b>che</b> abita a Roma.</i></p>
+<p><i>Leggo un libro. Il libro è molto bello.</i> → <i>Il libro <b>che</b> leggo è molto bello.</i></p>
+<p><b>Che</b> non cambia mai: maschile, femminile, singolare o plurale. <i>Il ragazzo che…, la ragazza che…, i ragazzi che…, le ragazze che…</i></p>
+<p>Attenzione: dopo una preposizione non si usa <i>che</i> ma <i>cui</i> (<i>la città in cui abito</i>). Lo studierai al B1.</p>`,
+      items: [
+        { t: 'mc', q: 'Ho un amico ___ parla quattro lingue.', o: ['che', 'chi', 'cui'], a: 0, topic: 'relativo-che' },
+        { t: 'mc', q: 'Il libro ___ leggo è molto bello.', o: ['che', 'cui', 'chi'], a: 0, topic: 'relativo-che' },
+        { t: 'mc', q: 'La ragazza ___ vedi lì è mia cugina.', o: ['che', 'chi', 'dove'], a: 0, topic: 'relativo-che' },
+        { t: 'gap', q: 'Ho comprato le scarpe ___ mi piacevano tanto.', a: ['che'], topic: 'relativo-che' },
+        { t: 'gap', q: 'Il professore ___ insegna matematica si chiama Rossi.', a: ['che'], topic: 'relativo-che' },
+        { t: 'mc', q: 'Unisci le frasi: «Ho un cane. Il cane è nero.»', o: ['Ho un cane che è nero.', 'Ho un cane chi è nero.', 'Ho un cane che il cane è nero.'], a: 0, topic: 'relativo-che', exp: '«Che» prende il posto di «il cane».' },
+        { t: 'mc', q: 'Questi sono i compagni ___ ho conosciuto in gita.', o: ['che', 'cui', 'chi'], a: 0, topic: 'relativo-che' },
+        { t: 'tf', q: '«Che» cambia con il maschile e il femminile.', a: false, topic: 'relativo-che', exp: 'Che non cambia mai.' },
+        { t: 'match', pairs: [['Ho una sorella', 'che studia medicina.'], ['Mangio la torta', 'che ha fatto la nonna.'], ['Cerco lo zaino', 'che ho perso ieri.'], ['Conosco un ragazzo', 'che suona la chitarra.']], topic: 'relativo-che', prompt: 'Completa le frasi' },
+        { t: 'order', words: ['La', 'ragazza', 'che', 'canta', 'è', 'Amina'], a: 'La ragazza che canta è Amina', topic: 'relativo-che' },
+        { t: 'order', words: ['Ho', 'visto', 'il', 'film', 'che', 'mi', 'hai', 'consigliato'], a: 'Ho visto il film che mi hai consigliato', topic: 'relativo-che' },
+        { t: 'dict', say: 'Il ragazzo che abita vicino a me si chiama Karim.', a: ['il ragazzo che abita vicino a me si chiama karim'], topic: 'relativo-che', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x3', level: 'A2', extra: true, title: 'Qualche, ogni, nessuno: gli indefiniti', icon: '🔢',
+      can: 'Posso parlare di quantità non precise: qualche, ogni, tutti, nessuno, niente.',
+      topics: ['indefiniti'],
+      theory: `
+<ul><li><b>qualche</b> + nome <b>singolare</b> = alcuni: <i>qualche giorno, qualche amico</i>.</li>
+<li><b>ogni</b> + nome <b>singolare</b>: <i>ogni giorno, ogni settimana</i>.</li>
+<li><b>tutto, tutta, tutti, tutte</b> + articolo: <i>tutti i giorni, tutta la classe</i>.</li>
+<li><b>molto, poco, tanto, troppo</b> + nome si accordano: <i>molti amici, poca acqua, troppe parole</i>.</li>
+<li><b>qualcuno</b> (una persona) e <b>qualcosa</b> (una cosa): <i>C'è qualcuno? Vuoi qualcosa?</i></li>
+<li><b>nessuno</b> (nessuna persona) e <b>niente</b> (nessuna cosa), dopo il verbo con <b>non</b>: <i>Non c'è nessuno. Non ho mangiato niente.</i></li>
+<li>Davanti a un nome: <b>nessun</b> / <b>nessuna</b> (come <i>un / una</i>): <i>Non ho nessun problema.</i></li></ul>`,
+      items: [
+        { t: 'mc', q: 'Vado in piscina ___ lunedì.', o: ['ogni', 'tutti', 'molti'], a: 0, topic: 'indefiniti', exp: 'Ogni + nome singolare.' },
+        { t: 'mc', q: 'Ho letto ___ libro di questo autore.', o: ['qualche', 'molti', 'tutti'], a: 0, topic: 'indefiniti', exp: 'Qualche vuole il nome singolare.' },
+        { t: 'mc', q: '___ i miei amici giocano a calcio.', o: ['Tutti', 'Ogni', 'Qualche'], a: 0, topic: 'indefiniti' },
+        { t: 'mc', q: 'Non c\'è ___ in classe: sono tutti in palestra.', o: ['nessuno', 'niente', 'qualcuno'], a: 0, topic: 'indefiniti' },
+        { t: 'mc', q: 'Ho fame: oggi non ho mangiato ___.', o: ['niente', 'nessuno', 'qualche'], a: 0, topic: 'indefiniti' },
+        { t: 'gap', q: 'C\'è ___ alla porta: vai ad aprire!', hint: 'una persona', a: ['qualcuno'], topic: 'indefiniti' },
+        { t: 'gap', q: 'Hai bisogno di ___? — Sì, di un po\' d\'acqua.', hint: 'una cosa', a: ['qualcosa'], topic: 'indefiniti' },
+        { t: 'mc', q: 'Non ho ___ problema.', o: ['nessun', 'nessuno', 'niente'], a: 0, topic: 'indefiniti', exp: 'Davanti a un nome maschile: nessun (come un).' },
+        { t: 'mc', q: 'In questa città ci sono ___ parchi.', o: ['molti', 'molto', 'molta'], a: 0, topic: 'indefiniti', exp: 'Molto + nome si accorda: molti parchi.' },
+        { t: 'gap', q: 'Bevi ___ acqua: devi bere di più!', hint: 'poco', a: ['poca'], topic: 'indefiniti' },
+        { t: 'order', words: ['Non', 'ho', 'visto', 'nessuno'], a: 'Non ho visto nessuno', topic: 'indefiniti' },
+        { t: 'dict', say: 'Ogni mattina faccio colazione con tutta la famiglia.', a: ['ogni mattina faccio colazione con tutta la famiglia'], topic: 'indefiniti', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x4', level: 'A2', extra: true, title: 'Come si dice? Il si impersonale', icon: '🗨️',
+      can: 'Posso dire che cosa fanno le persone in generale: si mangia, si dice, si può.',
+      topics: ['si-impersonale-a2'],
+      theory: `
+<p>Per parlare delle persone <b>in generale</b> (non di una persona precisa) si usa <b>si</b> + verbo alla <b>3ª persona singolare</b>:</p>
+<ul><li><i>In Italia <b>si mangia</b> la pasta quasi ogni giorno.</i></li>
+<li><i>In biblioteca non <b>si parla</b> ad alta voce.</i></li>
+<li><i>Come <b>si dice</b> "book" in italiano? Come <b>si scrive</b> il tuo nome?</i></li>
+<li><i>Qui non <b>si può</b> entrare.</i></li></ul>
+<p>Se dopo c'è un nome <b>plurale</b>, anche il verbo è plurale: <i>Qui <b>si vendono</b> i biglietti dell'autobus.</i></p>`,
+      items: [
+        { t: 'mc', q: 'In biblioteca non ___ parlare ad alta voce.', o: ['si può', 'si possono', 'può si'], a: 0, topic: 'si-impersonale-a2' },
+        { t: 'mc', q: 'Come ___ "school" in italiano?', o: ['si dice', 'si dicono', 'dice si'], a: 0, topic: 'si-impersonale-a2' },
+        { t: 'mc', q: 'In Italia ___ a pranzo verso l\'una.', o: ['si mangia', 'si mangiano', 'mangia si'], a: 0, topic: 'si-impersonale-a2' },
+        { t: 'gap', q: 'Come ___ il tuo nome? — Con la K: K-A-R-I-M.', hint: 'scrivere', a: ['si scrive'], topic: 'si-impersonale-a2' },
+        { t: 'gap', q: 'A scuola non ___ il cappello in classe.', hint: 'portare', a: ['si porta'], topic: 'si-impersonale-a2' },
+        { t: 'gap', q: 'In classe ___ l\'insegnante quando parla.', hint: 'ascoltare', a: ['si ascolta'], topic: 'si-impersonale-a2' },
+        { t: 'mc', q: 'Da qui ___ al centro in dieci minuti.', o: ['si arriva', 'si arrivano', 'si arriviamo'], a: 0, topic: 'si-impersonale-a2' },
+        { t: 'mc', q: 'In questo negozio ___ i biglietti dell\'autobus.', o: ['si vendono', 'si vende', 'si vendi'], a: 0, topic: 'si-impersonale-a2', exp: 'Con un nome plurale anche il verbo è plurale: si vendono i biglietti.' },
+        { t: 'tf', q: 'Nella frase «In Italia si beve molto caffè» parliamo di una persona sola.', a: false, topic: 'si-impersonale-a2', exp: 'Il si impersonale parla delle persone in generale.' },
+        { t: 'match', pairs: [['In biblioteca', 'si legge in silenzio.'], ['Al mare', 'si nuota.'], ['In cucina', 'si prepara la cena.'], ['In palestra', 'si fa sport.']], topic: 'si-impersonale-a2', prompt: 'Abbina il luogo all\'azione' },
+        { t: 'order', words: ['Come', 'si', 'dice', 'grazie', 'in', 'arabo'], a: 'Come si dice grazie in arabo', topic: 'si-impersonale-a2' },
+        { t: 'dict', say: 'In Italia si cena verso le otto di sera.', a: ['in italia si cena verso le otto di sera', 'in italia si cena verso le 8 di sera'], topic: 'si-impersonale-a2', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x5', level: 'A2', extra: true, title: 'Se piove, resto a casa · prima di uscire', icon: '☔',
+      can: 'Posso dire una condizione con se e l\'ordine delle azioni con prima di.',
+      topics: ['se-prima-di'],
+      theory: `
+<p><b>Se</b> + presente, poi presente (o imperativo): una condizione reale.</p>
+<ul><li><i><b>Se</b> piove, resto a casa.</i></li>
+<li><i><b>Se</b> hai fame, mangia un panino!</i></li>
+<li>La frase con <i>se</i> può stare anche dopo: <i>Resto a casa <b>se</b> piove.</i></li></ul>
+<p><b>Prima di</b> + <b>infinito</b>: che cosa fai prima di un'altra azione.</p>
+<ul><li><i><b>Prima di</b> uscire, chiudo la finestra.</i></li>
+<li><i>Lavati le mani <b>prima di</b> mangiare.</i></li></ul>
+<p>Attenzione: non si dice <i>prima di esco</i>, ma <i>prima di <b>uscire</b></i>.</p>`,
+      items: [
+        { t: 'mc', q: 'Se ___ bel tempo, andiamo al mare.', o: ['fa', 'fanno', 'facciamo'], a: 0, topic: 'se-prima-di' },
+        { t: 'mc', q: 'Se hai sete, ___ un po\' d\'acqua.', o: ['bevi', 'bere', 'bevuto'], a: 0, topic: 'se-prima-di' },
+        { t: 'mc', q: 'Prima di ___, faccio i compiti.', o: ['uscire', 'esco', 'uscito'], a: 0, topic: 'se-prima-di', exp: 'Dopo «prima di» si usa l\'infinito.' },
+        { t: 'mc', q: 'Lavati i denti prima di ___ a letto.', o: ['andare', 'vai', 'andato'], a: 0, topic: 'se-prima-di' },
+        { t: 'gap', q: 'Se ___ tempo, ti aiuto con i compiti.', hint: 'avere, io', a: ['ho'], topic: 'se-prima-di' },
+        { t: 'gap', q: 'Se tu ___ presto, prendiamo il treno delle otto.', hint: 'arrivare', a: ['arrivi'], topic: 'se-prima-di' },
+        { t: 'gap', q: 'Prima di ___, leggi bene la domanda.', hint: 'rispondere', a: ['rispondere'], topic: 'se-prima-di' },
+        { t: 'mc', q: 'Se non capisci, ___ alla prof.', o: ['chiedi', 'chiedere', 'chiesto'], a: 0, topic: 'se-prima-di' },
+        { t: 'tf', q: '«Prima di mangio, mi lavo le mani» è corretto.', a: false, topic: 'se-prima-di', exp: 'Si dice: prima di mangiare.' },
+        { t: 'match', pairs: [['Se piove,', 'prendo l\'ombrello.'], ['Se sono stanco,', 'vado a letto presto.'], ['Se ho fame,', 'mangio un panino.'], ['Se c\'è sciopero,', 'vado a piedi.']], topic: 'se-prima-di', prompt: 'Abbina la condizione alla conseguenza' },
+        { t: 'order', words: ['Prima', 'di', 'uscire', 'spengo', 'la', 'luce'], a: 'Prima di uscire spengo la luce', topic: 'se-prima-di' },
+        { t: 'dict', say: 'Se domani piove, restiamo a casa.', a: ['se domani piove, restiamo a casa', 'se domani piove restiamo a casa'], topic: 'se-prima-di', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x6', level: 'A2', extra: true, title: 'Invece, allora, infatti: unire le frasi', icon: '➕',
+      can: 'Posso unire le frasi con o, invece, allora, infatti, non solo… ma anche, so che.',
+      topics: ['connettivi-a2'],
+      theory: `
+<table><tr><th>connettivo</th><th>serve per…</th><th>esempio</th></tr>
+<tr><td><b>o</b></td><td>scegliere</td><td><i>Vuoi un tè <b>o</b> un caffè?</i></td></tr>
+<tr><td><b>invece</b></td><td>dire il contrario</td><td><i>Io amo il mare, mia sorella <b>invece</b> preferisce la montagna.</i></td></tr>
+<tr><td><b>allora</b></td><td>dire la conseguenza</td><td><i>Piove, <b>allora</b> prendo l'autobus.</i></td></tr>
+<tr><td><b>infatti</b></td><td>confermare</td><td><i>Marco è stanco: <b>infatti</b> ieri ha studiato fino a tardi.</i></td></tr>
+<tr><td><b>non solo… ma anche</b></td><td>aggiungere</td><td><i>Parla <b>non solo</b> l'arabo, <b>ma anche</b> il francese.</i></td></tr></table>
+<p>Dopo <i>dire, pensare, sapere, sperare</i> si mette <b>che</b> + frase: <i>So <b>che</b> domani c'è la verifica. Dice <b>che</b> arriva tardi.</i></p>`,
+      items: [
+        { t: 'mc', q: 'Io bevo il tè, mio fratello ___ beve il caffè.', o: ['invece', 'infatti', 'allora'], a: 0, topic: 'connettivi-a2' },
+        { t: 'mc', q: 'Non c\'è l\'autobus, ___ vado a piedi.', o: ['allora', 'invece', 'o'], a: 0, topic: 'connettivi-a2' },
+        { t: 'mc', q: 'Luca parla bene il cinese: ___ sua madre è di Pechino.', o: ['infatti', 'invece', 'o'], a: 0, topic: 'connettivi-a2' },
+        { t: 'mc', q: 'Vuoi un succo ___ un\'acqua?', o: ['o', 'infatti', 'allora'], a: 0, topic: 'connettivi-a2' },
+        { t: 'mc', q: 'Amina parla non solo l\'arabo, ___ il francese.', o: ['ma anche', 'e invece', 'o anche'], a: 0, topic: 'connettivi-a2' },
+        { t: 'gap', q: 'So ___ domani c\'è la verifica di storia.', a: ['che'], topic: 'connettivi-a2' },
+        { t: 'gap', q: 'Il negozio è chiuso, ___ torniamo domani.', hint: 'conseguenza', a: ['allora', 'quindi', 'così'], topic: 'connettivi-a2' },
+        { t: 'mc', q: 'Mia sorella è timida, io ___ parlo con tutti.', o: ['invece', 'infatti', 'allora'], a: 0, topic: 'connettivi-a2' },
+        { t: 'tf', q: '«Infatti» serve per dire una cosa contraria.', a: false, topic: 'connettivi-a2', exp: 'Infatti conferma. Per il contrario si usa invece.' },
+        { t: 'match', pairs: [['o', 'scelta'], ['invece', 'contrario'], ['allora', 'conseguenza'], ['infatti', 'conferma']], topic: 'connettivi-a2', prompt: 'Abbina il connettivo al suo significato' },
+        { t: 'order', words: ['Ho', 'studiato', 'molto', 'infatti', 'ho', 'preso', 'otto'], a: 'Ho studiato molto infatti ho preso otto', topic: 'connettivi-a2' },
+        { t: 'dict', say: 'Io vado in montagna, mio fratello invece va al mare.', a: ['io vado in montagna, mio fratello invece va al mare', 'io vado in montagna mio fratello invece va al mare'], topic: 'connettivi-a2', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'a2-x7', level: 'A2', extra: true, title: 'Completa il testo (come all\'esame)', icon: '🧩',
+      can: 'Posso completare un testo breve con le forme giuste di verbi e aggettivi.',
+      topics: ['testo-a2'],
+      theory: `
+<p>Negli esami A2 c'è spesso un <b>testo con spazi vuoti</b>. Tra parentesi c'è la parola da cambiare.</p>
+<ul><li>Per i <b>verbi</b>: guarda chi fa l'azione (<i>io, noi…</i>) e quando (<i>ieri → passato prossimo; di solito, da piccolo → imperfetto; oggi, ogni giorno → presente</i>).</li>
+<li>Per gli <b>aggettivi</b>: guarda il nome. È maschile o femminile? Singolare o plurale? <i>una spiaggia bell<b>a</b>, dei ragazzi simpatic<b>i</b></i>.</li>
+<li>Con <b>essere</b> al passato prossimo il participio si accorda: <i>Amina è andat<b>a</b>, noi siamo partit<b>i</b></i>.</li></ul>
+<p>Leggi prima tutto il testo, poi completa. Alla fine rileggi.</p>`,
+      items: [
+        {
+          t: 'cloze', topic: 'testo-a2', q: 'Completa la cartolina di Amina.',
+          text: 'Cara Giulia,\nsabato scorso ___ al mare con la mia famiglia. ___ presto, alle sette. La spiaggia era molto ___ e l\'acqua era ___, ma io ___ il bagno lo stesso! A pranzo ___ dei panini ___ e nel pomeriggio mio fratello ___ a pallavolo con alcuni ragazzi ___. ___ a casa la sera, stanchi ma contenti.\nUn abbraccio, Amina',
+          gaps: [{ h: 'andare, io', a: ['sono andata'] }, { h: 'partire, noi', a: ['siamo partiti'] }, { h: 'bello', a: ['bella'] }, { h: 'freddo', a: ['fredda'] }, { h: 'fare', a: ['ho fatto'] }, { h: 'mangiare, noi', a: ['abbiamo mangiato'] }, { h: 'buono', a: ['buoni'] }, { h: 'giocare', a: ['ha giocato'] }, { h: 'simpatico', a: ['simpatici'] }, { h: 'tornare, noi', a: ['siamo tornati'] }],
+          exp: 'Amina è una ragazza: sono andata. Con essere il participio si accorda (siamo partiti, siamo tornati). Gli aggettivi seguono il nome: spiaggia bella, acqua fredda, panini buoni, ragazzi simpatici.'
+        },
+        {
+          t: 'cloze', topic: 'testo-a2', q: 'Completa il racconto di Chen: quando era piccolo.',
+          text: 'Quando ___ piccolo, ___ in un villaggio vicino al mare. La mia casa ___ piccola ma ___. Ogni mattina mia madre ___ il tè e noi bambini ___ a scuola a piedi. Il pomeriggio ___ a calcio con i miei amici in una strada ___. La sera ___ la televisione tutti insieme.',
+          gaps: [{ h: 'essere, io', a: ['ero'] }, { h: 'abitare, io', a: ['abitavo'] }, { h: 'essere', a: ['era'] }, { h: 'luminoso', a: ['luminosa'] }, { h: 'preparare', a: ['preparava'] }, { h: 'andare, noi', a: ['andavamo'] }, { h: 'giocare, io', a: ['giocavo'] }, { h: 'stretto', a: ['stretta'] }, { h: 'guardare, noi', a: ['guardavamo'] }],
+          exp: 'Per descrivere il passato e le abitudini si usa l\'imperfetto: ero, abitavo, preparava, andavamo. Casa luminosa e strada stretta sono femminili.'
+        },
+        {
+          t: 'cloze', topic: 'testo-a2', q: 'Completa la presentazione di Karim.',
+          text: 'Mi chiamo Karim e ___ quindici anni. ___ a Torino con i miei genitori e le mie due sorelle ___. Ogni giorno ___ alle sette e ___ colazione. La mia scuola è ___ a casa, quindi ci ___ a piedi. I miei compagni sono ___ e le professoresse sono molto ___. Il sabato io e mio padre ___ a calcio al parco.',
+          gaps: [{ h: 'avere', a: ['ho'] }, { h: 'abitare', a: ['abito'] }, { h: 'piccolo', a: ['piccole'] }, { h: 'svegliarsi', a: ['mi sveglio'] }, { h: 'fare', a: ['faccio'] }, { h: 'vicino', a: ['vicina'] }, { h: 'andare', a: ['vado'] }, { h: 'gentile', a: ['gentili'] }, { h: 'bravo', a: ['brave'] }, { h: 'giocare', a: ['giochiamo'] }],
+          exp: 'Al presente: ho, abito, mi sveglio, faccio, vado. «Io e mio padre» = noi: giochiamo. Sorelle piccole, scuola vicina, compagni gentili, professoresse brave.'
+        },
+        {
+          t: 'cloze', topic: 'testo-a2', q: 'Completa il racconto di Omar: una mattina difficile.',
+          text: 'Ieri ___ una giornata strana. Quando ___ di casa, ___ forte e io non ___ l\'ombrello. ___ l\'autobus per venti minuti, ma l\'autobus non ___. Allora ___ a mio zio e lui mi ___ a scuola in macchina. Quando ___ in classe, la prof ___ la lezione di storia.',
+          gaps: [{ h: 'essere', a: ['è stata', 'era'] }, { h: 'uscire, io', a: ['sono uscito'] }, { h: 'piovere', a: ['pioveva'] }, { h: 'avere', a: ['avevo'] }, { h: 'aspettare, io', a: ['ho aspettato'] }, { h: 'arrivare', a: ['è arrivato'] }, { h: 'telefonare, io', a: ['ho telefonato'] }, { h: 'accompagnare', a: ['ha accompagnato'] }, { h: 'entrare, io', a: ['sono entrato'] }, { h: 'spiegare', a: ['spiegava', 'stava spiegando'] }],
+          exp: 'I fatti uno dopo l\'altro vanno al passato prossimo (sono uscito, ho aspettato, ho telefonato). Le descrizioni e le azioni in corso all\'imperfetto (pioveva, avevo, spiegava).'
+        }
+      ]
+    },
+
+    // ============================ B1 ============================
+    {
+      id: 'b1-x1', level: 'B1', extra: true, title: 'Le ho viste, ne ho comprati tre: l\'accordo del participio', icon: '🛍️',
+      can: 'Posso accordare il participio passato con lo, la, li, le e ne.',
+      topics: ['accordo-participio'],
+      theory: `
+<p>Con <b>avere</b> il participio di solito non cambia: <i>Ho visto Maria. Ho comprato le mele.</i></p>
+<p>Ma se <b>prima</b> del verbo c'è <b>lo, la, li, le</b>, il participio si accorda con il pronome:</p>
+<table><tr><td><i>Hai visto Maria?</i></td><td><i>Sì, <b>l'</b>ho vist<b>a</b>.</i></td></tr>
+<tr><td><i>Dove sono le chiavi?</i></td><td><i><b>Le</b> ho mess<b>e</b> nello zaino.</i></td></tr>
+<tr><td><i>Hai letto i libri?</i></td><td><i>Sì, <b>li</b> ho lett<b>i</b>.</i></td></tr></table>
+<p>Con <b>ne</b> + quantità il participio si accorda con la cosa contata: <i>Quante mele hai comprato? — <b>Ne</b> ho comprat<b>e</b> tre.</i></p>
+<p><i>Lo</i> e <i>la</i> davanti a <i>ho, hai, ha…</i> diventano <b>l'</b>. <i>Li</i> e <i>le</i> non perdono mai la vocale: <i>le ho viste</i>.</p>`,
+      items: [
+        { t: 'mc', q: 'Hai visto Giulia? — Sì, l\'ho ___ ieri.', o: ['vista', 'visto', 'visti'], a: 0, topic: 'accordo-participio' },
+        { t: 'mc', q: 'Dove sono le chiavi? — Le ho ___ sul tavolo.', o: ['lasciate', 'lasciato', 'lasciati'], a: 0, topic: 'accordo-participio' },
+        { t: 'mc', q: 'Hai letto questi libri? — Sì, li ho ___ tutti.', o: ['letti', 'letto', 'lette'], a: 0, topic: 'accordo-participio' },
+        { t: 'mc', q: 'Quante pizze avete ordinato? — Ne abbiamo ___ quattro.', o: ['ordinate', 'ordinato', 'ordinati'], a: 0, topic: 'accordo-participio', exp: 'Con ne il participio si accorda con le pizze: ordinate.' },
+        { t: 'gap', q: 'La lettera? L\'ho già ___.', hint: 'spedire', a: ['spedita'], topic: 'accordo-participio' },
+        { t: 'gap', q: 'I compiti? Li ho ___ ieri sera.', hint: 'finire', a: ['finiti'], topic: 'accordo-participio' },
+        { t: 'gap', q: 'Quanti caffè hai bevuto oggi? — Ne ho ___ due.', hint: 'bere', a: ['bevuti'], topic: 'accordo-participio' },
+        { t: 'mc', q: 'Le ragazze? Non ___ ancora chiamate.', o: ['le ho', 'l\'ho', 'li ho'], a: 0, topic: 'accordo-participio', exp: 'Le non perde la vocale: le ho chiamate.' },
+        { t: 'mc', q: 'Ho incontrato Sara e Paola e ___ salutate.', o: ['le ho', 'li ho', 'l\'ho'], a: 0, topic: 'accordo-participio' },
+        { t: 'tf', q: 'Nella frase «Ho visto Marta» il participio si accorda con Marta.', a: false, topic: 'accordo-participio', exp: 'Senza pronome prima del verbo, con avere il participio resta in -o.' },
+        { t: 'match', pairs: [['La torta?', 'L\'ho mangiata.'], ['Il film?', 'L\'ho visto.'], ['Le scarpe?', 'Le ho comprate.'], ['I biglietti?', 'Li ho presi.']], topic: 'accordo-participio', prompt: 'Abbina la domanda alla risposta' },
+        { t: 'order', words: ['Le', 'ho', 'incontrate', 'davanti', 'alla', 'scuola'], a: 'Le ho incontrate davanti alla scuola', topic: 'accordo-participio' },
+        { t: 'dict', say: 'Le foto? Le ho mandate ieri sera.', a: ['le foto? le ho mandate ieri sera', 'le foto le ho mandate ieri sera'], topic: 'accordo-participio', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'b1-x2', level: 'B1', extra: true, title: 'Chi cerca trova: il relativo chi', icon: '🧑‍🤝‍🧑',
+      can: 'Posso usare chi per dire «la persona che» e capire i proverbi con chi.',
+      topics: ['relativo-chi'],
+      theory: `
+<p><b>Chi</b> = <i>la persona che, le persone che</i>. Prima di <i>chi</i> <b>non c'è un nome</b>.</p>
+<ul><li><i><b>Chi</b> arriva tardi deve aspettare fuori.</i> (= le persone che arrivano tardi)</li>
+<li><i>Ringrazio <b>chi</b> mi ha aiutato.</i></li>
+<li><i>C'è <b>chi</b> preferisce il mare e c'è <b>chi</b> preferisce la montagna.</i></li></ul>
+<p>Dopo <i>chi</i> il verbo è sempre <b>singolare</b>: <i>Chi studia impara.</i></p>
+<p>Confronta: <i>Il ragazzo <b>che</b> arriva tardi è Luca</i> (c'è un nome: <i>il ragazzo</i>) · <i><b>Chi</b> arriva tardi aspetta fuori</i> (nessun nome).</p>
+<p>Molti proverbi usano <i>chi</i>: <i>Chi cerca trova. Chi dorme non piglia pesci. Chi va piano va sano e va lontano.</i></p>`,
+      items: [
+        { t: 'mc', q: '___ arriva tardi deve aspettare fuori.', o: ['Chi', 'Che', 'Cui'], a: 0, topic: 'relativo-chi' },
+        { t: 'mc', q: 'Il ragazzo ___ arriva tardi è Luca.', o: ['che', 'chi', 'cui'], a: 0, topic: 'relativo-chi', exp: 'C\'è un nome prima (il ragazzo): che.' },
+        { t: 'mc', q: '___ vuole venire alla gita deve portare l\'autorizzazione.', o: ['Chi', 'Che', 'Quale'], a: 0, topic: 'relativo-chi' },
+        { t: 'mc', q: 'Chi studia ogni giorno ___ meno fatica.', o: ['fa', 'fanno', 'facciamo'], a: 0, topic: 'relativo-chi', exp: 'Dopo chi il verbo è singolare.' },
+        { t: 'gap', q: '___ cerca trova. (proverbio)', a: ['chi'], topic: 'relativo-chi' },
+        { t: 'gap', q: 'Ringrazio ___ mi ha aiutato.', a: ['chi'], topic: 'relativo-chi' },
+        { t: 'mc', q: 'C\'è ___ preferisce il mare e c\'è chi preferisce la montagna.', o: ['chi', 'che', 'cui'], a: 0, topic: 'relativo-chi' },
+        { t: 'gap', q: 'Non dare il tuo numero a ___ non conosci.', a: ['chi'], topic: 'relativo-chi' },
+        { t: 'tf', q: '«Chi» si usa quando prima c\'è già un nome.', a: false, topic: 'relativo-chi', exp: 'Con un nome prima si usa che: la ragazza che…' },
+        { t: 'match', pairs: [['Chi dorme', 'non piglia pesci.'], ['Chi cerca', 'trova.'], ['Chi va piano', 'va sano e va lontano.'], ['Chi trova un amico', 'trova un tesoro.']], topic: 'relativo-chi', prompt: 'Completa i proverbi' },
+        { t: 'order', words: ['Chi', 'finisce', 'prima', 'può', 'uscire'], a: 'Chi finisce prima può uscire', topic: 'relativo-chi' },
+        { t: 'dict', say: 'Chi ha finito il compito può consegnarlo.', a: ['chi ha finito il compito può consegnarlo', 'chi ha finito il compito puo consegnarlo'], topic: 'relativo-chi', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'b1-x3', level: 'B1', extra: true, title: 'Alcuni, ciascuno, qualsiasi: gli indefiniti', icon: '👥',
+      can: 'Posso usare alcuni, ciascuno, nessuno, qualsiasi, parecchio, altri.',
+      topics: ['indefiniti-b1'],
+      theory: `
+<ul><li><b>alcuni / alcune</b> + plurale = <b>qualche</b> + singolare: <i>alcuni amici = qualche amico</i>.</li>
+<li><b>ciascuno / ciascuna</b> = ogni persona, ogni cosa: <i>Ciascuno porta il suo libro.</i> Davanti a un nome si comporta come <i>uno</i>: <i>ciascuno studente, ciascun ragazzo, ciascuna classe</i>.</li>
+<li><b>nessuno</b> prima del verbo <b>senza</b> <i>non</i>: <i>Nessuno è venuto.</i> Dopo il verbo con <i>non</i>: <i>Non è venuto nessuno.</i></li>
+<li><b>qualsiasi / qualunque</b> + singolare, non cambiano: <i>a qualsiasi ora, qualunque cosa</i>.</li>
+<li><b>parecchio / parecchia / parecchi / parecchie</b> = molto, si accorda: <i>parecchi compiti</i>.</li>
+<li><b>alcuni… altri…</b>: <i>Alcuni compagni sono già arrivati, altri arrivano dopo.</i></li></ul>`,
+      items: [
+        { t: 'mc', q: 'Ho invitato ___ amici alla festa.', o: ['alcuni', 'qualche', 'ciascuno'], a: 0, topic: 'indefiniti-b1', exp: 'Alcuni + plurale; qualche vuole il singolare.' },
+        { t: 'mc', q: 'Ho invitato ___ amico alla festa.', o: ['qualche', 'alcuni', 'parecchi'], a: 0, topic: 'indefiniti-b1' },
+        { t: 'mc', q: '___ studente deve portare il suo dizionario.', o: ['Ciascuno', 'Ciascun', 'Alcuni'], a: 0, topic: 'indefiniti-b1', exp: 'Ciascuno si comporta come uno: uno studente → ciascuno studente.' },
+        { t: 'mc', q: '___ è venuto alla riunione: la sala era vuota.', o: ['Nessuno', 'Qualcuno', 'Ciascuno'], a: 0, topic: 'indefiniti-b1', exp: 'Nessuno prima del verbo, senza non.' },
+        { t: 'mc', q: 'Alla riunione non è venuto ___.', o: ['nessuno', 'qualcuno', 'niente'], a: 0, topic: 'indefiniti-b1' },
+        { t: 'gap', q: 'Puoi chiamarmi a ___ ora: sono sempre sveglio.', hint: 'qualsiasi o qualunque', a: ['qualsiasi', 'qualunque'], topic: 'indefiniti-b1' },
+        { t: 'gap', q: 'Ci sono ___ ragazze che giocano a basket.', hint: 'alcuno', a: ['alcune'], topic: 'indefiniti-b1' },
+        { t: 'mc', q: 'Abbiamo ___ compiti per domani: ci vorranno tre ore!', o: ['parecchi', 'parecchio', 'qualche'], a: 0, topic: 'indefiniti-b1' },
+        { t: 'gap', q: 'Alcuni preferiscono il mare, ___ la montagna.', hint: 'altro', a: ['altri'], topic: 'indefiniti-b1' },
+        { t: 'tf', q: '«Nessuno non è venuto» è corretto.', a: false, topic: 'indefiniti-b1', exp: 'Prima del verbo: Nessuno è venuto.' },
+        { t: 'match', pairs: [['qualche amico', 'alcuni amici'], ['ogni studente', 'ciascuno studente'], ['molti compiti', 'parecchi compiti'], ['qualunque cosa', 'qualsiasi cosa']], topic: 'indefiniti-b1', prompt: 'Abbina le espressioni con lo stesso significato' },
+        { t: 'order', words: ['Ciascuno', 'di', 'noi', 'ha', 'un', 'compito'], a: 'Ciascuno di noi ha un compito', topic: 'indefiniti-b1' },
+        { t: 'dict', say: 'Alcuni compagni sono già arrivati, altri arrivano più tardi.', a: ['alcuni compagni sono già arrivati, altri arrivano più tardi', 'alcuni compagni sono già arrivati altri arrivano più tardi'], topic: 'indefiniti-b1', skill: 'ascolto' }
+      ]
+    },
+    {
+      id: 'b1-x4', level: 'B1', extra: true, title: 'Completa il testo (come all\'esame)', icon: '🧩',
+      can: 'Posso completare un testo con verbi, pronomi, relativi e connettivi.',
+      topics: ['testo-b1'],
+      theory: `
+<p>Negli esami B1 il testo da completare mescola più argomenti. Tra parentesi trovi la parola da cambiare o il tipo di parola che serve.</p>
+<ul><li><b>Verbi</b>: passato prossimo per i fatti, imperfetto per descrizioni e azioni in corso, condizionale per desideri e consigli (<i>mi piacerebbe, dovresti</i>).</li>
+<li><b>Pronomi</b>: chi o che cosa sostituiscono? Con <i>lo, la, li, le, ne</i> prima di <i>avere</i> il participio si accorda (<i>le abbiamo comprate</i>).</li>
+<li><b>Relativi</b>: <i>che</i> (soggetto o oggetto), <i>cui</i> dopo una preposizione, <i>chi</i> = la persona che.</li>
+<li><b>Connettivi</b>: <i>ma, però</i> (opposizione), <i>perché</i> (causa), <i>quindi, così</i> (conseguenza).</li></ul>`,
+      items: [
+        {
+          t: 'cloze', topic: 'testo-b1', q: 'Completa la mail di Elena alla sua amica.',
+          text: 'Cara Sofia,\nscusa se non ti ___ prima, ma questo mese ___ pieno di impegni. Ti ricordi la ragazza ___ abbiamo conosciuto in vacanza? Sabato scorso l\'___ per caso in centro! Mentre ___ davanti alla biblioteca, ___ qualcuno che mi chiamava: era lei. ___ di prendere un caffè insieme e ___ per due ore. Mi ha detto che ___ un lavoro per l\'estate, ___ le ho dato il numero del ristorante di mio zio. La prossima volta ___ anche tu? Mi ___ molto vederti.\nUn bacio, Elena',
+          gaps: [{ h: 'scrivere, io', a: ['ho scritto'] }, { h: 'essere', a: ['è stato'] }, { h: 'relativo', a: ['che'] }, { h: 'incontrare, io', a: ['ho incontrata'] }, { h: 'passeggiare, io', a: ['passeggiavo'] }, { h: 'sentire, io', a: ['ho sentito'] }, { h: 'decidere, noi', a: ['abbiamo deciso'] }, { h: 'parlare, noi', a: ['abbiamo parlato'] }, { h: 'cercare, lei', a: ['cercava'] }, { h: 'connettivo di conseguenza', a: ['così', 'quindi', 'allora', 'perciò'] }, { h: 'venire, tu', a: ['vieni', 'verrai'] }, { h: 'piacere, condizionale', a: ['piacerebbe'] }],
+          exp: '«L\'ho incontrata»: l\' = la ragazza, quindi il participio è femminile. Mentre + imperfetto (passeggiavo) per l\'azione in corso; i fatti al passato prossimo.'
+        },
+        {
+          t: 'cloze', topic: 'testo-b1', q: 'Completa il racconto: il compleanno di Samir.',
+          text: 'Domenica è stato il compleanno di mio fratello Samir. Io e mia madre ___ una torta al cioccolato: ___ piace tantissimo. Per il regalo io e mio padre ___ al centro commerciale. Abbiamo visto delle scarpe da calcio bellissime e ___ subito. Samir voleva anche dei fumetti: in libreria ce n\'erano molti e ___ due. Alla festa sono venuti i suoi amici: ___ quindici! Quando Samir ha aperto il regalo, ___ felicissimo. ___ ha abbracciati tutti e ha detto: «Grazie, sono perfette!». E la torta? ___ in dieci minuti!',
+          gaps: [{ h: 'preparare, noi', a: ['abbiamo preparato'] }, { h: 'pronome: a lui', a: ['gli'] }, { h: 'andare, noi', a: ['siamo andati'] }, { h: 'comprare, noi + pronome', a: ['le abbiamo comprate'] }, { h: 'scegliere, noi + ne', a: ['ne abbiamo scelti'] }, { h: 'invitare, lui + ne', a: ['ne ha invitati'] }, { h: 'essere, lui', a: ['era', 'è stato'] }, { h: 'pronome: noi', a: ['ci'] }, { h: 'mangiare, noi + pronome', a: ['l\'abbiamo mangiata'] }],
+          exp: 'Le scarpe → le abbiamo comprate; dei fumetti → ne abbiamo scelti due; degli amici → ne ha invitati quindici; la torta → l\'abbiamo mangiata. «A lui piace» = gli piace.'
+        },
+        {
+          t: 'cloze', topic: 'testo-b1', q: 'Completa la domanda sul forum e la risposta.',
+          text: 'Ciao a tutti, ___ bisogno di un consiglio. Mi ___ fare un corso di chitarra, ___ non ho molto tempo, ___ il pomeriggio lavoro in un negozio. Secondo voi, che cosa ___ fare?\n\nRisposta di Marco: Io al posto tuo ___ un corso online: ___ studiare la sera, quando ___ dal lavoro. Io ___ così l\'anno scorso e mi ___ benissimo. Il maestro ___ ho scelto si chiama Luca: se vuoi, ti ___ il link.',
+          gaps: [{ h: 'avere, io', a: ['ho'] }, { h: 'piacere, condizionale', a: ['piacerebbe'] }, { h: 'connettivo di opposizione', a: ['ma', 'però'] }, { h: 'connettivo di causa', a: ['perché', 'poiché', 'perchè'] }, { h: 'dovere, condizionale, io', a: ['dovrei'] }, { h: 'cercare, condizionale, io', a: ['cercherei'] }, { h: 'potere, condizionale, tu', a: ['potresti'] }, { h: 'tornare, tu', a: ['torni'] }, { h: 'fare, io', a: ['ho fatto'] }, { h: 'trovarsi, io', a: ['sono trovato', 'sono trovata'] }, { h: 'relativo', a: ['che'] }, { h: 'mandare, io', a: ['mando', 'manderò'] }],
+          exp: 'Per desideri e consigli si usa il condizionale: mi piacerebbe, dovrei, al posto tuo cercherei, potresti. «Mi sono trovato bene» vuole essere perché trovarsi è riflessivo.'
+        },
+        {
+          t: 'cloze', topic: 'testo-b1', q: 'Completa il testo sulla biblioteca del quartiere.',
+          text: 'Nel mio quartiere c\'è una biblioteca ___ è aperta anche la sera. È il posto in ___ studio quasi ogni giorno. ___ non ha un computer a casa può usare quelli della biblioteca. ___ può prendere in prestito tre libri per un mese. Il bibliotecario, con ___ ho parlato ieri, mi ha detto che ___ settimane fa ___ molti libri nuovi in arabo e in cinese. ___ li ha ancora presi, ___ domani ___ a vederli. Se ___, puoi venire con me!',
+          gaps: [{ h: 'relativo', a: ['che'] }, { h: 'relativo', a: ['cui'] }, { h: 'relativo: la persona che', a: ['chi'] }, { h: 'indefinito: ogni persona', a: ['ognuno', 'ciascuno'] }, { h: 'relativo', a: ['cui'] }, { h: 'alcuno', a: ['alcune', 'qualche'] }, { h: 'arrivare', a: ['sono arrivati'] }, { h: 'indefinito: non una persona', a: ['nessuno'] }, { h: 'connettivo di conseguenza', a: ['quindi', 'allora', 'perciò', 'così'] }, { h: 'andare, io', a: ['vado', 'andrò'] }, { h: 'volere, tu', a: ['vuoi'] }],
+          exp: 'Che = soggetto (la biblioteca che è aperta); in cui, con cui dopo la preposizione; chi = la persona che. Nessuno prima del verbo, senza non.'
+        }
+      ]
+    }
+  );
+
+  // ============== Scrittura come all'esame ==============
+  // "points" = i tre punti da sviluppare (come in tutte le prove scritte CILS, CELI e PLIDA);
+  // "short" = messaggio breve. Si aggiungono in fondo all'elenco: il piano di Oggi resta uguale.
+  C.writing = C.writing || [];
+  C.writing.push(
+    // A2: testo 40-70 parole e messaggi brevi 25-40 parole
+    { id: 'w-a2-x1', level: 'A2', extra: true, title: 'Diario: il mio fine settimana', genre: 'Come all\'esame · diario', prompt: 'Scrivi nel tuo diario che cosa hai fatto lo scorso fine settimana.', points: ['dove sei stato/a', 'con chi eri', 'che cosa ti è piaciuto di più e perché'], min: 40, max: 70, use: ['sabato', 'poi', 'mi è piaciuto', 'perché'], model: 'Sabato mattina sono andata al mercato con mia madre. Abbiamo comprato frutta e verdura. Nel pomeriggio sono stata al parco con la mia amica Lina: abbiamo fatto una passeggiata e abbiamo mangiato un gelato. Domenica sono rimasta a casa. Mi è piaciuto di più il pomeriggio al parco, perché c\'era il sole e abbiamo parlato tanto.' },
+    { id: 'w-a2-x2', level: 'A2', extra: true, title: 'Il mio quartiere', genre: 'Come all\'esame · descrizione', prompt: 'Descrivi il quartiere dove abiti a un amico che non lo conosce.', points: ['dove si trova e com\'è', 'che cosa c\'è (negozi, parco, scuola…)', 'che cosa fai di solito lì'], min: 40, max: 70, use: ['c\'è', 'ci sono', 'vicino a', 'di solito'] },
+    { id: 'w-a2-x3', level: 'A2', extra: true, title: 'La giornata di Luca (sì / no)', genre: 'Come all\'esame · racconto da appunti', prompt: 'Leggi gli appunti di Luca e racconta la sua giornata di sabato, come se fossi Luca. Mattina: mercato con la mamma → SÌ. Pomeriggio: cinema con Marco → NO, era chiuso, allora parco. Sera: pizza con gli amici → SÌ.', points: ['la mattina al mercato', 'il pomeriggio: il cinema chiuso e il parco', 'la sera in pizzeria'], min: 40, max: 70, use: ['sono andato', 'era chiuso', 'allora', 'la sera'] },
+    { id: 'w-a2-x4', level: 'A2', extra: true, short: true, title: 'Messaggio: non vengo all\'allenamento', genre: 'Come all\'esame · messaggio breve', prompt: 'Scrivi un messaggio al tuo allenatore: oggi non puoi andare all\'allenamento.', points: ['perché non puoi venire', 'quando torni', 'chiedi a che ora è il prossimo allenamento'], min: 25, max: 40, use: ['purtroppo', 'perché', 'a che ora'], model: 'Ciao Marco, purtroppo oggi non posso venire all\'allenamento perché ho la febbre. Spero di tornare la settimana prossima. A che ora è il prossimo allenamento? Grazie, a presto! Omar' },
+    { id: 'w-a2-x5', level: 'A2', extra: true, short: true, title: 'Mail breve: un corso in piscina', genre: 'Come all\'esame · richiesta di informazioni', prompt: 'Scrivi una mail breve alla piscina del tuo quartiere: vuoi fare un corso di nuoto.', points: ['in quali giorni c\'è il corso', 'quanto costa', 'che cosa devi portare'], min: 25, max: 40, use: ['Buongiorno', 'vorrei sapere', 'Grazie', 'Cordiali saluti'] },
+    { id: 'w-a2-x6', level: 'A2', extra: true, short: true, title: 'Messaggio: un invito', genre: 'Come all\'esame · invito', prompt: 'Scrivi un messaggio a un compagno per invitarlo alla tua festa di compleanno.', points: ['il giorno e l\'ora', 'il posto', 'che cosa deve portare'], min: 25, max: 40, use: ['ti invito', 'alle', 'porta'] },
+    // B1: testo 100-140 parole e mail brevi 50-80 parole
+    { id: 'w-b1-x1', level: 'B1', extra: true, title: 'Un\'esperienza importante', genre: 'Come all\'esame · racconto', prompt: 'Racconta un\'esperienza importante della tua vita (un viaggio, un incontro, un cambiamento).', points: ['che cosa è successo e quando', 'come ti sei sentito/a', 'che cosa hai imparato'], min: 100, max: 140, use: ['quando', 'all\'inizio', 'mentre', 'alla fine', 'ho capito che'] },
+    { id: 'w-b1-x2', level: 'B1', extra: true, title: 'Lettera a un amico italiano', genre: 'Come all\'esame · lettera informale', prompt: 'Scrivi una lettera a un amico italiano che non vedi da tanto tempo.', points: ['racconta una novità della tua vita', 'descrivi la tua nuova scuola o la tua città', 'invitalo a trovarti e proponi che cosa fare insieme'], min: 100, max: 140, use: ['Caro/Cara', 'sai che', 'mi piacerebbe', 'potremmo', 'un abbraccio'], model: 'Caro Matteo,\nscusa se non ti ho scritto per tanto tempo! Sai che da settembre vivo a Padova? Mio padre ha trovato lavoro qui e ci siamo trasferiti tutti. All\'inizio è stato difficile, perché non conoscevo nessuno, ma adesso mi trovo bene. La mia nuova scuola è grande e moderna: ci sono due laboratori e una palestra enorme. I miei compagni sono simpatici e il pomeriggio giochiamo spesso a basket. Anche la città mi piace: il centro è pieno di portici e di biciclette. Perché non vieni a trovarmi a Pasqua? Potremmo visitare la città, andare al Prato della Valle e mangiare un gelato in piazza. Mi piacerebbe tanto rivederti!\nUn abbraccio, Youssef' },
+    { id: 'w-b1-x3', level: 'B1', extra: true, title: 'Forum: più sport a scuola?', genre: 'Come all\'esame · opinione', prompt: 'Su un forum di studenti si discute: «A scuola ci dovrebbero essere più ore di sport?». Scrivi il tuo intervento.', points: ['la tua opinione', 'due motivi', 'un esempio dalla tua esperienza'], min: 100, max: 140, use: ['secondo me', 'prima di tutto', 'inoltre', 'per esempio', 'per questo'] },
+    { id: 'w-b1-x4', level: 'B1', extra: true, short: true, title: 'Mail: un problema con un acquisto', genre: 'Come all\'esame · mail formale breve', prompt: 'Hai comprato una cosa online ed è arrivata rotta. Scrivi una mail al negozio.', points: ['che cosa hai comprato e quando', 'qual è il problema', 'che cosa chiedi (cambio o rimborso)'], min: 50, max: 80, use: ['Gentili signori', 'ho ordinato', 'purtroppo', 'vorrei', 'Distinti saluti'], model: 'Gentili signori,\nil 3 novembre ho ordinato sul vostro sito una lampada da scrivania (ordine n. 4512). Il pacco è arrivato ieri, ma purtroppo la lampada è rotta: il vetro è spaccato e non si accende. Vorrei sapere se è possibile cambiarla con una nuova o avere il rimborso. Vi mando una foto della lampada.\nDistinti saluti,\nSara Rossi' },
+    { id: 'w-b1-x5', level: 'B1', extra: true, short: true, title: 'Mail alla segreteria: un corso pomeridiano', genre: 'Come all\'esame · richiesta di informazioni', prompt: 'La tua scuola organizza un corso pomeridiano di teatro. Scrivi una mail alla segreteria.', points: ['chi sei e quale corso ti interessa', 'quando e dove si svolge', 'come ci si iscrive'], min: 50, max: 80, use: ['Gentile segreteria', 'frequento la classe', 'vorrei sapere', 'La ringrazio'] },
+    { id: 'w-b1-x6', level: 'B1', extra: true, short: true, title: 'Messaggio: scusarsi e proporre', genre: 'Come all\'esame · messaggio informale', prompt: 'Ieri avevi un appuntamento con un amico, ma non sei andato/a. Scrivigli un messaggio.', points: ['scusati', 'spiega perché non sei andato/a', 'proponi un altro giorno e che cosa fare'], min: 50, max: 80, use: ['scusami', 'purtroppo', 'che ne dici di', 'potremmo'] }
+  );
+
+  // ============== Parlato guidato (dialogo e monologo, come all'esame) ==============
+  // Dialogo: l'app legge le battute dell'altra persona, lo studente risponde. Monologo: parla da solo.
+  // prep = secondi per prepararsi; time = durata consigliata in secondi.
+  C.speakCards = [
+    // --- A2: dialoghi 2-3 minuti ---
+    { id: 'sd-a2-1', level: 'A2', kind: 'dialogo', title: 'In un negozio di vestiti', situation: 'Sei in un negozio. Vuoi comprare una giacca. Parla con il commesso.', other: 'il commesso', points: ['dì che cosa cerchi', 'chiedi la taglia giusta e il prezzo', 'decidi se la compri'], turns: ['Buongiorno! Posso aiutarti?', 'Certo. Che taglia porti?', 'Di che colore la vuoi?', 'Ecco, guarda questa. Costa quarantacinque euro. Ti piace?', 'Vuoi pagare in contanti o con la carta?', 'Perfetto. Grazie e buona giornata!'], useful: ['Vorrei una giacca…', 'Porto la taglia M.', 'Quanto costa?', 'Posso provarla?', 'La prendo. / Ci penso.'], prep: 60, time: 150 },
+    { id: 'sd-a2-2', level: 'A2', kind: 'dialogo', title: 'Organizzare il sabato con un amico', situation: 'Un amico ti telefona per organizzare sabato pomeriggio.', other: 'l\'amico', points: ['rispondi se sei libero/a', 'accetta la proposta o proponi un\'altra cosa', 'decidete l\'ora e il posto'], turns: ['Ciao! Che cosa fai sabato pomeriggio?', 'Ti va di andare al cinema?', 'Va bene. A che ora ci vediamo?', 'E dove ci incontriamo?', 'Perfetto, allora a sabato! Ciao!'], useful: ['Sabato sono libero/a.', 'Mi dispiace, sabato non posso.', 'Perché non andiamo al parco?', 'Ci vediamo alle…', 'Davanti a…'], prep: 60, time: 150 },
+    { id: 'sd-a2-3', level: 'A2', kind: 'dialogo', title: 'Dal medico', situation: 'Non stai bene e vai dal medico.', other: 'il medico', points: ['spiega che cosa ti fa male', 'dì da quanto tempo stai male', 'chiedi che cosa devi fare'], turns: ['Buongiorno, accomodati. Che cosa ti succede?', 'Da quanto tempo stai male?', 'Hai anche la febbre?', 'Va bene. Devi riposare e prendere questa medicina due volte al giorno. Hai qualche domanda?', 'Prego. Se non stai meglio, torna fra tre giorni.'], useful: ['Mi fa male la gola / la testa…', 'Da due giorni.', 'Ho la febbre a trentotto.', 'Posso andare a scuola?', 'Quando devo prendere la medicina?'], prep: 60, time: 150 },
+    // --- A2: monologhi 1 minuto e mezzo ---
+    { id: 'sm-a2-1', level: 'A2', kind: 'monologo', title: 'La mia famiglia', situation: 'Parla della tua famiglia.', points: ['chi sono le persone della tua famiglia', 'come sono (aspetto e carattere)', 'che cosa fate insieme'], useful: ['Nella mia famiglia siamo…', 'Mio fratello è alto e simpatico.', 'La domenica di solito…', 'Insieme ci piace…'], prep: 60, time: 90 },
+    { id: 'sm-a2-2', level: 'A2', kind: 'monologo', title: 'Le mie ultime vacanze', situation: 'Racconta le tue ultime vacanze.', points: ['dove sei andato/a e con chi', 'che cosa hai fatto', 'che cosa ti è piaciuto e perché'], useful: ['L\'estate scorsa sono andato/a…', 'Abbiamo visitato…', 'Un giorno…', 'Mi è piaciuto molto… perché…'], prep: 60, time: 90 },
+    { id: 'sm-a2-3', level: 'A2', kind: 'monologo', title: 'Una giornata di scuola', situation: 'Descrivi una tua giornata di scuola.', points: ['a che ora cominci e finisci', 'le materie che preferisci e perché', 'che cosa fai nell\'intervallo e dopo la scuola'], useful: ['Le lezioni cominciano alle…', 'La mia materia preferita è…', 'Nell\'intervallo…', 'Dopo la scuola…'], prep: 60, time: 90 },
+    // --- B1: dialoghi 3 minuti ---
+    { id: 'sd-b1-1', level: 'B1', kind: 'dialogo', title: 'Restituire un acquisto', situation: 'Hai comprato un paio di cuffie che non funzionano. Torni al negozio e parli con la commessa. Usa il Lei.', other: 'la commessa', points: ['spiega il problema', 'chiedi una soluzione', 'accetta la proposta o proponi un\'alternativa'], turns: ['Buongiorno, mi dica.', 'Mi dispiace. Quando le ha comprate?', 'Ha lo scontrino?', 'Purtroppo non possiamo restituire i soldi, però possiamo cambiarle con un altro modello. Che cosa preferisce?', 'D\'accordo. Posso fare altro per Lei?'], useful: ['Ho comprato queste cuffie…', 'Purtroppo non funzionano: …', 'Sarebbe possibile…?', 'Preferirei…', 'Va bene, allora…'], prep: 60, time: 180 },
+    { id: 'sd-b1-2', level: 'B1', kind: 'dialogo', title: 'Decidere la gita di classe', situation: 'Con un compagno dovete decidere dove andare in gita a fine anno.', other: 'il compagno', points: ['dì che cosa pensi della sua proposta', 'proponi un\'altra meta con due motivi', 'mettetevi d\'accordo'], turns: ['Allora, dove andiamo in gita a fine anno? Io pensavo a Roma.', 'Ah sì? Perché non ti convince?', 'E tu che cosa proponi?', 'Interessante. Ma quanto costerebbe, secondo te?', 'Va bene, allora proviamo a proporlo alla prof!'], useful: ['Secondo me…', 'Hai ragione, però…', 'Io proporrei…, prima di tutto perché…, inoltre…', 'Costerebbe circa…', 'D\'accordo, facciamo così.'], prep: 60, time: 180 },
+    { id: 'sd-b1-3', level: 'B1', kind: 'dialogo', title: 'Colloquio per un lavoro estivo', situation: 'Fai un colloquio per lavorare d\'estate in una gelateria. Usa il Lei.', other: 'il titolare', points: ['presentati', 'spiega perché sei la persona giusta', 'fai almeno una domanda (orario, paga, giorni)'], turns: ['Buongiorno, si accomodi. Come si chiama?', 'Perché vuole lavorare con noi?', 'Ha già fatto qualche esperienza di lavoro?', 'Quali lingue parla?', 'Bene. Ha qualche domanda per noi?', 'Perfetto, la chiamiamo entro venerdì. Arrivederci!'], useful: ['Mi chiamo… e ho … anni.', 'Sono una persona precisa e…', 'L\'anno scorso ho lavorato…', 'Parlo…, e capisco…', 'Vorrei sapere qual è l\'orario.'], prep: 60, time: 180 },
+    // --- B1: monologhi 1 minuto e mezzo ---
+    { id: 'sm-b1-1', level: 'B1', kind: 'monologo', title: 'Un libro o un film che mi è piaciuto', situation: 'Parla di un libro o di un film che ti è piaciuto.', points: ['di che cosa parla', 'perché ti è piaciuto', 'a chi lo consiglieresti'], useful: ['Racconta la storia di…', 'Mi ha colpito…', 'Secondo me è bello perché…', 'Lo consiglierei a…'], prep: 60, time: 90 },
+    { id: 'sm-b1-2', level: 'B1', kind: 'monologo', title: 'Vivere in Italia e nel mio paese', situation: 'Confronta la vita in Italia con la vita nel tuo paese.', points: ['una cosa simile', 'una cosa diversa', 'che cosa ti manca o che cosa preferisci'], useful: ['Come nel mio paese, anche qui…', 'Invece in Italia…', 'Mi manca…', 'Preferisco… perché…'], prep: 60, time: 90 },
+    { id: 'sm-b1-3', level: 'B1', kind: 'monologo', title: 'Il mio progetto per il futuro', situation: 'Parla di che cosa vorresti fare dopo la scuola.', points: ['che cosa vorresti fare', 'perché', 'che cosa fai già per arrivarci'], useful: ['Mi piacerebbe diventare…', 'Ho deciso così perché…', 'Per questo adesso…', 'Spero di…'], prep: 60, time: 90 }
+  ];
+})();
+
+;
 /* js/content/placement.js */
 /*
  * Banca di item per il test di livello adattivo (A1–C1).
@@ -4953,6 +5367,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       case 'vocab': return C.vocabById[ref] ? 'Parole ' + C.vocabById[ref].level + ' · ' + C.vocabById[ref].title : ref;
       case 'game': { const [g, k] = String(ref).split(':'); if (g === 'bingo') return 'Gioco · Bingo delle parole'; const cw = window.IL2.games && window.IL2.games.CROSSWORDS.find(s => s.id === k); return 'Gioco · Cruciverba' + (cw ? ' ' + cw.level + ' · ' + cw.title : ''); }
       case 'speaking': return 'Pronuncia ' + ref;
+      case 'speakcard': { const sc = (C.speakCards || []).find(x => x.id === ref); return sc ? 'Parlato guidato ' + sc.level + ' · ' + sc.title : ref; }
       case 'topic': return C.topics[ref] ? 'Rinforzo · ' + C.topics[ref].name : ref;
       case 'test': return 'Test di livello';
       case 'review': return 'Ripasso parole';
@@ -6059,6 +6474,53 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     };
   };
 
+  // Testo da completare (come negli esami): più spazi in un paragrafo, ognuno con la parola tra parentesi.
+  // L'esercizio è giusto se almeno l'80% degli spazi è giusto; il riscontro mostra spazio per spazio.
+  R.cloze = function (box, item, opts) {
+    const parts = String(item.text).split('___');
+    let h = '';
+    parts.forEach((t, i) => {
+      h += esc(t).replace(/\n/g, '<br>');
+      if (i < item.gaps.length) {
+        const g = item.gaps[i];
+        h += '<span class="cz"><sup>' + (i + 1) + '</sup><input class="gap-in cz-in" data-i="' + i + '" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Spazio ' + (i + 1) + (g.h ? ', ' + esc(g.h) : '') + '">' + (g.h ? '<span class="hint">(' + esc(g.h) + ')</span>' : '') + '</span>';
+      }
+    });
+    box.innerHTML = '<p class="q">' + esc(item.q) + '</p><div class="passage cloze">' + h + '</div>' +
+      '<p class="small muted">Scrivi negli spazi la forma giusta. Puoi passare allo spazio dopo con Invio.</p>' + accentBar();
+    const ins = Array.from(box.querySelectorAll('.cz-in'));
+    let last = ins[0];
+    ins.forEach((inp, k) => {
+      inp.addEventListener('focus', () => { last = inp; });
+      inp.addEventListener('input', () => opts.onReady());
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (ins[k + 1]) ins[k + 1].focus(); else opts.submit(); } });
+    });
+    // la barra degli accenti scrive nello spazio in cui si trovava il cursore
+    box.querySelectorAll('.key').forEach(k => k.addEventListener('mousedown', e => e.preventDefault()));
+    box.querySelectorAll('.key').forEach(k => k.addEventListener('click', () => {
+      const inp = last; if (!inp || inp.disabled) return;
+      const s = inp.selectionStart != null ? inp.selectionStart : inp.value.length, e = inp.selectionEnd != null ? inp.selectionEnd : inp.value.length;
+      inp.value = inp.value.slice(0, s) + k.dataset.ch + inp.value.slice(e);
+      inp.focus(); inp.selectionStart = inp.selectionEnd = s + 1; opts.onReady();
+    }));
+    setTimeout(() => ins[0] && ins[0].focus(), 50);
+    return {
+      ready: () => ins.some(i => i.value.trim().length > 0),
+      dontKnow() { },
+      check() {
+        let right = 0; const wrong = [];
+        ins.forEach((inp, i) => {
+          inp.disabled = true;
+          const g = grade(inp.value, item.gaps[i].a);
+          if (g === 'no') { inp.classList.add('wrong'); wrong.push((i + 1) + ': ' + item.gaps[i].a[0]); inp.insertAdjacentHTML('afterend', '<b class="cz-fix">' + esc(item.gaps[i].a[0]) + '</b>'); }
+          else { inp.classList.add('right'); right++; }
+        });
+        const n = ins.length, ok = right >= Math.ceil(n * 0.8);
+        return { ok, given: right + '/' + n, expected: wrong.join(' · ') || 'tutto giusto', note: right + ' spazi giusti su ' + n + (wrong.length ? '. Le correzioni sono nel testo, in verde.' : '. Perfetto!') };
+      }
+    };
+  };
+
   R.dict = function (box, item, opts) {
     box.innerHTML = '<div class="listen-row big">' + speakBtn(item.say, 'Ascolta') + '<button type="button" class="btn ghost small" data-say="' + esc(item.say) + '" data-slow="1">' + IL2.ui.icon('slow') + ' Più lento</button></div>' +
       '<p class="q">Ascolta e scrivi la frase.</p>' + l1Line('listenWrite') +
@@ -6216,7 +6678,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
       function showFeedback(res) {
         let h = '';
-        if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!']) + '</div>';
+        if (res.note) h += '<div class="' + (res.ok ? 'ok-line' : 'no-line') + '">' + IL2.ui.icon(res.ok ? 'check' : 'close') + ' ' + esc(res.note) + '</div>';
+        else if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!']) + '</div>';
         else if (res.ok && res.accent) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi! Attenzione agli accenti: <b>' + esc(res.expected) + '</b></div>';
         else h += '<div class="no-line">' + IL2.ui.icon('close') + ' La risposta giusta è: <b>' + esc(res.expected) + '</b>' + (current.t === 'dict' || current.t === 'gap' ? ' ' + speakBtn(res.expected) : '') + '</div>';
         if (current.exp && (!res.ok || res.accent)) h += '<p class="exp">' + esc(current.exp) + '</p>';
@@ -6560,7 +7023,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   // ---------- Struttura ----------
   const NAV = {
-    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
+    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
     teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['impostazioni', 'gear', 'Impostazioni']]
   };
   function shell() {
@@ -7141,7 +7604,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const tile = (href, ic, cls, title, sub, skill) => '<a class="card tile ' + cls + '" href="#/' + href + '"><span class="t-icon">' + icon(ic) + '</span><b>' + title + '</b><small>' + sub + '</small>' + (skill ? '<span class="lvl-mini">stima ' + E.levelFromTheta(sk[skill] || -2) + '</span>' : '') + '</a>';
     view.innerHTML = '<div class="page-head"><h1>Pratica</h1><p class="muted">Allena le quattro abilità con testi del tuo livello e di quelli precedenti.</p></div><div class="tiles">' +
       tile('leggi', 'read', 'c-read', 'Leggere', 'Testi di vario tipo', 'lettura') + tile('ascolta', 'headphones', 'c-listen', 'Ascoltare', 'Dialoghi e messaggi', 'ascolto') +
-      tile('parla/' + lv, 'mic', 'c-speak', 'Parlare', 'Pronuncia e intonazione', 'parlato') + tile('scrivi', 'pen', 'c-write', 'Scrivere', 'Testi letti dall\'insegnante', 'scrittura') +
+      tile('parla/' + lv, 'mic', 'c-speak', 'Parlare', 'Pronuncia e intonazione', 'parlato') + ((C.speakCards || []).some(c => open(c.level)) ? tile('schede', 'users', 'c-speak', 'Parlato guidato', 'Dialoghi e monologhi come all\'esame') : '') + tile('scrivi', 'pen', 'c-write', 'Scrivere', 'Testi letti dall\'insegnante', 'scrittura') +
       tile('errori', 'wrench', 'c-err', 'I miei errori', openErr + ' da correggere') + tile('test', 'compass', 'c-test', 'Test di livello', testLabel(p)) +
       tile('materie', 'library', 'c-study', 'Materie scolastiche', 'Facoltativo · scienze, storia, geografia') +
       tile('giochi', 'puzzle', 'c-game', 'Giochi', 'Bingo delle parole e cruciverba') + '</div>';
@@ -7267,6 +7730,87 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     });
   };
 
+  // =================== PARLATO GUIDATO (come all'esame) ===================
+  // Scheda: situazione e 3 punti, 1 minuto per prepararsi, poi si parla con il tempo che scorre.
+  // Nel dialogo l'app legge le battute dell'altra persona. Si può registrare e riascoltare.
+  // Alla fine lo studente controlla da solo che cosa ha fatto: nessun voto.
+  const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  const cardsDone = p => (p.stats && p.stats.cards) || {};
+  R.schede = async function (view) {
+    const p = P(), cur = E.currentLevel(p), list = C.speakCards || [], dn = cardsDone(p);
+    const lvls = E.LEVELS.filter(l => list.some(c => c.level === l));
+    view.innerHTML = '<a class="back" href="#/pratica">' + icon('back') + 'Pratica</a><h1>Parlato guidato</h1>' +
+      '<p class="muted">Schede come quelle degli esami: un dialogo o un monologo con tre punti da dire. Hai un minuto per prepararti, poi parli. Puoi registrarti e riascoltarti.</p>' +
+      lvls.filter(open).slice().reverse().map(lv => '<h2 class="lv-h">' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + (lv === cur ? ' <span class="tag">il tuo livello</span>' : '') + '</h2><div class="list">' +
+        list.filter(c => c.level === lv).map(c => '<a class="card row-item' + (dn[c.id] ? ' done' : '') + '" href="#/scheda/' + c.id + '"><span class="ri-ic">' + icon(dn[c.id] ? 'check' : c.kind === 'dialogo' ? 'users' : 'mic') + '</span><span class="ri-body"><b>' + esc(c.title) + '</b><small>' + (c.kind === 'dialogo' ? 'Dialogo' : 'Monologo') + ' · ' + mmss(c.time) + ' min · ' + esc(c.situation) + '</small></span>' + icon('chevron') + '</a>').join('') + '</div>').join('') +
+      (lvls.some(l => !open(l)) ? '<p class="locked-note">' + icon('lock') + ' Le schede dei livelli ' + lvls.filter(l => !open(l)).join(', ') + ' si sbloccano con il test di livello.</p>' : '');
+  };
+  R.scheda = async function (view, parts) {
+    const c = (C.speakCards || []).find(x => x.id === parts[0]); if (!c) return IL2.go('schede');
+    if (guard(view, c.level, ['schede', 'Parlato guidato'])) return;
+    const p = P(), dia = c.kind === 'dialogo', started = Date.now();
+    let timer = null, rec = null, stream = null, chunks = [], turn = 0;
+    const stopAll = () => { clearInterval(timer); IL2.speech.stop(); if (rec && rec.state !== 'inactive') rec.stop(); else if (stream) stream.getTracks().forEach(t => t.stop()); };
+    IL2.leaveGuard = null;
+    view.innerHTML = '<a class="back" href="#/schede">' + icon('back') + 'Parlato guidato</a><p class="eyebrow">' + c.level + ' · ' + (dia ? 'Dialogo' : 'Monologo') + ' · circa ' + mmss(c.time) + ' min</p><h1>' + esc(c.title) + '</h1>' +
+      '<div class="card prompt"><p>' + esc(c.situation) + (dia ? ' L\'app fa la parte di <b>' + esc(c.other) + '</b>.' : '') + '</p><p class="small"><b>Devi:</b></p><ol class="w-points">' + c.points.map(x => '<li>' + esc(x) + '</li>').join('') + '</ol>' +
+      '<details><summary>Frasi utili</summary><ul>' + c.useful.map(u => '<li><i>' + esc(u) + '</i></li>').join('') + '</ul></details></div>' +
+      '<div id="stage" class="card sc-stage"><p>Prima leggi bene la scheda. Quando vuoi, comincia a prepararti: hai ' + Math.round(c.prep / 60) + ' minuto per pensare a che cosa dire.</p><div class="row wrap"><button class="btn primary" id="prep">' + icon('clock') + ' Preparati (' + mmss(c.prep) + ')</button><button class="btn ghost" id="skip">Sono già pronto/a</button></div></div>';
+    const stage = view.querySelector('#stage');
+    const onLeave = () => { stopAll(); window.removeEventListener('hashchange', onLeave); };
+    window.addEventListener('hashchange', onLeave);
+    function prep() {
+      let left = c.prep;
+      stage.innerHTML = '<p class="sc-time" id="t">' + mmss(left) + '</p><p>Pensa a che cosa dire per ogni punto. Puoi prendere appunti su un foglio.</p><button class="btn primary" id="go">' + icon('mic') + ' Comincia a parlare</button>';
+      stage.querySelector('#go').addEventListener('click', speak);
+      timer = setInterval(() => { left--; const t = stage.querySelector('#t'); if (t) t.textContent = mmss(Math.max(0, left)); if (left <= 0) { clearInterval(timer); speak(); } }, 1000);
+    }
+    async function speak() {
+      clearInterval(timer);
+      const canRec = !!(navigator.mediaDevices && window.MediaRecorder);
+      if (canRec) {
+        try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); rec = new MediaRecorder(stream); chunks = []; rec.ondataavailable = e => chunks.push(e.data); rec.onstop = () => stream.getTracks().forEach(t => t.stop()); rec.start(); }
+        catch (e) { rec = null; }
+      }
+      const t0 = Date.now();
+      stage.innerHTML = '<div class="row between wrap"><span class="sc-time" id="t">0:00</span><span class="small muted">tempo consigliato: ' + mmss(c.time) + (rec ? ' · ' + icon('mic') + ' sto registrando' : '') + '</span></div>' +
+        '<div class="meter"><span id="bar" style="width:0"></span></div>' +
+        (dia ? '<div class="sc-turn"><p class="small muted">Dice ' + esc(c.other) + ':</p><p class="s-text" id="line" lang="it"></p><div class="row wrap"><button class="btn ghost small" id="again">' + icon('speaker') + ' Riascolta</button><button class="btn primary" id="next">Ho risposto: avanti</button></div></div>'
+          : '<p>Parla ad alta voce e cerca di dire tutti e tre i punti. Se ti blocchi, guarda le frasi utili.</p>') +
+        '<div class="row center"><button class="btn" id="end">' + icon('stop') + ' Ho finito</button></div>';
+      timer = setInterval(() => { const s = (Date.now() - t0) / 1000; const t = stage.querySelector('#t'); if (!t) return clearInterval(timer); t.textContent = mmss(s); stage.querySelector('#bar').style.width = Math.min(100, 100 * s / c.time) + '%'; t.classList.toggle('ok-text', s >= c.time * 0.8); }, 500);
+      if (dia) {
+        const show = () => { const l = c.turns[turn]; stage.querySelector('#line').textContent = l; IL2.speech.say(l); stage.querySelector('#next').textContent = turn < c.turns.length - 1 ? 'Ho risposto: avanti' : 'Fine del dialogo'; };
+        show();
+        stage.querySelector('#again').addEventListener('click', () => IL2.speech.say(c.turns[turn]));
+        stage.querySelector('#next').addEventListener('click', () => { if (turn < c.turns.length - 1) { turn++; show(); } else finish(); });
+      }
+      stage.querySelector('#end').addEventListener('click', finish);
+    }
+    function finish() {
+      clearInterval(timer); IL2.speech.stop();
+      const secs = Math.round((Date.now() - started) / 1000);
+      const after = url => {
+        stage.innerHTML = '<h3>Com\'è andata?</h3>' + (url ? '<audio controls src="' + url + '"></audio><p class="small muted">Riascoltati: la registrazione resta solo su questo dispositivo e non viene mandata a nessuno.</p>' : '') +
+          '<p class="small">Spunta quello che hai fatto. Serve solo a te per capire su che cosa allenarti.</p><div class="w-check"><b>I tre punti della scheda:</b>' +
+          c.points.slice().concat(['Ho parlato per quasi tutto il tempo', 'Ho usato frasi complete']).map((x, i) => '<label><input type="checkbox" class="sc-box" data-i="' + i + '"> ' + esc(x) + '</label>').join('') + '</div>' +
+          '<div class="row center wrap"><button class="btn primary" id="save">' + icon('check') + ' Salva</button><a class="btn ghost" href="#/scheda/' + c.id + '">Rifai la scheda</a></div>';
+        stage.querySelector('#save').addEventListener('click', () => {
+          const boxes = Array.from(stage.querySelectorAll('.sc-box')), ticked = boxes.filter(b => b.checked).length, pts = boxes.slice(0, 3).filter(b => b.checked).length;
+          E.recordAnswer(p, { skill: 'parlato', lv: c.level }, pts === 3, { logError: false });
+          p.stats = p.stats || {}; p.stats.cards = p.stats.cards || {}; p.stats.cards[c.id] = { at: Date.now(), points: pts };
+          done({ type: 'speakcard', ref: c.id, skill: 'parlato', correct: ticked, total: boxes.length, durationSec: secs });
+          IL2.award(5 + pts * 2);
+          stage.innerHTML = '<p class="ok-line">' + icon('check') + ' Salvato! ' + (pts === 3 ? 'Hai detto tutti e tre i punti: bravo/a!' : 'La prossima volta prova a dire tutti e tre i punti.') + '</p><div class="row center wrap">' + btn('schede', 'Altre schede', 'primary') + btn('oggi', 'Oggi') + '</div>';
+        });
+      };
+      if (rec && rec.state !== 'inactive') { rec.addEventListener('stop', () => after(URL.createObjectURL(new Blob(chunks, { type: rec.mimeType })))); rec.stop(); }
+      else after(null);
+    }
+    stage.querySelector('#prep').addEventListener('click', prep);
+    stage.querySelector('#skip').addEventListener('click', speak);
+  };
+
   async function recordAudio(btnEl, onDone) {
     const li = btnEl.closest('li'); const out = li.querySelector('.s-out');
     if (!navigator.mediaDevices || !window.MediaRecorder) { out.innerHTML = '<p class="small">La registrazione non è disponibile su questo dispositivo.</p>'; return; }
@@ -7300,9 +7844,10 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     let draft = ''; try { draft = localStorage.getItem(key) || ''; } catch (e) { /* nulla */ }
     const started = Date.now();
     view.innerHTML = '<a class="back" href="#/scrivi">' + icon('back') + 'Scrivere</a><p class="eyebrow">' + t.level + ' · ' + t.min + '–' + t.max + ' parole</p><h1>' + esc(t.title) + '</h1>' +
-      '<div class="card prompt"><p>' + esc(t.prompt) + '</p>' + (t.use && t.use.length ? '<p class="small">Prova a usare: ' + t.use.map(u => '<span class="chip small">' + esc(u) + '</span>').join(' ') + '</p>' : '') + '</div>' +
+      '<div class="card prompt"><p>' + esc(t.prompt) + '</p>' + (t.points ? '<p class="small"><b>Nel testo devi:</b></p><ol class="w-points">' + t.points.map(x => '<li>' + esc(x) + '</li>').join('') + '</ol>' : '') + (t.use && t.use.length ? '<p class="small">Prova a usare: ' + t.use.map(u => '<span class="chip small">' + esc(u) + '</span>').join(' ') + '</p>' : '') + '</div>' +
       (t.model ? '<details class="card"><summary>Vedi un esempio</summary><p><i>' + esc(t.model) + '</i></p></details>' : '') +
       '<textarea id="txt" rows="10" class="writing" placeholder="Scrivi qui il tuo testo…" spellcheck="false" lang="it">' + esc(draft) + '</textarea>' + X.accentBar() +
+      (t.points ? '<div class="card w-check"><b>Prima di mandare, controlla. Nel testo c\'è:</b>' + t.points.slice().concat(['Ho scritto tra ' + t.min + ' e ' + t.max + ' parole', t.short ? 'Ho cominciato con un saluto e ho firmato' : 'Ho riletto i verbi e gli accordi']).map(x => '<label><input type="checkbox" class="wc-box"> ' + esc(x) + '</label>').join('') + '</div>' : '') +
       '<div class="row between wrap"><span class="small muted" id="wc"></span><span class="row wrap"><button class="btn ghost" id="chk">' + icon('search') + ' Controlla</button><button class="btn primary" id="send">' + (window.IL2_SITE === 'studenti' ? 'Salva e manda all\'insegnante' : 'Invia all\'insegnante') + '</button></span></div><div id="fbk"></div>';
     const ta = view.querySelector('#txt'), wc = view.querySelector('#wc');
     X.bindAccents(view, ta);
@@ -7320,6 +7865,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     view.querySelector('#send').addEventListener('click', async () => {
       const text = ta.value.trim(); const n = (text.match(/[a-zà-ÿ']+/gi) || []).length;
       if (n < Math.min(10, t.min)) return toast('Il testo è troppo breve', 'bad');
+      if (t.points && Array.from(view.querySelectorAll('.wc-box')).some(b => !b.checked) && !await IL2.ui.confirm('Non hai spuntato tutti i punti della lista. Vuoi mandare il testo lo stesso?', 'Manda')) return;
       if (n < t.min && !await IL2.ui.confirm('Il testo ha ' + n + ' parole (richieste almeno ' + t.min + '). Vuoi inviarlo lo stesso?', 'Invia')) return;
       const chk = IL2.checker.check(text, t);
       try {
@@ -8060,6 +8606,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (it.t === 'tf') return it.a ? 'Vero' : 'Falso';
     if (it.t === 'match') return it.pairs.map(p => p.join(' – ')).join(', ');
     if (it.t === 'order') return it.a;
+    if (it.t === 'cloze') return it.gaps.map((g, i) => (i + 1) + '. ' + g.a.join(' / ')).join(' · ');
     return Array.isArray(it.a) ? it.a.join(' / ') : String(it.a == null ? '' : it.a);
   }
 
@@ -8258,7 +8805,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<p class="small muted">Un errore si considera corretto quando lo studente risponde bene due volte di seguito, nel ripasso o rifacendo l\'esercizio.</p></div>';
   }
 
-  const ACT_ICON = { unit: 'path', reading: 'read', listening: 'headphones', writing: 'pen', speaking: 'mic', vocab: 'dict', review: 'repeat', errors: 'wrench', topic: 'target', test: 'compass', mixed: 'repeat', game: 'puzzle' };
+  const ACT_ICON = { unit: 'path', reading: 'read', listening: 'headphones', writing: 'pen', speaking: 'mic', speakcard: 'users', vocab: 'dict', review: 'repeat', errors: 'wrench', topic: 'target', test: 'compass', mixed: 'repeat', game: 'puzzle' };
   function secActivity(s, p, d) {
     const acts = d.activity.slice(-60).reverse();
     const srs = Object.values(p.srs || {}), now = Date.now();
@@ -8524,7 +9071,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const s = C.stats();
     let h = head('Contenuti', s.units + ' lezioni con ' + s.items + ' esercizi · ' + s.words + ' parole · ' + s.readings + ' letture · ' + s.listenings + ' ascolti · ' + s.writing + ' tracce di scrittura · ' + s.placement + ' domande nel test di livello.') +
       '<div class="tabs">' + [['unita', 'Lezioni'], ['letture', 'Letture'], ['ascolti', 'Ascolti'], ['scrittura', 'Scrittura'], ['lessico', 'Lessico'], ['mie', 'Le mie liste'], ['lingue', 'Lingue d\'origine'], ['test', 'Test']].map(([k, l]) => '<a class="tab' + (k === tab ? ' on' : '') + '" href="#/contenuti?t=' + k + '">' + l + '</a>').join('') + '</div>';
-    if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b><small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
+    if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
     if (tab === 'letture') h += C.readings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.genre) + '</summary><p class="pre">' + esc(r.text) + '</p><ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'ascolti') h += C.listenings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.situation) + '</summary>' + r.script.map(([v, t]) => '<p><b>' + v + ':</b> ' + esc(t) + '</p>').join('') + '<ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'scrittura') h += C.writing.map(w => '<div class="card">' + levelBadge(w.level) + ' <b>' + esc(w.title) + '</b> · ' + w.min + '–' + w.max + ' parole<p>' + esc(w.prompt) + '</p></div>').join('');
