@@ -609,6 +609,10 @@ a.kpi:hover { border-color: var(--primary); }
 .bcell.on .bp { display: block; }
 .bcell.win { background: var(--c-game); color: #fff; border-color: var(--c-game); animation: glow-good .8s ease 2; }
 .bcell.shake { animation: shake .35s ease; }
+.bcell.show { border-color: var(--good); border-style: dashed; }
+.big-listen { width: 5.5rem; height: 5.5rem; border-radius: 50%; background: var(--c-game); color: #fff; }
+.big-listen .ic { width: 2.6rem; height: 2.6rem; }
+.seg.wrap { flex-wrap: wrap; }
 .big-emoji { font-size: 3.5rem; }
 .cw-num { font-weight: 700; color: var(--lv, var(--primary)); font-size: 1.8rem; }
 .cw-wrap { display: grid; grid-template-columns: auto minmax(240px, 1fr); gap: 18px; align-items: start; margin: 12px 0; }
@@ -5365,7 +5369,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       case 'listening': return C.listeningById[ref] ? 'Ascolto ' + C.listeningById[ref].level + ' · ' + C.listeningById[ref].title : ref;
       case 'writing': return C.writingById[ref] ? 'Scrittura ' + C.writingById[ref].level + ' · ' + C.writingById[ref].title : ref;
       case 'vocab': return C.vocabById[ref] ? 'Parole ' + C.vocabById[ref].level + ' · ' + C.vocabById[ref].title : ref;
-      case 'game': { const [g, k] = String(ref).split(':'); if (g === 'bingo') return 'Gioco · Bingo delle parole'; const cw = window.IL2.games && window.IL2.games.CROSSWORDS.find(s => s.id === k); return 'Gioco · Cruciverba' + (cw ? ' ' + cw.level + ' · ' + cw.title : ''); }
+      case 'game': { const [g, k] = String(ref).split(':'); if (g === 'bingo') return 'Gioco · Bingo delle parole' + (String(ref).endsWith(':ascolta') ? ' (ascolto)' : ''); const cw = window.IL2.games && window.IL2.games.CROSSWORDS.find(s => s.id === k); return 'Gioco · Cruciverba' + (cw ? ' ' + cw.level + ' · ' + cw.title : ''); }
       case 'speaking': return 'Pronuncia ' + ref;
       case 'speakcard': { const sc = (C.speakCards || []).find(x => x.id === ref); return sc ? 'Parlato guidato ' + sc.level + ' · ' + sc.title : ref; }
       case 'topic': return C.topics[ref] ? 'Rinforzo · ' + C.topics[ref].name : ref;
@@ -8292,7 +8296,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const b = games().bingo;
     view.innerHTML = '<div class="page-head"><h1>Giochi</h1><p class="muted">Per ripassare le parole in un altro modo. Usano il lessico dei livelli che hai sbloccato.</p></div>' +
       '<div class="game-grid">' +
-      '<a class="card game-card g-bingo" href="#/bingo"><span class="g-art" aria-hidden="true">🍎 🚌 ☀️<br>📕 🐟 🏠</span><b>Bingo delle parole</b><small>Guarda l\'immagine e trova la parola nella tua cartella, oppure scrivila. Per livello, per argomento o con parole miste.</small>' +
+      '<a class="card game-card g-bingo" href="#/bingo"><span class="g-art" aria-hidden="true">🍎 🚌 ☀️<br>📕 🐟 🏠</span><b>Bingo delle parole</b><small>Guarda l\'immagine o ascolta la parola e trovala nella tua cartella, oppure scrivila. Per livello, per argomento o con parole miste.</small>' +
       (b ? '<span class="g-stat">' + b.count + (b.count === 1 ? ' partita' : ' partite') + '</span>' : '') + '</a>' +
       '<a class="card game-card g-cw" href="#/cruciverba"><span class="g-art" aria-hidden="true">C A S A<br>· · · L<br>· · · B</span><b>Cruciverba</b><small>Dieci cruciverba dal più facile al più difficile: prima con frasi da completare, poi con definizioni in italiano.</small>' +
       '<span class="g-stat">' + cwDone + ' su ' + G.CROSSWORDS.length + ' completati</span></a></div>';
@@ -8325,14 +8329,14 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   R.bingo = async function (view, parts, q) {
     const srcs = bingoSources();
-    const modo = q.modo === 'scrivi' ? 'scrivi' : 'riconosci';
+    const modo = ['scrivi', 'ascolta'].includes(q.modo) ? q.modo : 'riconosci';
     const src = srcs.find(s => s.key === q.da);
     if (src && !src.locked) return playBingo(view, src, modo);
     const link = s => s.locked ? '<span class="chip-src locked" title="Si sblocca al livello ' + s.lv + '">' + icon('lock') + esc(s.label) + '</span>'
       : '<a class="chip-src" href="#/bingo?da=' + encodeURIComponent(s.key) + '&modo=' + modo + '"><b>' + esc(s.label) + '</b><small>' + esc(s.sub || '') + '</small></a>';
     const groups = ['Per livello', 'Materie', 'Per argomento'];
-    view.innerHTML = '<a class="back" href="#/giochi">' + icon('back') + 'Giochi</a><div class="page-head"><h1>Bingo delle parole</h1><p class="muted">Compare un\'immagine: trova la parola nella tua cartella, oppure scrivila. Fai bingo completando una riga, una colonna o una diagonale.</p></div>' +
-      '<div class="seg" role="group" aria-label="Modalità"><a class="' + (modo === 'riconosci' ? 'on' : '') + '" href="#/bingo?modo=riconosci">' + icon('target') + ' Riconosci la parola</a><a class="' + (modo === 'scrivi' ? 'on' : '') + '" href="#/bingo?modo=scrivi">' + icon('pen') + ' Scrivi la parola</a></div>' +
+    view.innerHTML = '<a class="back" href="#/giochi">' + icon('back') + 'Giochi</a><div class="page-head"><h1>Bingo delle parole</h1><p class="muted">Compare un\'immagine o senti una parola: trovala nella tua cartella, oppure scrivila. Una casella si segna solo con la risposta giusta: se sbagli, la parola torna più avanti. Fai bingo completando una riga, una colonna o una diagonale.</p></div>' +
+      '<div class="seg wrap" role="group" aria-label="Modalità"><a class="' + (modo === 'riconosci' ? 'on' : '') + '" href="#/bingo?modo=riconosci">' + icon('target') + ' Riconosci la parola</a><a class="' + (modo === 'ascolta' ? 'on' : '') + '" href="#/bingo?modo=ascolta">' + icon('speaker') + ' Ascolta la parola</a><a class="' + (modo === 'scrivi' ? 'on' : '') + '" href="#/bingo?modo=scrivi">' + icon('pen') + ' Scrivi la parola</a></div>' +
       '<h2 class="h-sec">Con quali parole?</h2><div class="src-row">' + link(srcs[0]) + '</div>' +
       groups.map(g => { const list = srcs.filter(s => s.group === g); return list.length ? '<h3 class="h-sub">' + g + '</h3><div class="src-row">' + list.map(link).join('') + '</div>' : ''; }).join('');
   };
@@ -8360,6 +8364,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const calls = shuffle(card); // passano solo le parole della cartella
     const marked = new Set(); const started = Date.now();
     let i = 0, ok = 0, answered = 0, busy = false; const misses = [];
+    // Una casella si conquista solo con la risposta giusta: la parola sbagliata torna più avanti (al massimo 3 volte in tutto).
+    const MAX_TURNS = 3; const turns = {}; const missed = new Map();
     const lines = [];
     for (let r = 0; r < size; r++) { lines.push([...Array(size)].map((_, c) => r * size + c)); lines.push([...Array(size)].map((_, c) => c * size + r)); }
     lines.push([...Array(size)].map((_, k) => k * size + k)); lines.push([...Array(size)].map((_, k) => k * size + size - 1 - k));
@@ -8375,9 +8381,14 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     function feedback(html, cls) { const f = $('.call-fb'); f.className = 'call-fb ' + (cls || ''); f.innerHTML = html; }
     function mark(w) { const k = card.indexOf(w); if (k >= 0) { marked.add(w.id); cells[k].classList.add('on'); } }
     function result(w, good, msg) {
-      answered++; if (good) ok++; else misses.push(w.it);
+      answered++; if (good) ok++; else { misses.push(w.it); missed.set(w.id, w); }
       E.recordAnswer(P(), { skill: 'lessico', lv: w.level || 'A1' }, good, { logError: false });
-      if (onCard.has(w.id)) mark(w);
+      if (good && onCard.has(w.id)) mark(w);
+      if (!good) {
+        const k = card.indexOf(w); if (k >= 0) { cells[k].classList.add('show'); setTimeout(() => cells[k].classList.remove('show'), 1600); }
+        if ((turns[w.id] || 0) < MAX_TURNS) { calls.splice(Math.min(calls.length, i + 2), 0, w); msg += ' <span class="muted">Questa parola torna più avanti.</span>'; }
+      }
+      if (modo === 'ascolta') $('.call-pic').textContent = w.pic;
       feedback(msg, good ? 'good' : 'bad'); say(w.it);
       busy = true;
       const line = hasBingo();
@@ -8387,19 +8398,31 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     }
     function next() {
       busy = false; feedback('');
-      const w = calls[i++];
+      let w = calls[i++];
+      while (w && marked.has(w.id)) w = calls[i++];
       if (!w) return finish();
-      $('.progress span').style.width = Math.round(100 * (i - 1) / calls.length) + '%';
-      $('.count').textContent = i + ' / ' + calls.length;
-      $('.call-pic').textContent = w.pic;
-      if (modo === 'riconosci') {
-        $('.call-ask').textContent = 'Che cos\'è? Tocca la parola nella cartella.';
-        $('.call-act').innerHTML = '<div class="row wrap center">' + (rules.listen ? '<button class="btn ghost small lis" type="button">' + icon('speaker') + ' Ascolta la parola</button>' : '') + '</div>';
-        if (rules.listen) $('.call-act .lis').addEventListener('click', () => say(w.it));
+      turns[w.id] = (turns[w.id] || 0) + 1;
+      $('.progress span').style.width = Math.round(100 * marked.size / n) + '%';
+      $('.count').textContent = marked.size + ' / ' + n;
+      $('.call-pic').textContent = modo === 'ascolta' ? '' : w.pic;
+      if (modo === 'ascolta') {
+        $('.call-pic').innerHTML = '<button class="btn icon big-listen" type="button" aria-label="Ascolta di nuovo">' + icon('speaker') + '</button>';
+        $('.call-pic .big-listen').addEventListener('click', () => say(w.it));
+        $('.call-ask').textContent = 'Ascolta. Tocca la parola nella cartella.';
+        $('.call-act').innerHTML = '<div class="row wrap center"><button class="btn ghost small lis" type="button">' + icon('speaker') + ' Ascolta di nuovo</button></div>';
+        $('.call-act .lis').addEventListener('click', () => say(w.it));
+        setTimeout(() => say(w.it), 250);
+      }
+      if (modo === 'riconosci' || modo === 'ascolta') {
+        if (modo === 'riconosci') {
+          $('.call-ask').textContent = 'Che cos\'è? Tocca la parola nella cartella.';
+          $('.call-act').innerHTML = '<div class="row wrap center">' + (rules.listen ? '<button class="btn ghost small lis" type="button">' + icon('speaker') + ' Ascolta la parola</button>' : '') + '</div>';
+          if (rules.listen) $('.call-act .lis').addEventListener('click', () => say(w.it));
+        }
         cells.forEach(c => { c.onclick = () => {
-          if (busy) return; const t = card[+c.dataset.k];
+          if (busy || marked.has(card[+c.dataset.k].id)) return; const t = card[+c.dataset.k];
           if (t.id === w.id) result(w, true, 'Bravo! <b lang="it">' + esc(w.it) + '</b>.');
-          else { c.classList.add('shake'); setTimeout(() => c.classList.remove('shake'), 400); result(w, false, 'No, questa è <b lang="it">' + esc(w.it) + '</b>.'); }
+          else { c.classList.add('shake'); setTimeout(() => c.classList.remove('shake'), 400); result(w, false, 'No, hai toccato <b lang="it">' + esc(t.it) + '</b>. La parola giusta è <b lang="it">' + esc(w.it) + '</b>.'); }
         }; });
       } else {
         $('.call-ask').innerHTML = 'Scrivi la parola: <span class="hint-len">' + w.it.split('').map((ch, k) => ch === ' ' ? '&nbsp;&nbsp;' : rules.first && k === 0 ? esc(ch) : '_').join(' ') + '</span>';
@@ -8421,12 +8444,14 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     function finish() {
       const bingo = !!hasBingo();
       const r = { correct: ok, total: answered, durationSec: Math.round((Date.now() - started) / 1000) };
-      IL2.log({ type: 'game', ref: 'bingo:' + src.key, skill: 'lessico', correct: ok, total: answered, durationSec: r.durationSec, misses: misses.slice(0, 20) });
+      // Le parole sbagliate entrano nel Ripasso parole di Oggi (e l'insegnante le vede nella pagina dello studente).
+      for (const w of missed.values()) E.srsReview(P(), w.id, 0);
+      IL2.log({ type: 'game', ref: 'bingo:' + src.key + (modo === 'ascolta' ? ':ascolta' : ''), skill: 'lessico', correct: ok, total: answered, durationSec: r.durationSec, misses: [...new Set(misses)].slice(0, 20) });
       const g = games(); g.bingo = { count: ((g.bingo && g.bingo.count) || 0) + 1, at: Date.now() };
       IL2.award(2 + ok); IL2.save();
       view.innerHTML = '<section class="result card"><div class="big-emoji" aria-hidden="true">' + (bingo ? '🎉' : '🙂') + '</div><h2>' + (bingo ? 'Bingo!' : 'Partita finita') + '</h2>' +
         '<p class="muted">' + ok + ' risposte giuste su ' + answered + '.</p>' +
-        (misses.length ? '<p>Da ripassare: ' + [...new Set(misses)].map(m => '<b lang="it">' + esc(m) + '</b>').join(', ') + '</p>' : '') +
+        (misses.length ? '<p>Da ripassare: ' + [...new Set(misses)].map(m => '<b lang="it">' + esc(m) + '</b>').join(', ') + '.<br><small class="muted">Le ritrovi nel Ripasso parole di Oggi.</small></p>' : '') +
         '<div class="row center wrap"><a class="btn ghost" href="#/giochi">Giochi</a><a class="btn primary" href="#/bingo?da=' + encodeURIComponent(src.key) + '&modo=' + modo + '&n=' + Date.now() + '">Nuova cartella</a></div></section>';
     }
     next();
@@ -8811,11 +8836,16 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const srs = Object.values(p.srs || {}), now = Date.now();
     const learned = srs.filter(c => c.box >= 3).length, due = srs.filter(c => c.due <= now).length;
     const themes = C.vocab.map(t => ({ t, n: t.words.filter(w => p.srs[w.id]).length, l: t.words.filter(w => p.srs[w.id] && p.srs[w.id].box >= 3).length })).filter(x => x.n);
+    // Parole sbagliate nel bingo negli ultimi 30 giorni (entrano anche nel suo Ripasso parole).
+    const gm = {};
+    for (const a of d.activity) if (a.type === 'game' && String(a.ref).startsWith('bingo') && a.at >= now - 30 * 864e5) for (const m of a.misses || []) gm[m] = (gm[m] || 0) + 1;
+    const gmList = Object.entries(gm).sort((x, y) => y[1] - x[1]).slice(0, 20);
     const counts = { unit: Object.keys(p.unitsDone || {}).length, reading: Object.keys(p.readingsDone || {}).length, listening: Object.keys(p.listeningsDone || {}).length, writing: d.submissions.length };
     return '<div class="grid2"><div class="card"><h3>Cosa ha fatto</h3><div class="mini-stats"><span>' + icon('path') + '<b>' + counts.unit + '</b> lezioni</span><span>' + icon('read') + '<b>' + counts.reading + '</b> letture</span><span>' + icon('headphones') + '<b>' + counts.listening + '</b> ascolti</span><span>' + icon('pen') + '<b>' + counts.writing + '</b> scritti</span></div>' +
       '<ul class="activity small">' + (acts.length ? acts.map(a => '<li>' + icon(ACT_ICON[a.type] || 'check') + '<span>' + esc(C.describe(a.type, a.ref) || a.type) + '</span><span class="muted">' + (a.total ? a.correct + '/' + a.total + ' · ' : '') + (a.durationSec ? Math.max(1, Math.round(a.durationSec / 60)) + ' min · ' : '') + fmtDate(a.at, true) + '</span></li>').join('') : '<li class="muted">Nessuna attività.</li>') + '</ul></div>' +
       '<div class="card"><h3>Lessico</h3><div class="mini-stats"><span><b>' + srs.length + '</b> parole incontrate</span><span><b>' + learned + '</b> memorizzate</span><span><b>' + due + '</b> da ripassare</span></div>' +
-      (themes.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Tema</th><th>Liv.</th><th>Memorizzate</th></tr>' + themes.map(x => '<tr><td>' + esc(x.t.title) + '</td><td>' + x.t.level + '</td><td class="mcell">' + meter(x.l, x.t.words.length, x.l === x.t.words.length ? 'ok' : '') + '<small>' + x.l + '/' + x.t.words.length + '</small></td></tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora iniziato il lessico.</p>') + '</div></div>';
+      (themes.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Tema</th><th>Liv.</th><th>Memorizzate</th></tr>' + themes.map(x => '<tr><td>' + esc(x.t.title) + '</td><td>' + x.t.level + '</td><td class="mcell">' + meter(x.l, x.t.words.length, x.l === x.t.words.length ? 'ok' : '') + '<small>' + x.l + '/' + x.t.words.length + '</small></td></tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora iniziato il lessico.</p>') +
+      '<h4>Parole sbagliate nel bingo <small class="muted">(ultimi 30 giorni)</small></h4>' + (gmList.length ? '<p class="small">' + gmList.map(([w, c]) => '<span class="tag" lang="it">' + esc(w) + (c > 1 ? ' ×' + c : '') + '</span>').join(' ') + '</p><p class="small muted">Queste parole tornano nel suo Ripasso parole.</p>' : '<p class="muted small">Nessuna parola sbagliata nel bingo.</p>') + '</div></div>';
   }
 
   function secWritings(s, d) {
