@@ -682,6 +682,43 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 .w-check label { display: flex !important; flex-direction: row; font-weight: 400; margin: 0; }
 .w-check label input { width: auto; flex: none; margin: .2em 0 0; }
 
+/* ---------- Verso la verifica ---------- */
+.v-hero { display: flex; gap: 16px; align-items: flex-start; background: linear-gradient(135deg, color-mix(in srgb, var(--c-test) 12%, var(--surface)), var(--surface)); }
+.v-hero h1 { margin: 2px 0 6px; }
+.v-hero p { margin: 0 0 6px; }
+.v-hero-ic { font-size: 2.6rem; line-height: 1; flex: none; }
+.v-all { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; border-left: 4px solid var(--c-test); }
+.v-all-body { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 220px; }
+.v-all-body small { color: var(--muted); }
+.v-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.v-chip { display: inline-flex; align-items: center; gap: 3px; font-size: .74rem; padding: 2px 8px; border-radius: 99px; background: var(--surface-2); color: var(--muted); }
+.v-chip.on { background: var(--good-soft); color: var(--good); font-weight: 600; }
+.v-chip .ic { width: 13px; height: 13px; }
+.v-emoji { font-size: 1.35rem; }
+.row-item.locked { opacity: .7; }
+.v-char-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.v-char-list li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); }
+.v-char-list li > span:first-child { font-size: 1.5rem; line-height: 1; }
+.v-char-list li > span:last-child { display: flex; flex-direction: column; }
+.v-char-list small { color: var(--muted); }
+.v-summary p { margin: 6px 0 0; line-height: 1.6; }
+.v-before { display: flex; gap: 10px; align-items: flex-start; }
+.v-before .ic { flex: none; color: var(--primary); }
+.v-gloss table { margin-top: 10px; width: 100%; }
+.v-gloss td:first-child { white-space: nowrap; }
+.tile.v-part { font: inherit; text-align: left; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.tile.v-part:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line)); box-shadow: var(--shadow); }
+.tile.v-part.done .t-icon { background: var(--good-soft); color: var(--good); }
+.v-parts { margin-bottom: 14px; }
+.v-rule { border-left: 4px solid var(--c-test); }
+.v-rule h3 { margin: 4px 0 8px; }
+#vbox, #vallbox { scroll-margin-top: 70px; }
+@media (max-width: 760px) {
+  .nav a { min-width: 0; flex: 1 1 0; padding: 6px 2px; }
+  .v-hero-ic { font-size: 2rem; }
+  .v-gloss td:first-child { white-space: normal; }
+}
+
 </style>
 </head>
 <body>
@@ -740,7 +777,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
     return {
       l1: l1 || 'en', level: null, theta: null, levelOverride: null,
       skills: { grammatica: 0, lessico: 0, lettura: 0, ascolto: 0, scrittura: 0, parlato: 0 },
-      topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {},
+      topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {}, verificheDone: {},
       speakingDone: {}, xp: 0, streak: { count: 0, best: 0, last: null }, badges: [], badgeLog: {}, stats: { writings: 0 },
       placement: [], nextTestDue: null, testRequested: false, timeLog: {}, practice: {},
       prefs: { fontScale: 1, dyslexia: false, ttsRate: 0.9, showL1: true, contrast: false },
@@ -750,7 +787,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 
   // Campi del profilo che lo studente può aggiornare (gli altri sono gestiti dal server o dall'insegnante).
   const STUDENT_FIELDS = ['skills', 'topics', 'srs', 'errors', 'unitsDone', 'readingsDone', 'listeningsDone',
-    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice'];
+    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice', 'verificheDone'];
 
   function publicUser(u) {
     return {
@@ -1564,6 +1601,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
     mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
     pen: '<path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3L8.5 19z"/><path d="M13.5 7l3.5 3.5"/>',
     read: '<path d="M3 6h7a2 2 0 0 1 2 2v12a1.5 1.5 0 0 0-1.5-1.5H3z"/><path d="M21 6h-7a2 2 0 0 0-2 2v12a1.5 1.5 0 0 1 1.5-1.5H21z"/>',
+    clip: '<rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5V3.5h6v1"/><rect x="9" y="2.8" width="6" height="3.4" rx="1"/><path d="m8.5 13 2.3 2.3 4.7-4.8"/>',
     target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
     repeat: '<path d="M4 12a7.5 7.5 0 0 1 12.8-5.3L19 9"/><path d="M19 4v5h-5"/><path d="M20 12a7.5 7.5 0 0 1-12.8 5.3L5 15"/><path d="M5 20v-5h5"/>',
     wrench: '<path d="M14.5 6.5a4 4 0 0 0 5 5l-8.7 8.7a2.1 2.1 0 0 1-3-3z"/><path d="M14.5 6.5 17 4l3 3-2.5 2.5"/>',
@@ -5167,6 +5205,659 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 })();
 
 ;
+/* js/content/verifiche.js */
+/*
+ * «Verso la verifica»: materiale per prepararsi alle verifiche di classe.
+ * Ogni GRUPPO è un argomento di una verifica (es. «Promessi sposi»). Per aggiungere materiale:
+ *   - un nuovo gruppo: C.verifiche.push({ id, title, icon, desc, characters?, quotes?, texts: [...] })
+ *   - un nuovo testo in un gruppo: aggiungere un oggetto a texts (id unico, mai da cambiare: i progressi
+ *     sono salvati con l'id).
+ * Ogni testo ha: level ('A2', 'B1'…; levelLabel facoltativo, es. 'A2+'), cap (da dove viene), title,
+ * summary/before (facoltativi), text, glossary [parola mostrata, significato, parola da sottolineare nel testo ('' = non sottolineare)],
+ * e tre parti: lessico, grammatica ({ theory, items }), comprensione. Gli esercizi usano i tipi già
+ * presenti nell'app (mc, tf, gap, match, order, cloze). write (facoltativo) = traccia di scrittura per
+ * l'insegnante (finisce in Scrivere solo dentro la verifica, non nell'elenco generale).
+ * I testi sono dell'insegnante (prof.ssa De Gaspari), adattati dai Promessi sposi di A. Manzoni.
+ */
+(function () {
+  const C = (window.IL2 = window.IL2 || {}).content = window.IL2.content || {};
+  C.verifiche = C.verifiche || [];
+
+  const L = 'lessico', CO = 'comprensione';
+
+  C.verifiche.push({
+    id: 'promessi-sposi', title: 'Promessi sposi', icon: '📜',
+    desc: 'I primi capitoli del romanzo di Alessandro Manzoni: don Abbondio e i bravi, Perpetua, Renzo, fra Cristoforo.',
+    what: ['il lessico dei testi', 'la grammatica che hai studiato', 'le domande di comprensione'],
+    characters: [
+      ['⛪', 'Don Abbondio', 'il curato (prete) del paese: non è coraggioso e ha paura dei potenti'],
+      ['🧑', 'Renzo', 'un giovane del paese: vuole sposare Lucia'],
+      ['👩', 'Lucia', 'la ragazza che Renzo vuole sposare'],
+      ['👵', 'Agnese', 'la mamma di Lucia'],
+      ['🧺', 'Perpetua', 'la governante di don Abbondio: è curiosa ma fedele'],
+      ['🗡️', 'I bravi', 'uomini forti e pericolosi al servizio di don Rodrigo'],
+      ['🏰', 'Don Rodrigo', 'un signore potente: non vuole il matrimonio di Renzo e Lucia'],
+      ['📜', 'Azzecca-garbugli', 'l\'avvocato di Lecco: ha paura di don Rodrigo e manda via Renzo'],
+      ['🙏', 'Fra Cristoforo', 'un frate buono e forte; da giovane si chiamava Lodovico'],
+      ['🛡️', 'Cristoforo, il servitore', 'il servitore di Lodovico: muore nel duello']
+    ],
+    // «Chi lo dice?»: frasi dei testi, per il ripasso di tutto
+    quotes: [
+      ['«Signor curato, domani lei non deve fare quel matrimonio.»', 'un bravo'],
+      ['«Cosa avete? Siete pallido!»', 'Perpetua'],
+      ['«Non dire niente a nessuno!»', 'don Abbondio'],
+      ['«Oggi non è possibile. Ci sono degli impedimenti.»', 'don Abbondio'],
+      ['«Non parli in latino, signor curato! Mi spieghi che cosa succede!»', 'Renzo'],
+      ['«Le chiedo perdono.»', 'fra Cristoforo']
+    ],
+    texts: [
+      // ======================= CAPITOLO 1 =======================
+      {
+        id: 'ps-a2-bravi', level: 'A2', cap: 'Capitolo 1', title: 'Don Abbondio e i bravi', icon: '🗡️',
+        before: 'Secondo te, chi sono «i bravi»? Amici o persone cattive?',
+        text: `Don Abbondio è un prete. Vive in un piccolo paese. Don Abbondio non è coraggioso. Non gli piacciono i problemi. Lui vuole solo vivere tranquillo.
+Un giorno, don Abbondio cammina in un sentiero. È il pomeriggio. Lui legge un libro e guarda il panorama. A un certo punto, vede due uomini. Gli uomini aspettano. Sono i "bravi": uomini forti e pericolosi. Lavorano per un signore importante, Don Rodrigo.
+Don Abbondio ha paura. Il suo cuore batte forte. Lui pensa: "Torno indietro?" Ma è troppo tardi: i due uomini lo vedono. Don Abbondio continua a camminare. Cerca di essere calmo.
+I due bravi parlano con don Abbondio. Un uomo dice: "Signor curato, domani lei non deve fare quel matrimonio." Don Abbondio capisce subito: parlano del matrimonio di Renzo e Lucia. Domani è il giorno del matrimonio.
+L'altro bravo dice: "Il nostro padrone non vuole questo matrimonio. Se lei tiene alla vita, non deve fare il matrimonio." Poi i due uomini vanno via.
+Don Abbondio resta solo, in mezzo alla strada. Ha molta paura. È pallido. Non sa cosa fare.`,
+        glossary: [
+          ['curato / prete', 'uomo di chiesa', 'prete'], ['coraggioso ≠ pauroso', 'che non ha paura ≠ che ha paura', 'coraggioso'],
+          ['sentiero', 'piccola strada in campagna'], ['bravo (in questa storia)', 'uomo forte e pericoloso, al servizio di un capo', 'bravi'],
+          ['padrone', 'capo, persona importante'], ['pallido', 'il viso diventa bianco (per paura)'],
+          ['matrimonio', 'cerimonia di due persone che si sposano']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['curato', 'uomo di chiesa'], ['sentiero', 'piccola strada in campagna'], ['padrone', 'capo, persona importante'], ['pallido', 'con il viso bianco per la paura'], ['matrimonio', 'cerimonia di due persone che si sposano']] },
+          { t: 'mc', q: 'Completa: «Don Abbondio è il ___ del paese.»', o: ['curato', 'padrone', 'matrimonio', 'pallido'], a: 0 },
+          { t: 'mc', q: 'Completa: «I due bravi lavorano per un ___ importante.»', o: ['padrone', 'curato', 'sentiero', 'matrimonio'], a: 0 },
+          { t: 'mc', q: 'Completa: «Domani è il giorno del ___ di Renzo e Lucia.»', o: ['matrimonio', 'padrone', 'curato', 'sentiero'], a: 0 },
+          { t: 'mc', q: 'Completa: «Don Abbondio ha molta ___ quando vede i bravi.»', o: ['paura', 'fame', 'pace', 'voglia'], a: 0 },
+          { t: 'mc', q: 'Completa: «Dopo l\'incontro, don Abbondio è ___ .»', o: ['pallido', 'contento', 'coraggioso', 'tranquillo'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «coraggioso» è…', o: ['pauroso', 'pallido', 'tranquillo'], a: 0 },
+          { t: 'gap', q: 'Don Abbondio non è coraggioso: è ___ .', hint: 'che ha paura', a: ['pauroso'] },
+          { t: 'gap', q: 'Una piccola strada in campagna si chiama ___ .', a: ['sentiero', 'il sentiero', 'un sentiero'] },
+          { t: 'mc', q: 'In questa storia, chi sono i «bravi»?', o: ['Uomini forti e pericolosi, al servizio di un capo', 'Ragazzi che vanno bene a scuola', 'Amici di don Abbondio'], a: 0, exp: 'Di solito «bravo» vuol dire «buono, capace». Nei Promessi sposi i bravi sono uomini pericolosi al servizio di un signore.' }
+        ],
+        grammatica: {
+          title: 'Il presente e il futuro',
+          theory: `<p>Il testo racconta la storia al <b>presente</b>: <i>don Abbondio <b>cammina</b>, <b>legge</b>, <b>vede</b> due uomini.</i></p>
+<table><tr><th></th><th>-are</th><th>-ere</th><th>-ire</th></tr>
+<tr><td>lui / lei</td><td>cammin<b>a</b></td><td>legg<b>e</b></td><td>sent<b>e</b></td></tr>
+<tr><td>loro</td><td>cammin<b>ano</b></td><td>legg<b>ono</b></td><td>sent<b>ono</b></td></tr></table>
+<p>Irregolari: <i>essere → è, sono · avere → ha, hanno · andare → va, vanno · fare → fa · dire → dice · sapere → sa</i>.</p>
+<p>Per dire che cosa succederà <b>domani</b> usiamo il <b>futuro</b>: <i>parlare → parler<b>à</b> · prendere → prender<b>à</b> · partire → partir<b>à</b></i>. Loro: <i>parler<b>anno</b></i>.</p>
+<p>Futuri irregolari: <i>essere → sarà · avere → avrà · fare → farà · andare → andrà · dire → dirà · sapere → saprà · potere → potrà</i>.</p>`,
+          items: [
+            { t: 'gap', q: 'Don Abbondio (vivere) ___ in un piccolo paese.', a: ['vive'], topic: 'presente-regolare' },
+            { t: 'gap', q: 'Un giorno, don Abbondio (camminare) ___ in un sentiero.', a: ['cammina'], topic: 'presente-regolare' },
+            { t: 'gap', q: 'I due uomini (aspettare) ___ .', a: ['aspettano'], topic: 'presente-regolare' },
+            { t: 'gap', q: 'I bravi (lavorare) ___ per don Rodrigo.', a: ['lavorano'], topic: 'presente-regolare' },
+            { t: 'gap', q: 'Poi i due uomini (andare) ___ via.', a: ['vanno'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Don Abbondio non (sapere) ___ cosa fare.', a: ['sa'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Domani don Abbondio non (fare) ___ il matrimonio.', a: ['farà'], topic: 'futuro' },
+            { t: 'gap', q: 'Domani don Abbondio (dire) ___ a Renzo che non è possibile.', a: ['dirà'], topic: 'futuro' },
+            { t: 'gap', q: 'Renzo e Lucia (essere) ___ tristi.', hint: 'futuro', a: ['saranno'], topic: 'futuro' },
+            { t: 'gap', q: 'Stanotte don Abbondio (avere) ___ paura.', hint: 'futuro', a: ['avrà'], topic: 'futuro' },
+            { t: 'mc', q: 'Domani Renzo ___ da don Abbondio.', o: ['andrà', 'andava', 'è andato'], a: 0, topic: 'futuro', exp: 'Con «domani» si usa il futuro: andrà.' }
+          ]
+        },
+        comprensione: [
+          { t: 'tf', q: 'Don Abbondio è un uomo coraggioso.', a: false },
+          { t: 'tf', q: 'Don Abbondio incontra due bravi nel sentiero.', a: true },
+          { t: 'tf', q: 'I bravi vogliono fare il matrimonio di Renzo e Lucia.', a: false },
+          { t: 'tf', q: 'Don Abbondio ha paura dei bravi.', a: true },
+          { t: 'tf', q: 'Alla fine, don Abbondio è contento e tranquillo.', a: false },
+          { t: 'mc', q: 'Chi è don Abbondio?', o: ['Il prete (curato) di un piccolo paese', 'Un signore ricco e potente', 'Uno dei due bravi'], a: 0 },
+          { t: 'mc', q: 'Dove incontra i due bravi?', o: ['In un sentiero', 'In chiesa', 'A casa sua'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa don Abbondio mentre cammina?', o: ['Legge un libro e guarda il panorama', 'Parla con Perpetua', 'Canta una canzone'], a: 0 },
+          { t: 'mc', q: 'Perché don Abbondio non torna indietro?', o: ['Perché i due uomini lo vedono: è troppo tardi', 'Perché non ha paura', 'Perché vuole parlare con i bravi'], a: 0 },
+          { t: 'mc', q: 'Che cosa dicono i bravi a don Abbondio?', o: ['Che domani non deve fare il matrimonio di Renzo e Lucia', 'Che il matrimonio è oggi', 'Che deve andare da Renzo'], a: 0 },
+          { t: 'mc', q: 'Per chi lavorano i bravi?', o: ['Per don Rodrigo', 'Per don Abbondio', 'Per Renzo'], a: 0 },
+          { t: 'mc', q: 'Come si sente don Abbondio alla fine?', o: ['Ha molta paura e non sa cosa fare', 'È contento', 'È arrabbiato con Renzo'], a: 0 }
+        ],
+        write: { title: 'Che cosa fa don Abbondio domani?', prompt: 'Secondo te, che cosa fa don Abbondio domani? Scrivi 4-5 frasi. Usa il futuro.', min: 30, max: 70, use: ['farà', 'andrà', 'dirà'] }
+      },
+      {
+        id: 'ps-b1-bravi', level: 'B1', cap: 'Capitolo 1', title: 'Don Abbondio e i bravi', icon: '🗡️',
+        before: 'Guarda il titolo: chi pensi che siano «i bravi»? Amici, soldati o criminali?',
+        text: `Don Abbondio, il curato del paese, era un uomo tranquillo, che amava soprattutto la pace. Non era coraggioso: quando c'era un pericolo, preferiva sempre evitarlo, invece di affrontarlo. Diceva spesso che, in un mondo pieno di prepotenti, un uomo pacifico come lui doveva solo stare attento a non farsi del male.
+Un pomeriggio d'autunno, don Abbondio camminava lungo un sentiero, leggendo tranquillamente il suo breviario e ogni tanto alzando gli occhi per guardare il paesaggio. Arrivato a una curva, vide due uomini fermi, uno di fronte all'altro, come se aspettassero qualcuno. Erano vestiti in un modo che li faceva riconoscere subito: erano due bravi, cioè due uomini al servizio di un signore potente, pronti a usare la violenza per lui.
+Il cuore di don Abbondio cominciò a battere forte. Pensò per un momento di tornare indietro, ma capì che ormai i due bravi lo avevano visto: scappare sarebbe stato troppo evidente. Allora continuò a camminare, cercando di sembrare calmo, mentre in realtà pensava velocemente a cosa fare.
+Quando fu vicino, uno dei due bravi gli si fece incontro e gli chiese, con un tono che non ammetteva rifiuti: "Signor curato, lei domani deve rinunciare a fare quel matrimonio." Don Abbondio capì subito che parlavano delle nozze tra Renzo e Lucia, che lui stesso doveva celebrare il giorno dopo.
+L'altro bravo aggiunse, in modo ancora più minaccioso, che il loro padrone non voleva assolutamente quel matrimonio, e che era meglio per don Abbondio obbedire, se teneva alla propria vita. Poi i due uomini se ne andarono, lasciando il povero curato fermo in mezzo alla strada, pallido e spaventato.`,
+        glossary: [
+          ['curato', 'sacerdote responsabile di una parrocchia'], ['prepotente', 'persona che usa la forza per imporsi sugli altri', 'prepotenti'],
+          ['breviario', 'libro di preghiere dei sacerdoti'], ['bravo (sostantivo)', 'uomo armato al servizio di un signore, spesso violento', 'bravi'],
+          ['farsi incontro', 'avvicinarsi a qualcuno', 'si fece incontro'], ['minaccioso', 'che fa paura, che contiene una minaccia'], ['nozze', 'matrimonio']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['prepotente', 'chi usa la forza per imporsi sugli altri'], ['breviario', 'libro di preghiere dei sacerdoti'], ['farsi incontro', 'avvicinarsi a qualcuno'], ['minaccioso', 'che fa paura, che contiene una minaccia'], ['nozze', 'matrimonio']] },
+          { t: 'mc', q: 'Il curato è…', o: ['il sacerdote responsabile di una parrocchia', 'un signore potente del paese', 'un uomo armato al servizio di un signore'], a: 0 },
+          { t: 'mc', q: 'Un uomo «pacifico»…', o: ['ama la pace ed evita i conflitti', 'usa spesso la violenza', 'parla sempre ad alta voce'], a: 0 },
+          { t: 'mc', q: 'Don Abbondio preferiva evitare il pericolo «invece di affrontarlo». Affrontare un pericolo vuol dire…', o: ['andargli incontro con coraggio', 'scappare lontano', 'non accorgersene'], a: 0 },
+          { t: 'mc', q: '«Un tono che non ammetteva rifiuti» vuol dire che…', o: ['non si poteva dire di no', 'era un tono gentile e allegro', 'era solo una domanda'], a: 0 },
+          { t: 'mc', q: '«Se teneva alla propria vita» vuol dire…', o: ['se gli importava di restare vivo', 'se voleva una vita tranquilla in campagna', 'se teneva la vita in mano'], a: 0 },
+          { t: 'gap', q: 'minaccia → aggettivo: ___', a: ['minaccioso'], exp: 'minaccia → minaccioso (come pericolo → pericoloso).' },
+          { t: 'gap', q: 'pericolo → aggettivo: ___', a: ['pericoloso'] },
+          { t: 'gap', q: 'violenza → aggettivo: ___', a: ['violento'] },
+          { t: 'gap', q: 'pace → aggettivo: ___', a: ['pacifico'] },
+          { t: 'gap', q: 'prepotente → nome: la ___', a: ['prepotenza'] },
+          { t: 'mc', q: '«Scappare sarebbe stato troppo evidente»: evidente vuol dire…', o: ['che tutti possono vedere e capire', 'molto pericoloso', 'molto veloce'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Il discorso indiretto (e i tempi del racconto)',
+          theory: `<p>Nel <b>discorso diretto</b> riportiamo le parole esatte, tra virgolette: <i>Il bravo disse: «Lei domani deve rinunciare a fare quel matrimonio».</i></p>
+<p>Nel <b>discorso indiretto</b> le raccontiamo noi, con <b>che</b>: <i>Il bravo disse a don Abbondio <b>che il giorno dopo doveva</b> rinunciare a fare quel matrimonio.</i></p>
+<p>Quando il verbo che introduce è al passato (<i>disse, pensò, minacciò</i>) cambiano:</p>
+<table><tr><th>discorso diretto</th><th>discorso indiretto</th></tr>
+<tr><td>presente: <i>vuole, deve</i></td><td>imperfetto: <i>voleva, doveva</i></td></tr>
+<tr><td>futuro: <i>farò</i></td><td>condizionale passato: <i>avrebbe fatto</i></td></tr>
+<tr><td><i>io, lei, nostro</i></td><td><i>lui, lui, loro</i></td></tr>
+<tr><td><i>domani · oggi · questo</i></td><td><i>il giorno dopo · quel giorno · quello</i></td></tr></table>
+<p>Nel racconto Manzoni usa il <b>passato remoto</b> per le azioni (<i>vide, capì, continuò</i>) e l'<b>imperfetto</b> per le descrizioni (<i>era tranquillo, camminava</i>).</p>`,
+          items: [
+            { t: 'gap', q: '«Il nostro padrone non vuole questo matrimonio.» → Il bravo disse che il loro padrone non ___ quel matrimonio.', hint: 'volere', a: ['voleva'], topic: 'discorso-indiretto' },
+            { t: 'mc', q: '«Il nostro padrone non vuole questo matrimonio.» → I bravi dissero che ___ padrone non voleva quel matrimonio.', o: ['il loro', 'il nostro', 'il vostro'], a: 0, topic: 'discorso-indiretto', exp: 'Parlano i bravi (loro): nostro → il loro.' },
+            { t: 'mc', q: '«… non vuole questo matrimonio.» → Il bravo disse che il padrone non voleva ___ matrimonio.', o: ['quel', 'questo', 'quello'], a: 0, topic: 'discorso-indiretto', exp: 'Nel discorso indiretto questo diventa quello (davanti a «matrimonio»: quel).' },
+            { t: 'gap', q: '«Lei domani deve rinunciare a fare quel matrimonio.» → Il bravo disse a don Abbondio che il giorno dopo ___ rinunciare a fare quel matrimonio.', hint: 'dovere', a: ['doveva'], topic: 'discorso-indiretto' },
+            { t: 'mc', q: 'Nel discorso indiretto al passato, «domani» diventa…', o: ['il giorno dopo', 'il giorno prima', 'oggi'], a: 0, topic: 'discorso-indiretto' },
+            { t: 'mc', q: '«Domani non farò quel matrimonio.» (pensa don Abbondio) → Don Abbondio pensò che il giorno dopo non ___ quel matrimonio.', o: ['avrebbe fatto', 'farò', 'fa'], a: 0, topic: 'discorso-indiretto', exp: 'Il futuro nel passato si esprime con il condizionale passato: avrebbe fatto.' },
+            { t: 'mc', q: '«Lei stia attento, se tiene alla vita.» → Il bravo minacciò che don Abbondio doveva stare attento, se ___ alla vita.', o: ['teneva', 'tiene', 'terrà'], a: 0, topic: 'discorso-indiretto' },
+            { t: 'gap', q: '«Sono un uomo pacifico.» → Don Abbondio diceva che ___ un uomo pacifico.', hint: 'essere', a: ['era'], topic: 'discorso-indiretto' },
+            { t: 'order', words: ['Il', 'bravo', 'disse', 'che', 'il', 'padrone', 'non', 'voleva', 'il', 'matrimonio'], a: 'Il bravo disse che il padrone non voleva il matrimonio', topic: 'discorso-indiretto' },
+            { t: 'match', prompt: 'Abbina il passato remoto all\'infinito', pairs: [['vide', 'vedere'], ['capì', 'capire'], ['pensò', 'pensare'], ['aggiunse', 'aggiungere'], ['fu', 'essere']], topic: 'passato-remoto' },
+            { t: 'mc', q: '«Don Abbondio ___ un uomo tranquillo.» (descrizione del carattere)', o: ['era', 'fu', 'è stato'], a: 0, topic: 'passato-remoto', exp: 'Per descrivere una persona nel passato si usa l\'imperfetto: era.' },
+            { t: 'mc', q: '«Arrivato a una curva, ___ due uomini.» (un\'azione del racconto)', o: ['vide', 'vedeva', 'vede'], a: 0, topic: 'passato-remoto', exp: 'Un\'azione precisa e finita del racconto: passato remoto, vide.' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Che tipo di persona è don Abbondio?', o: ['Un uomo tranquillo e poco coraggioso, che evita i pericoli', 'Un uomo coraggioso che affronta i prepotenti', 'Un uomo violento al servizio di un signore'], a: 0 },
+          { t: 'mc', q: 'Quando avviene l\'incontro?', o: ['Un pomeriggio d\'autunno', 'Una mattina di primavera', 'Una sera d\'inverno'], a: 0 },
+          { t: 'tf', q: 'Don Abbondio camminava leggendo il breviario.', a: true },
+          { t: 'tf', q: 'I due uomini alla curva stavano litigando tra loro.', a: false, exp: 'Erano fermi, uno di fronte all\'altro, come se aspettassero qualcuno.' },
+          { t: 'tf', q: 'Si capiva subito che erano bravi, dal modo in cui erano vestiti.', a: true },
+          { t: 'mc', q: 'Perché don Abbondio non scappa quando vede i due bravi?', o: ['Perché ormai lo hanno visto e scappare sarebbe troppo evidente', 'Perché non ha paura', 'Perché vuole parlare con loro'], a: 0 },
+          { t: 'mc', q: 'Che cosa chiedono i bravi a don Abbondio?', o: ['Di rinunciare a celebrare il matrimonio di Renzo e Lucia', 'Di celebrare subito il matrimonio', 'Di andare dal loro padrone'], a: 0 },
+          { t: 'tf', q: 'Don Abbondio doveva celebrare le nozze il giorno dopo.', a: true },
+          { t: 'mc', q: 'Chi è il «padrone» dei bravi?', o: ['Un signore potente, don Rodrigo, che non vuole il matrimonio', 'Renzo, lo sposo', 'Il vescovo'], a: 0 },
+          { t: 'tf', q: 'Il secondo bravo parla in modo più gentile del primo.', a: false, exp: 'Parla in modo ancora più minaccioso.' },
+          { t: 'mc', q: 'Come reagisce don Abbondio dopo l\'incontro?', o: ['Resta fermo in mezzo alla strada, pallido e spaventato', 'Corre a casa di Renzo', 'Va subito dal vescovo'], a: 0 }
+        ],
+        write: { title: 'Il giorno dopo l\'incontro', prompt: 'Immagina di essere don Abbondio subito dopo l\'incontro con i bravi. Scrivi che cosa pensi di fare il giorno dopo e perché (8-10 frasi). Usa almeno tre connettivi.', min: 80, max: 160, use: ['perciò', 'però', 'dato che', 'anche se'] }
+      },
+      {
+        id: 'ps-a2-perpetua', level: 'A2', cap: 'Capitolo 1', title: 'Don Abbondio e Perpetua', icon: '🧺',
+        text: `Don Abbondio torna a casa. È molto agitato. Apre la porta e si siede subito su una sedia. È stanco e ha paura.
+Perpetua lavora nella casa di don Abbondio. Vede la faccia di don Abbondio e capisce: qualcosa non va bene. Perpetua chiede: "Cosa avete? Siete pallido!"
+Don Abbondio risponde: "Niente, niente." Ma la voce trema. Perpetua non crede a don Abbondio. Lei dice: "Come niente? Con quella faccia?"
+Don Abbondio dice che è solo stanco. Ma Perpetua non è convinta. Lei pensa: "C'è un problema. Don Abbondio non dice la verità."
+Perpetua allora cambia modo di parlare. Dice che i segreti fanno male. Dice anche che lei sa sempre mantenere un segreto. Vuole convincere don Abbondio a parlare.
+Alla fine, don Abbondio racconta tutto: l'incontro con i due bravi, la minaccia sul matrimonio di Renzo e Lucia. Ma poi dice a Perpetua: "Non dire niente a nessuno!"
+Perpetua è arrabbiata. Dice che don Abbondio deve parlare con il vescovo. Ma don Abbondio ha paura. Dice a Perpetua di stare zitta.`,
+        glossary: [
+          ['agitato', 'nervoso, non calmo'], ['governante', 'donna che lavora in una casa', ''], ['pallido', 'il viso diventa bianco (per paura)'],
+          ['tremare', 'muoversi per la paura o il freddo', 'trema'], ['segreto', 'una cosa che non devi dire agli altri', 'segreti'],
+          ['vescovo', 'un capo importante della Chiesa'], ['arrabbiato', 'che sente rabbia', 'arrabbiata']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['agitato', 'nervoso, non calmo'], ['governante', 'donna che lavora in una casa'], ['tremare', 'muoversi per la paura o il freddo'], ['segreto', 'una cosa che non devi dire agli altri'], ['vescovo', 'un capo importante della Chiesa']] },
+          { t: 'mc', q: 'Completa: «Perpetua è la ___ di don Abbondio.»', o: ['governante', 'vescovo', 'segreto', 'arrabbiata'], a: 0 },
+          { t: 'mc', q: 'Completa: «Don Abbondio ha una faccia ___ .»', o: ['pallida', 'segreta', 'vescovo', 'governante'], a: 0, exp: '«Faccia» è femminile: faccia pallida.' },
+          { t: 'mc', q: 'Completa: «L\'incontro con i bravi è un ___ .»', o: ['segreto', 'vescovo', 'governante', 'pallido'], a: 0 },
+          { t: 'mc', q: 'Completa: «Per Perpetua, don Abbondio deve parlare con il ___ .»', o: ['vescovo', 'segreto', 'governante', 'pallido'], a: 0 },
+          { t: 'mc', q: 'Completa: «Perpetua è ___ quando sente la storia.»', o: ['arrabbiata', 'pallida', 'segreta', 'tranquilla'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «agitato» è…', o: ['calmo', 'pallido', 'stanco'], a: 0 },
+          { t: 'mc', q: '«La voce trema» vuol dire che…', o: ['la voce non è ferma, per la paura', 'la voce è molto forte', 'la voce è allegra'], a: 0 },
+          { t: 'gap', q: 'Quando hai molta paura, la tua faccia diventa ___ .', hint: 'bianca', a: ['pallida'] },
+          { t: 'mc', q: '«Stare zitta» vuol dire…', o: ['non parlare', 'parlare forte', 'andare via'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Il presente, il futuro e l\'imperativo negativo',
+          theory: `<p><b>Presente</b> dei verbi irregolari del testo:</p>
+<table><tr><th>verbo</th><th>lui / lei</th><th>loro</th></tr>
+<tr><td>dire</td><td>dice</td><td>dicono</td></tr><tr><td>volere</td><td>vuole</td><td>vogliono</td></tr>
+<tr><td>sapere</td><td>sa</td><td>sanno</td></tr><tr><td>dovere</td><td>deve</td><td>devono</td></tr></table>
+<p>Il <b>futuro</b> per fare ipotesi su quello che succederà: <i>Perpetua parler<b>à</b>, dir<b>à</b>, andr<b>à</b>, sapr<b>à</b></i>.</p>
+<p>L'<b>imperativo negativo</b> con <i>tu</i>: <b>non + infinito</b>. <i>Non <b>dire</b> niente a nessuno!</i> · <i>Non <b>parlare</b>!</i></p>`,
+          items: [
+            { t: 'gap', q: 'Perpetua (capire) ___ subito che qualcosa non va.', a: ['capisce'], topic: 'presente-regolare' },
+            { t: 'gap', q: 'Don Abbondio (dire) ___ che è solo stanco.', a: ['dice'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Perpetua (volere) ___ convincere don Abbondio a parlare.', a: ['vuole'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Lei (sapere) ___ sempre mantenere un segreto.', a: ['sa'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Secondo Perpetua, don Abbondio (dovere) ___ parlare con il vescovo.', a: ['deve'], topic: 'presente-irregolare' },
+            { t: 'gap', q: 'Domani Perpetua (parlare) ___ con un\'amica.', a: ['parlerà'], topic: 'futuro' },
+            { t: 'gap', q: 'Perpetua non (dire) ___ niente a nessuno.', hint: 'futuro', a: ['dirà'], topic: 'futuro' },
+            { t: 'gap', q: 'Domani don Abbondio non (andare) ___ dal vescovo.', a: ['andrà'], topic: 'futuro' },
+            { t: 'gap', q: 'Forse Renzo (sapere) ___ la verità.', hint: 'futuro', a: ['saprà'], topic: 'futuro' },
+            { t: 'mc', q: 'Don Abbondio dice a Perpetua: «Non ___ niente a nessuno!»', o: ['dire', 'dici', 'dirai'], a: 0, topic: 'imperativo', exp: 'Imperativo negativo con tu: non + infinito.' },
+            { t: 'mc', q: 'Don Abbondio dice a Perpetua: «Non ___ con il vescovo!»', o: ['parlare', 'parla', 'parli'], a: 0, topic: 'imperativo' }
+          ]
+        },
+        comprensione: [
+          { t: 'tf', q: 'Don Abbondio torna a casa tranquillo.', a: false },
+          { t: 'tf', q: 'Perpetua capisce subito che c\'è un problema.', a: true },
+          { t: 'tf', q: 'Don Abbondio racconta subito tutto a Perpetua.', a: false },
+          { t: 'tf', q: 'Perpetua vuole sapere cosa è successo.', a: true },
+          { t: 'tf', q: 'Perpetua è contenta della storia dei bravi.', a: false },
+          { t: 'mc', q: 'Come sta don Abbondio quando torna a casa?', o: ['È agitato, stanco e ha paura', 'È tranquillo e contento', 'Ha fame e vuole mangiare'], a: 0 },
+          { t: 'mc', q: 'Chi è Perpetua?', o: ['La governante: lavora nella casa di don Abbondio', 'La sorella di don Abbondio', 'La mamma di Lucia'], a: 0 },
+          { t: 'mc', q: 'Che cosa dice don Abbondio all\'inizio?', o: ['«Niente, niente»: dice che è solo stanco', 'Racconta tutta la storia', 'Dice che va dal vescovo'], a: 0 },
+          { t: 'mc', q: 'Come convince Perpetua don Abbondio a parlare?', o: ['Dice che i segreti fanno male e che lei sa mantenere un segreto', 'Grida e si arrabbia', 'Chiama il vescovo'], a: 0 },
+          { t: 'mc', q: 'Che cosa racconta don Abbondio alla fine?', o: ['L\'incontro con i bravi e la minaccia sul matrimonio di Renzo e Lucia', 'Una storia sul vescovo', 'Che è malato'], a: 0 },
+          { t: 'mc', q: 'Che cosa vuole Perpetua?', o: ['Che don Abbondio parli con il vescovo', 'Andare a parlare con i bravi', 'Raccontare tutto a Renzo'], a: 0 }
+        ],
+        write: { title: 'Perpetua parlerà?', prompt: 'Secondo te, Perpetua parla con qualcuno di questo segreto? Scrivi 4-5 frasi. Usa il futuro.', min: 30, max: 70, use: ['parlerà', 'dirà', 'andrà'] }
+      },
+      {
+        id: 'ps-b1-perpetua', level: 'B1', cap: 'Capitolo 1', title: 'Don Abbondio e Perpetua', icon: '🧺',
+        before: 'Secondo te, don Abbondio racconterà subito a Perpetua quello che è successo? Perché sì o perché no?',
+        text: `Don Abbondio arrivò a casa turbato e agitato. Aprì la porta con mano tremante, entrò e si lasciò cadere su una sedia, come un uomo che ha camminato per ore senza riposo. Perpetua, la sua governante, capì subito che qualcosa non andava.
+Perpetua era una donna fedele, ma anche molto curiosa: viveva con don Abbondio da tanti anni e conosceva bene ogni sua espressione. "Cosa avete, signor padrone? Siete pallido come un morto", gli chiese, mettendo in tavola la cena.
+"Niente, niente", rispose don Abbondio, cercando di sembrare tranquillo. Ma la sua voce tremava, e Perpetua non si lasciò ingannare così facilmente. "Come niente? Volete darmi a intendere che state bene, con quella faccia?"
+Don Abbondio insistette che non era successo nulla di particolare, solo un po' di stanchezza. Ma più lui negava, più Perpetua diventava sospettosa: lo conosceva troppo bene per credere a quella scusa. "Qui c'è sotto qualcosa", pensò tra sé.
+Perpetua allora cambiò strategia: invece di insistere direttamente, cominciò a fare discorsi indiretti, dicendo che una persona anziana come lui non doveva tenersi i pensieri dentro, che i segreti fanno male alla salute, e che lei, del resto, sapeva sempre mantenere la bocca chiusa.
+Alla fine, dopo molte resistenze, don Abbondio non riuscì più a nascondere l'accaduto. Raccontò tutto: l'incontro con i due bravi sul sentiero, la minaccia contro il matrimonio di Renzo e Lucia, la paura che ancora sentiva. Ma subito dopo, pentito di aver parlato, ordinò a Perpetua di non dire una parola a nessuno.
+Perpetua, sentita la storia, si indignò e disse che don Abbondio doveva denunciare quei prepotenti al vescovo, invece di aver paura e obbedire. Ma lui, spaventato più che mai, le ripeté di stare zitta e di non impicciarsi di cose che non la riguardavano.`,
+        glossary: [
+          ['turbato', 'agitato, preoccupato dentro di sé'], ['governante', 'donna che gestisce la casa di qualcuno'],
+          ['darmi a intendere', 'farmi credere una cosa falsa'], ['sospettoso', 'che pensa che ci sia qualcosa di nascosto', 'sospettosa'],
+          ['accaduto (sostantivo)', 'quello che è successo, l\'evento', 'accaduto'], ['indignarsi', 'arrabbiarsi per un\'ingiustizia', 'si indignò'],
+          ['impicciarsi', 'occuparsi di cose che non ti riguardano']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['turbato', 'preoccupato dentro di sé'], ['darmi a intendere', 'farmi credere una cosa falsa'], ['sospettoso', 'che pensa che ci sia qualcosa di nascosto'], ['indignarsi', 'arrabbiarsi per un\'ingiustizia'], ['impicciarsi', 'occuparsi di cose che non ti riguardano']] },
+          { t: 'mc', q: '«Don Abbondio non riuscì più a nascondere l\'accaduto.» L\'accaduto è…', o: ['quello che è successo', 'una persona caduta', 'il luogo dell\'incontro'], a: 0 },
+          { t: 'mc', q: '«Mantenere la bocca chiusa» vuol dire…', o: ['non raccontare un segreto', 'non mangiare', 'non sorridere mai'], a: 0 },
+          { t: 'mc', q: '«Qui c\'è sotto qualcosa» vuol dire…', o: ['c\'è qualcosa di nascosto', 'c\'è qualcosa sotto il tavolo', 'non c\'è nessun problema'], a: 0 },
+          { t: 'mc', q: '«Perpetua non si lasciò ingannare» vuol dire che…', o: ['non credette alla bugia di don Abbondio', 'credette subito a don Abbondio', 'si arrabbiò con lui'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «negare» è…', o: ['ammettere', 'nascondere', 'insistere'], a: 0 },
+          { t: 'mc', q: 'Perpetua è «fedele»: vuol dire che…', o: ['è leale e resta vicina al suo padrone', 'dice spesso bugie', 'va sempre in chiesa'], a: 0 },
+          { t: 'mc', q: 'Don Abbondio è «pentito di aver parlato»: vuol dire che…', o: ['gli dispiace di aver parlato', 'è contento di aver parlato', 'non ricorda di aver parlato'], a: 0 },
+          { t: 'gap', q: 'sospetto → aggettivo: ___', a: ['sospettoso'] },
+          { t: 'gap', q: 'curioso → nome: la ___', a: ['curiosità'] },
+          { t: 'gap', q: 'stanco → nome: la ___', a: ['stanchezza'] },
+          { t: 'gap', q: 'fedele → nome: la ___', a: ['fedeltà'] }
+        ],
+        grammatica: {
+          title: 'Il congiuntivo con i verbi di opinione',
+          theory: `<p>Dopo i verbi di <b>opinione, speranza, dubbio e volontà</b> + <b>che</b> si usa il <b>congiuntivo</b>:</p>
+<p><i>pensare che · credere che · sperare che · dubitare che · temere che · volere che · è probabile che</i></p>
+<table><tr><th>infinito</th><th>lui / lei</th><th>loro</th></tr>
+<tr><td>parlare, tornare</td><td>parl<b>i</b>, torn<b>i</b></td><td>parl<b>ino</b>, torn<b>ino</b></td></tr>
+<tr><td>nascondere</td><td>nascond<b>a</b></td><td>nascond<b>ano</b></td></tr>
+<tr><td>essere · avere</td><td><b>sia · abbia</b></td><td><b>siano · abbiano</b></td></tr>
+<tr><td>stare · dire · sapere</td><td><b>stia · dica · sappia</b></td><td><b>stiano · dicano · sappiano</b></td></tr></table>
+<p>Attenzione: se il soggetto è <b>lo stesso</b> si usa <b>di + infinito</b>: <i>Perpetua pensa <b>di sapere</b> tutto</i> (non: <i>che sappia</i>).</p>`,
+          items: [
+            { t: 'gap', q: 'Perpetua pensa che don Abbondio le (nascondere) ___ qualcosa.', a: ['nasconda'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Perpetua crede che don Abbondio (essere) ___ pallido per un motivo preciso.', a: ['sia'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Don Abbondio spera che Perpetua (stare) ___ zitta con tutti.', a: ['stia'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Perpetua dubita che il signor curato (dire) ___ tutta la verità.', a: ['dica'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'È probabile che i bravi (tornare) ___ un\'altra volta.', a: ['tornino'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Don Abbondio non vuole che Perpetua (parlare) ___ con nessuno di questa storia.', a: ['parli'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Perpetua pensa che don Abbondio (avere) ___ paura.', a: ['abbia'], topic: 'congiuntivo-presente' },
+            { t: 'gap', q: 'Don Abbondio teme che i bravi (sapere) ___ tutto.', a: ['sappiano'], topic: 'congiuntivo-presente' },
+            { t: 'mc', q: 'Perpetua vuole che don Abbondio ___ i bravi al vescovo.', o: ['denunci', 'denuncia', 'denunciare'], a: 0, topic: 'congiuntivo-presente' },
+            { t: 'mc', q: 'Perpetua pensa ___ mantenere un segreto. (lei stessa)', o: ['di sapere', 'che sappia', 'che sa'], a: 0, topic: 'congiuntivo-presente', exp: 'Il soggetto è lo stesso (Perpetua pensa, Perpetua sa): di + infinito.' },
+            { t: 'mc', q: 'Don Abbondio crede che ___ meglio obbedire.', o: ['sia', 'è', 'essere'], a: 0, topic: 'congiuntivo-presente' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Come si comporta don Abbondio appena entra in casa?', o: ['Si lascia cadere su una sedia, turbato e agitato', 'Si siede a tavola tranquillo', 'Racconta subito tutto a Perpetua'], a: 0 },
+          { t: 'mc', q: 'Che cosa capisce subito Perpetua?', o: ['Che qualcosa non va', 'Che don Abbondio ha fame', 'Che i bravi sono in casa'], a: 0 },
+          { t: 'tf', q: 'Perpetua lavora per don Abbondio da poco tempo.', a: false, exp: 'Viveva con lui da tanti anni.' },
+          { t: 'tf', q: 'Don Abbondio dice che è solo un po\' stanco.', a: true },
+          { t: 'mc', q: 'Perché all\'inizio don Abbondio non vuole raccontare niente?', o: ['Perché ha paura e vuole sembrare tranquillo', 'Perché Perpetua non gli piace', 'Perché non ricorda bene i fatti'], a: 0 },
+          { t: 'tf', q: 'Più don Abbondio nega, più Perpetua diventa sospettosa.', a: true },
+          { t: 'mc', q: 'Quale strategia usa Perpetua per farlo parlare?', o: ['Fa discorsi indiretti: i segreti fanno male alla salute e lei sa tenere la bocca chiusa', 'Lo minaccia di andare dal vescovo', 'Smette di preparare la cena'], a: 0 },
+          { t: 'mc', q: 'Che cosa chiede don Abbondio subito dopo aver raccontato tutto?', o: ['Di non dire una parola a nessuno', 'Di chiamare Renzo', 'Di andare dal vescovo'], a: 0 },
+          { t: 'mc', q: 'Come reagisce Perpetua e che consiglio dà?', o: ['Si indigna e dice che deve denunciare i prepotenti al vescovo', 'Ride e dice di non preoccuparsi', 'Ha paura e dice di scappare dal paese'], a: 0 },
+          { t: 'tf', q: 'Alla fine don Abbondio segue subito il consiglio di Perpetua.', a: false, exp: 'Le ripete di stare zitta e di non impicciarsi.' }
+        ],
+        write: { title: 'Perpetua convince don Abbondio', prompt: 'Immagina di essere Perpetua. Scrivi un breve dialogo (8-10 battute) in cui cerchi di convincere don Abbondio a denunciare i bravi al vescovo.', min: 70, max: 160, use: ['secondo me', 'dovreste', 'non è giusto che'] }
+      },
+      {
+        id: 'ps-a2p-carattere', level: 'A2', levelLabel: 'A2+', cap: 'Capitolo 1', title: 'Il carattere di don Abbondio', icon: '🏺',
+        text: `Don Abbondio non è nato con un carattere coraggioso. Fin da ragazzo ha capito una cosa importante: in quel periodo storico, le persone deboli e senza protezione dovevano stare molto attente. C'erano spesso liti e conflitti tra famiglie potenti, e chi non aveva un nome importante o soldati al suo servizio rischiava sempre di pagare le conseguenze, anche senza colpa.
+I genitori di don Abbondio non erano né ricchi né nobili. Erano persone semplici, che volevano solo una vita sicura per il figlio. Per questo motivo, hanno deciso che lui sarebbe diventato prete: non tanto per una vera vocazione religiosa, ma perché quel ruolo garantiva rispetto e una certa protezione sociale. In quel mondo difficile, essere curato significava avere uno status che gli altri, anche i più prepotenti, dovevano in parte rispettare.
+Crescendo con questa idea, don Abbondio ha sviluppato una strategia molto semplice: evitare ogni tipo di scontro. Non gli interessava avere ragione, soprattutto se l'altra persona era più forte o più potente di lui. Preferiva sempre trovare un compromesso, o restare in silenzio, piuttosto che rischiare di farsi un nemico pericoloso.
+Manzoni descrive questo aspetto del suo carattere con un paragone molto famoso ed efficace: don Abbondio era come un vaso di terracotta, costretto a viaggiare insieme a tanti vasi di ferro. Il vaso di terracotta è fragile e leggero; se si scontra con un vaso di ferro, si rompe subito, mentre l'altro rimane intatto. Per questo motivo, il vaso debole deve fare molta attenzione e stare sempre lontano dagli urti.
+Con il passare del tempo, questo modo di comportarsi non era più solo una strategia, ma era diventato parte della sua vera natura. Don Abbondio non si chiedeva mai chi avesse ragione o torto in una situazione: la sua unica domanda era sempre la stessa, cioè chi fosse il più forte. Per lui, vivere in pace era molto più importante di qualsiasi principio di giustizia.`,
+        glossary: [
+          ['rischiare', 'essere in pericolo di subire qualcosa di negativo', 'rischiava'], ['vocazione', 'forte desiderio interiore di seguire una strada di vita, spesso religiosa'],
+          ['garantire', 'assicurare, dare sicurezza su qualcosa', 'garantiva'], ['scontro', 'conflitto, contrasto forte tra due persone'],
+          ['compromesso', 'accordo in cui ognuno rinuncia a qualcosa'], ['paragone', 'confronto tra due cose per spiegare meglio un concetto'],
+          ['urto', 'colpo, scontro fisico tra due oggetti o persone', 'urti'], ['principio', 'idea o valore fondamentale su cui si basa un comportamento']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['vocazione', 'forte desiderio di seguire una strada di vita'], ['compromesso', 'accordo in cui ognuno rinuncia a qualcosa'], ['paragone', 'confronto tra due cose per spiegare meglio'], ['principio', 'idea o valore fondamentale']] },
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['rischiare', 'essere in pericolo di qualcosa di negativo'], ['garantire', 'assicurare, dare sicurezza'], ['scontro', 'conflitto, contrasto forte'], ['urto', 'colpo tra due oggetti o persone']] },
+          { t: 'gap', q: 'Don Abbondio preferisce trovare un ___ : ognuno rinuncia a qualcosa.', a: ['compromesso'] },
+          { t: 'gap', q: 'Manzoni fa un ___ tra don Abbondio e un vaso di terracotta.', a: ['paragone'] },
+          { t: 'mc', q: 'Il vaso di terracotta è…', o: ['fragile e leggero: si rompe facilmente', 'duro come il ferro', 'pesante e resistente'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «fragile» è…', o: ['resistente', 'leggero', 'debole'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «debole» è…', o: ['forte', 'fragile', 'povero'], a: 0 },
+          { t: 'mc', q: 'Una persona «prepotente»…', o: ['usa la forza contro gli altri', 'è gentile con tutti', 'ha paura di tutti'], a: 0 },
+          { t: 'mc', q: '«Farsi un nemico» vuol dire…', o: ['fare in modo che una persona diventi tua nemica', 'trovare un nuovo amico', 'vincere una lite'], a: 0 },
+          { t: 'mc', q: '«Rimanere intatto» vuol dire…', o: ['non rompersi, restare com\'era', 'rompersi in tanti pezzi', 'cambiare colore'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Imperfetto e passato prossimo',
+          theory: `<p>Nel testo ci sono due tempi del passato:</p>
+<p>L'<b>imperfetto</b> per <b>descrivere</b>: situazioni, caratteristiche, abitudini. <i>I genitori <b>erano</b> persone semplici. <b>Preferiva</b> sempre trovare un compromesso.</i></p>
+<p>Il <b>passato prossimo</b> per <b>azioni ed eventi precisi</b>, finiti: <i>Fin da ragazzo <b>ha capito</b> una cosa importante. I genitori <b>hanno deciso</b> che sarebbe diventato prete.</i></p>
+<p>Parole che aiutano: <i>sempre, spesso, di solito, mentre</i> → imperfetto · <i>un giorno, ieri, all'improvviso, una volta</i> → passato prossimo.</p>
+<p>Ricorda: con <b>essere</b> il participio si accorda: <i>l'abitudine è diventat<b>a</b></i>.</p>`,
+          items: [
+            { t: 'gap', q: 'Da ragazzo, don Abbondio (capire) ___ che i deboli dovevano stare attenti.', hint: 'passato prossimo', a: ['ha capito'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'I suoi genitori (essere) ___ persone semplici, senza soldi né potere.', a: ['erano'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'Un giorno, i genitori (decidere) ___ che lui sarebbe diventato prete.', a: ['hanno deciso'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'Con gli anni, questa abitudine (diventare) ___ parte del suo carattere.', hint: 'passato prossimo', a: ['è diventata'], topic: 'passato-imperfetto', exp: 'Diventare vuole essere; l\'abitudine è femminile: è diventata.' },
+            { t: 'gap', q: 'Don Abbondio (preferire) ___ sempre evitare ogni scontro.', a: ['preferiva'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'Evitava gli scontri quando (essere) ___ possibile.', a: ['era'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'In quel periodo (esserci) ___ spesso liti tra famiglie potenti.', a: ['c\'erano', 'cerano', 'ci erano'], topic: 'passato-imperfetto' },
+            { t: 'gap', q: 'Chi non aveva protezione (rischiare) ___ sempre di pagare le conseguenze.', a: ['rischiava'], topic: 'passato-imperfetto' },
+            { t: 'mc', q: 'Da giovane, don Abbondio ___ sempre gli scontri.', o: ['evitava', 'ha evitato', 'evita'], a: 0, topic: 'passato-imperfetto', exp: '«Sempre» indica un\'abitudine: imperfetto.' },
+            { t: 'mc', q: 'Un pomeriggio, don Abbondio ___ due bravi.', o: ['ha incontrato', 'incontrava', 'incontra'], a: 0, topic: 'passato-imperfetto', exp: '«Un pomeriggio»: un fatto preciso, passato prossimo.' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Perché, secondo il testo, essere deboli era pericoloso in quel periodo storico?', o: ['Perché c\'erano spesso liti tra famiglie potenti e chi non aveva protezione pagava le conseguenze', 'Perché non c\'era lavoro per nessuno', 'Perché i preti erano tutti potenti'], a: 0 },
+          { t: 'tf', q: 'I genitori di don Abbondio erano ricchi e nobili.', a: false },
+          { t: 'mc', q: 'Per quale motivo i genitori hanno deciso che sarebbe diventato prete?', o: ['Perché quel ruolo dava rispetto e protezione, non per una vera vocazione', 'Perché lui aveva una forte vocazione religiosa', 'Perché volevano che diventasse ricco'], a: 0 },
+          { t: 'mc', q: 'Qual è la «strategia» di don Abbondio per vivere tranquillo?', o: ['Evitare ogni scontro: trovare un compromesso o restare in silenzio', 'Combattere contro i prepotenti', 'Chiedere aiuto ai soldati'], a: 0 },
+          { t: 'tf', q: 'Don Abbondio vuole sempre avere ragione.', a: false },
+          { t: 'mc', q: 'Che cosa vuol dire il paragone del vaso di terracotta tra i vasi di ferro?', o: ['Don Abbondio è debole tra persone forti: deve evitare gli scontri per non «rompersi»', 'Don Abbondio è forte come il ferro', 'Don Abbondio vende vasi al mercato'], a: 0 },
+          { t: 'tf', q: 'Con il tempo, questa strategia è diventata parte del suo carattere.', a: true },
+          { t: 'mc', q: 'Qual è l\'unica domanda di don Abbondio in ogni situazione?', o: ['Chi è il più forte?', 'Chi ha ragione?', 'Che cosa è giusto?'], a: 0 },
+          { t: 'mc', q: 'Che cosa conta di più per don Abbondio?', o: ['Vivere in pace, più della giustizia', 'La giustizia, più della pace', 'Diventare ricco'], a: 0 }
+        ]
+      },
+      // ======================= CAPITOLO 2 =======================
+      {
+        id: 'ps-a2-renzo', level: 'A2', cap: 'Capitolo 2', title: 'Renzo e don Abbondio', icon: '💍',
+        before: 'Renzo va da don Abbondio per il suo matrimonio con Lucia. Ma don Abbondio ha paura dei bravi. Secondo te, che cosa dice a Renzo? Dice la verità o inventa una scusa?',
+        text: `La mattina dopo, Renzo arrivò a casa di don Abbondio molto presto. Entrò con un grande sorriso. Per lui, quel giorno fu il giorno più bello della vita: finalmente poteva sposare Lucia.
+Don Abbondio, invece, non ebbe una buona notte. Era pallido e stanco. Quando sentì la voce di Renzo, tremò.
+Renzo salutò il curato e parlò subito del matrimonio: "Signor curato, oggi è il giorno del matrimonio. Lucia e io siamo pronti. A che ora andiamo in chiesa?"
+Don Abbondio esitò. Poi cercò una scusa: "Oggi non è possibile. Ci sono degli impedimenti. Dobbiamo aspettare." Renzo non capì: "Impedimenti? Quali impedimenti?"
+Il curato cominciò a parlare in latino, con parole difficili e complicate. Renzo non capì niente e si arrabbiò: "Non parli in latino, signor curato! Mi spieghi che cosa succede!"
+Renzo insistette a lungo. Alla fine, don Abbondio confessò la verità: "Sono minacciato da due uomini. Il loro padrone non vuole il matrimonio." "Chi è? Mi dica il nome!", gridò Renzo. Don Abbondio, con la voce bassa, pronunciò un nome: don Rodrigo.
+Renzo non credette alle sue orecchie. Era furioso. Uscì di corsa dalla casa, senza salutare.`,
+        glossary: [
+          ['pronto', 'preparato, che può già fare qualcosa', 'pronti'], ['impedimento', 'problema che non permette di fare una cosa', 'impedimenti'],
+          ['scusa', 'spiegazione falsa per non fare qualcosa'], ['esitare', 'non sapere cosa fare o cosa dire, aspettare un momento', 'esitò'],
+          ['confessare', 'dire una verità difficile o nascosta', 'confessò'], ['minacciare', 'dire a qualcuno che gli farai del male', 'minacciato'],
+          ['insistere', 'chiedere più volte la stessa cosa', 'insistette'], ['furioso', 'molto, molto arrabbiato']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['impedimento', 'problema che non permette di fare una cosa'], ['scusa', 'spiegazione falsa per non fare qualcosa'], ['esitare', 'non sapere cosa dire, aspettare un momento'], ['confessare', 'dire una verità difficile o nascosta'], ['insistere', 'chiedere più volte la stessa cosa']] },
+          { t: 'mc', q: 'Renzo è «furioso»: vuol dire che è…', o: ['molto, molto arrabbiato', 'molto contento', 'molto stanco'], a: 0 },
+          { t: 'mc', q: 'Dire a qualcuno che gli farai del male vuol dire…', o: ['minacciarlo', 'confessare', 'esitare'], a: 0 },
+          { t: 'gap', q: '«Lucia e io siamo ___ : possiamo sposarci oggi.»', hint: 'preparati', a: ['pronti'] },
+          { t: 'mc', q: 'Don Abbondio non dice la verità: inventa una ___ .', o: ['scusa', 'minaccia', 'chiesa'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «dire la verità» è…', o: ['dire una bugia', 'confessare', 'insistere'], a: 0 },
+          { t: 'mc', q: 'Il curato parla in latino, con parole…', o: ['difficili e complicate', 'facili e chiare', 'allegre e simpatiche'], a: 0 },
+          { t: 'mc', q: '«Renzo non credette alle sue orecchie» vuol dire che…', o: ['non poteva credere a quello che sentiva', 'aveva male alle orecchie', 'non sentiva bene la voce'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Il passato remoto e la forma passiva',
+          theory: `<p>Il narratore usa il <b>passato remoto</b> per raccontare azioni finite nel passato:</p>
+<table><tr><th></th><th>arrivare</th><th>credere</th><th>capire</th></tr>
+<tr><td>lui / lei</td><td>arriv<b>ò</b></td><td>cred<b>ette</b></td><td>cap<b>ì</b></td></tr>
+<tr><td>loro</td><td>arriv<b>arono</b></td><td>cred<b>ettero</b></td><td>cap<b>irono</b></td></tr></table>
+<p>Attenzione: <b>essere</b> e <b>avere</b> sono irregolari. Essere: <i>lui <b>fu</b>, loro <b>furono</b></i>. Avere: <i>lui <b>ebbe</b>, loro <b>ebbero</b></i>.</p>
+<p>La <b>forma passiva</b>: il soggetto <b>riceve</b> l'azione. <i>«Sono minacciato da due uomini.»</i></p>
+<p>Si forma con <b>essere + participio passato (+ da)</b>. Il participio si accorda con il soggetto: <i>I bravi minacciano il curato → Il curato <b>è minacciato</b> dai bravi. · Lucia <b>è minacciata</b>.</i></p>`,
+          items: [
+            { t: 'gap', q: 'Renzo (entrare) ___ in casa con un sorriso.', a: ['entrò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Per Renzo quel giorno (essere) ___ molto importante.', a: ['fu'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Don Abbondio non (avere) ___ una buona notte.', a: ['ebbe'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Quando (sentire) ___ la voce di Renzo, il curato tremò.', a: ['sentì'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Quando sentì la voce di Renzo, il curato (tremare) ___ .', a: ['tremò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Renzo non (capire) ___ le parole in latino.', a: ['capì'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'I due bravi (minacciare) ___ don Abbondio.', a: ['minacciarono'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Alla fine don Abbondio (confessare) ___ la verità.', a: ['confessò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il curato celebra le nozze. → Le nozze ___ dal curato.', hint: 'essere + participio', a: ['sono celebrate'], topic: 'passivo' },
+            { t: 'gap', q: 'Renzo ama Lucia. → Lucia ___ da Renzo.', hint: 'essere + participio', a: ['è amata'], topic: 'passivo' },
+            { t: 'gap', q: 'Don Rodrigo blocca il matrimonio. → Il matrimonio ___ da don Rodrigo.', hint: 'essere + participio', a: ['è bloccato'], topic: 'passivo' },
+            { t: 'mc', q: '«Sono minacciato da due uomini.» Chi riceve l\'azione?', o: ['Don Abbondio', 'I due uomini', 'Renzo'], a: 0, topic: 'passivo' },
+            { t: 'mc', q: 'Lucia ___ da don Rodrigo.', o: ['è minacciata', 'è minacciato', 'ha minacciato'], a: 0, topic: 'passivo', exp: 'Lucia è femminile: il participio finisce in -a.' }
+          ]
+        },
+        comprensione: [
+          { t: 'tf', q: 'Renzo arriva a casa di don Abbondio nel pomeriggio.', a: false },
+          { t: 'tf', q: 'Don Abbondio è contento di vedere Renzo.', a: false },
+          { t: 'tf', q: 'Don Abbondio parla in latino per confondere Renzo.', a: true },
+          { t: 'tf', q: 'Don Abbondio dice subito la verità a Renzo.', a: false },
+          { t: 'tf', q: 'Il padrone dei bravi è don Rodrigo.', a: true },
+          { t: 'mc', q: 'Com\'è Renzo quando arriva da don Abbondio?', o: ['Felice, con un grande sorriso', 'Arrabbiato', 'Stanco e pallido'], a: 0 },
+          { t: 'mc', q: 'Perché don Abbondio dice che ci sono «impedimenti»?', o: ['Perché ha paura dei bravi e cerca una scusa', 'Perché Lucia è malata', 'Perché la chiesa è chiusa'], a: 0 },
+          { t: 'mc', q: 'Perché Renzo si arrabbia quando don Abbondio parla in latino?', o: ['Perché non capisce niente e vuole sapere che cosa succede', 'Perché non gli piace la musica', 'Perché il curato grida'], a: 0 },
+          { t: 'mc', q: 'Che nome dice don Abbondio alla fine?', o: ['Don Rodrigo', 'Fra Cristoforo', 'Perpetua'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa Renzo alla fine?', o: ['Esce di corsa dalla casa, senza salutare', 'Va in chiesa con Lucia', 'Ringrazia il curato'], a: 0 }
+        ],
+        write: { title: 'Che cosa farà Renzo?', prompt: 'Che cosa farà Renzo dopo aver parlato con don Abbondio? Scrivi 4-5 frasi. Usa il futuro.', min: 30, max: 70, use: ['andrà', 'parlerà', 'cercherà'] }
+      },
+      // ======================= CAPITOLI 3 E 4 =======================
+      {
+        id: 'ps-a2-cristoforo', level: 'A2', cap: 'Capitolo 4 (parte 1)', title: 'Il cammino di fra Cristoforo', icon: '🙏',
+        summary: `Lucia parla con Renzo e con la mamma, Agnese. Lucia dice: "Don Rodrigo mi dà fastidio." Renzo va a Lecco da un avvocato. Il nome dell'avvocato è Azzecca-garbugli. Renzo porta un regalo: quattro polli. L'avvocato sente il nome di don Rodrigo e ha paura. L'avvocato manda via Renzo. Lucia vuole parlare con un frate amico: fra Cristoforo.`,
+        before: 'Nel capitolo 4 c\'è un personaggio nuovo: un frate. Secondo te, chi è un frate? Dove vive?',
+        text: `È mattina presto. È novembre. Fra Cristoforo esce dal suo convento. Il convento è a Pescarenico, vicino a Lecco. Fra Cristoforo vuole andare a casa di Lucia. Lucia ha un problema e chiede aiuto.
+Fra Cristoforo cammina per la strada. Vede molte persone povere. Le persone hanno fame. Non c'è cibo per tutti: è la carestia.
+Fra Cristoforo vede anche una ragazza molto magra. La ragazza ha una mucca. Anche la mucca è magra. La ragazza prende l'erba per mangiare.
+Fra Cristoforo ha circa sessant'anni. Ha la barba lunga e bianca. È magro, perché mangia poco. Di solito guarda in basso. Ma a volte i suoi occhi sono forti, pieni di fuoco.
+Fra Cristoforo è buono. Aiuta le persone povere. Ma ha anche un carattere forte. Perché? La risposta è nella sua storia.`,
+        glossary: [
+          ['frate', 'uomo di chiesa; vive con altri frati', ''], ['convento', 'la casa dei frati'], ['povero ≠ ricco', 'che non ha soldi ≠ che ha molti soldi', 'povere'],
+          ['fame', 'quando vuoi mangiare'], ['carestia', 'quando non c\'è cibo per tutti'], ['magro ≠ grasso', 'che pesa poco ≠ che pesa molto', 'magra'],
+          ['barba', 'i peli sul viso di un uomo']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['frate', 'uomo di chiesa che vive con altri frati'], ['convento', 'la casa dei frati'], ['carestia', 'quando non c\'è cibo per tutti'], ['fame', 'quando vuoi mangiare'], ['barba', 'i peli sul viso di un uomo']] },
+          { t: 'mc', q: 'Completa: «Fra Cristoforo esce dal ___ .»', o: ['convento', 'barba', 'fame', 'carestia'], a: 0 },
+          { t: 'mc', q: 'Completa: «Le persone non mangiano: hanno ___ .»', o: ['fame', 'barba', 'convento', 'magra'], a: 0 },
+          { t: 'mc', q: 'Completa: «Non c\'è cibo per tutti: è la ___ .»', o: ['carestia', 'barba', 'fame', 'convento'], a: 0 },
+          { t: 'mc', q: 'Completa: «La ragazza mangia poco: è molto ___ .»', o: ['magra', 'grassa', 'ricca', 'carestia'], a: 0 },
+          { t: 'mc', q: 'Completa: «Fra Cristoforo ha la ___ lunga e bianca.»', o: ['barba', 'fame', 'carestia', 'mucca'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «povero» è…', o: ['ricco', 'magro', 'buono'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «magro» è…', o: ['grasso', 'alto', 'povero'], a: 0 },
+          { t: 'gap', q: 'Una persona che non ha soldi è ___ .', hint: '≠ ricca', a: ['povera'] }
+        ],
+        grammatica: {
+          title: 'Il passato remoto di essere e avere',
+          theory: `<p>Ripassa il <b>passato remoto</b> di <b>essere</b> e <b>avere</b>:</p>
+<table><tr><th>verbo</th><th>lui / lei</th><th>loro</th></tr>
+<tr><td>essere</td><td><b>fu</b></td><td><b>furono</b></td></tr>
+<tr><td>avere</td><td><b>ebbe</b></td><td><b>ebbero</b></td></tr></table>
+<p><i>Le persone <b>hanno</b> fame → Le persone <b>ebbero</b> fame. · Il viaggio <b>è</b> lungo → Il viaggio <b>fu</b> lungo.</i></p>`,
+          items: [
+            { t: 'gap', q: 'Le persone hanno fame. → Le persone ___ fame.', a: ['ebbero'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'La ragazza ha una mucca. → La ragazza ___ una mucca.', a: ['ebbe'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il viaggio è lungo. → Il viaggio ___ lungo.', a: ['fu'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Fra Cristoforo ha paura per Lucia. → Fra Cristoforo ___ paura per Lucia.', a: ['ebbe'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'I campi sono vuoti. → I campi ___ vuoti.', a: ['furono'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Fra Cristoforo è buono con i poveri. → Fra Cristoforo ___ buono con i poveri.', a: ['fu'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Renzo e Lucia hanno un problema. → Renzo e Lucia ___ un problema.', a: ['ebbero'], topic: 'passato-remoto' },
+            { t: 'match', prompt: 'Abbina il passato remoto al presente', pairs: [['fu', 'è'], ['furono', 'sono'], ['ebbe', 'ha'], ['ebbero', 'hanno']], topic: 'passato-remoto' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Capitolo 3: dove va Renzo?', o: ['A Lecco, da un avvocato', 'A Milano, da un amico', 'In chiesa, da don Abbondio'], a: 0 },
+          { t: 'mc', q: 'Capitolo 3: come si chiama l\'avvocato?', o: ['Azzecca-garbugli', 'Don Rodrigo', 'Cristoforo'], a: 0 },
+          { t: 'mc', q: 'Capitolo 3: che regalo porta Renzo all\'avvocato?', o: ['Quattro polli', 'Un pezzo di pane', 'Dei soldi'], a: 0 },
+          { t: 'tf', q: 'Capitolo 3: l\'avvocato aiuta Renzo contro don Rodrigo.', a: false, exp: 'Sente il nome di don Rodrigo, ha paura e manda via Renzo.' },
+          { t: 'mc', q: 'Chi è Agnese?', o: ['La mamma di Lucia', 'La governante di don Abbondio', 'La sorella di Renzo'], a: 0 },
+          { t: 'tf', q: 'Fra Cristoforo è un frate.', a: true },
+          { t: 'tf', q: 'Il convento è a Milano.', a: false, exp: 'È a Pescarenico, vicino a Lecco.' },
+          { t: 'tf', q: 'Per la strada ci sono molte persone povere.', a: true },
+          { t: 'tf', q: 'La ragazza è grassa.', a: false },
+          { t: 'tf', q: 'Fra Cristoforo ha la barba bianca.', a: true },
+          { t: 'mc', q: 'Dove va fra Cristoforo?', o: ['A casa di Lucia, che ha un problema e chiede aiuto', 'A Milano', 'Dal vescovo'], a: 0 },
+          { t: 'mc', q: 'Che cosa vede per la strada?', o: ['Molte persone povere che hanno fame e una ragazza magra con una mucca', 'Una festa in piazza', 'I due bravi'], a: 0 },
+          { t: 'mc', q: 'Com\'è fra Cristoforo?', o: ['Ha circa sessant\'anni, la barba lunga e bianca ed è magro', 'È giovane e grasso', 'È ricco ed elegante'], a: 0 },
+          { t: 'mc', q: 'In che mese siamo?', o: ['A novembre', 'A maggio', 'Ad agosto'], a: 0 }
+        ],
+        write: { title: 'Una persona buona', prompt: 'Descrivi una persona buona che conosci. Com\'è? Che cosa fa per gli altri? Scrivi 4-5 frasi con essere e avere.', min: 30, max: 70, use: ['è', 'ha', 'aiuta'] }
+      },
+      {
+        id: 'ps-a2-lodovico', level: 'A2', cap: 'Capitolo 4 (parte 2)', title: 'Lodovico e il duello', icon: '⚔️',
+        before: 'Da giovane, fra Cristoforo non è un frate. Secondo te, com\'è da giovane? Buono o violento?',
+        text: `Da giovane, fra Cristoforo ha un altro nome: si chiama Lodovico. Lodovico è ricco. Suo padre è un mercante: compra e vende cose.
+Lodovico vuole essere amico dei nobili. Ma i nobili non lo vogliono. Lodovico è arrabbiato. Aiuta le persone deboli contro i prepotenti.
+Un giorno Lodovico cammina per la strada. Con lui c'è Cristoforo, il suo servitore. Arriva un nobile. Il nobile pensa: "Io sono più importante di te."
+Lodovico e il nobile vogliono passare vicino al muro. Nessuno vuole lasciare il posto. Litigano. Poi prendono le spade.
+Il nobile vuole colpire Lodovico. Il servitore Cristoforo aiuta Lodovico e muore. Lodovico è molto arrabbiato e uccide il nobile.
+Lodovico è ferito. La gente porta Lodovico in un convento. Lì Lodovico è al sicuro.`,
+        glossary: [
+          ['mercante', 'uomo che compra e vende cose'], ['nobile', 'persona di una famiglia importante', 'nobili'], ['prepotente', 'persona che usa la forza contro i deboli', 'prepotenti'],
+          ['servitore', 'uomo che lavora in casa di una persona ricca'], ['litigare', 'parlare con rabbia contro un\'altra persona', 'litigano'],
+          ['spada', 'un\'arma lunga', 'spade'], ['uccidere', 'far morire', 'uccide']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['mercante', 'uomo che compra e vende cose'], ['nobile', 'persona di una famiglia importante'], ['servitore', 'uomo che lavora in casa di una persona ricca'], ['spada', 'un\'arma lunga'], ['uccidere', 'far morire']] },
+          { t: 'mc', q: 'Completa: «Il padre di Lodovico compra e vende cose: è un ___ .»', o: ['mercante', 'servitore', 'nobile', 'frate'], a: 0 },
+          { t: 'mc', q: 'Completa: «Cristoforo lavora per Lodovico: è il suo ___ .»', o: ['servitore', 'mercante', 'padre', 'nobile'], a: 0 },
+          { t: 'mc', q: 'Completa: «Lodovico e il nobile ___ per il posto vicino al muro.»', o: ['litigano', 'uccidono', 'vendono', 'mangiano'], a: 0 },
+          { t: 'mc', q: 'Completa: «Lodovico prende la ___ .»', o: ['spada', 'mercante', 'strada', 'pace'], a: 0 },
+          { t: 'mc', q: 'Completa: «Lodovico ___ il nobile.»', o: ['uccide', 'litiga', 'vende', 'aiuta'], a: 0 },
+          { t: 'mc', q: 'Una persona «prepotente»…', o: ['usa la forza contro i deboli', 'aiuta i deboli', 'è sempre povera'], a: 0 },
+          { t: 'mc', q: 'Dopo il duello Lodovico è «ferito»: vuol dire che…', o: ['ha una ferita sul corpo', 'è morto', 'è molto felice'], a: 0 },
+          { t: 'mc', q: 'Nel convento Lodovico è «al sicuro»: vuol dire che…', o: ['nessuno gli può fare del male', 'è in prigione', 'è malato'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Il passato remoto dei verbi regolari',
+          theory: `<p>Ripassa il <b>passato remoto</b> dei verbi regolari:</p>
+<table><tr><th></th><th>camminare</th><th>vendere</th><th>capire</th></tr>
+<tr><td>lui / lei</td><td>cammin<b>ò</b></td><td>vend<b>ette</b> (vend<b>é</b>)</td><td>cap<b>ì</b></td></tr>
+<tr><td>loro</td><td>cammin<b>arono</b></td><td>vend<b>ettero</b></td><td>cap<b>irono</b></td></tr></table>
+<p>Per raccontare un fatto di oggi o di ieri, nella lingua di tutti i giorni, usiamo il <b>passato prossimo</b>: <i>ieri <b>ho litigato</b> con mio fratello, <b>siamo andati</b> a casa.</i></p>`,
+          items: [
+            { t: 'gap', q: 'Lodovico (camminare) ___ per la strada.', a: ['camminò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Un nobile (arrivare) ___ .', a: ['arrivò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Lodovico e il nobile (litigare) ___ .', a: ['litigarono'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il padre di Lodovico (vendere) ___ molte cose.', a: ['vendette', 'vendé', 'vendè'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'I nobili non (capire) ___ Lodovico.', a: ['capirono'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il servitore (aiutare) ___ Lodovico.', a: ['aiutò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Lodovico e il nobile non (lasciare) ___ il posto.', a: ['lasciarono'], topic: 'passato-remoto' },
+            { t: 'mc', q: 'Ieri io e mio fratello ___ .', o: ['abbiamo litigato', 'siamo litigati', 'litigarono'], a: 0, topic: 'passato-avere', exp: 'Litigare vuole avere: abbiamo litigato.' },
+            { t: 'mc', q: 'Dopo la lite, Marta ___ a casa.', o: ['è andata', 'ha andato', 'è andato'], a: 0, topic: 'passato-essere', exp: 'Andare vuole essere; Marta è femminile: è andata.' }
+          ]
+        },
+        comprensione: [
+          { t: 'tf', q: 'Lodovico è povero.', a: false },
+          { t: 'tf', q: 'Il padre di Lodovico è un mercante.', a: true },
+          { t: 'tf', q: 'Cristoforo è il fratello di Lodovico.', a: false, exp: 'Cristoforo è il suo servitore.' },
+          { t: 'tf', q: 'Lodovico e il nobile litigano per il posto vicino al muro.', a: true },
+          { t: 'tf', q: 'Dopo il duello, Lodovico va a casa.', a: false },
+          { t: 'mc', q: 'Chi è Lodovico?', o: ['Fra Cristoforo da giovane', 'Il servitore di un nobile', 'Il fratello di Renzo'], a: 0 },
+          { t: 'mc', q: 'Chi aiuta Lodovico da giovane?', o: ['Le persone deboli contro i prepotenti', 'I nobili', 'I bravi di don Rodrigo'], a: 0 },
+          { t: 'mc', q: 'Perché Lodovico e il nobile litigano?', o: ['Nessuno dei due vuole lasciare il posto vicino al muro', 'Il nobile vuole i soldi di Lodovico', 'Lodovico vuole sposare la sorella del nobile'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa il servitore Cristoforo?', o: ['Aiuta Lodovico e muore', 'Scappa via', 'Chiama la gente'], a: 0 },
+          { t: 'mc', q: 'Dove va Lodovico dopo il duello?', o: ['In un convento, dove è al sicuro', 'In prigione', 'A casa del nobile'], a: 0 }
+        ],
+        write: { title: 'Un litigio', prompt: 'Racconta un litigio. Con chi? Perché? Come finisce? Scrivi 4-5 frasi con il passato prossimo.', min: 30, max: 70, use: ['ho detto', 'abbiamo litigato', 'siamo andati'] }
+      },
+      {
+        id: 'ps-a2-perdono', level: 'A2', cap: 'Capitolo 4 (parte 3)', title: 'Il pane del perdono', icon: '🍞',
+        text: `Lodovico è nel convento. È triste per il suo errore. Vuole cambiare vita. Allora diventa frate. Prende un nome nuovo: Cristoforo, come il suo servitore morto.
+Fra Cristoforo dà i suoi soldi alla famiglia del servitore. Ora non è più ricco.
+Poi fra Cristoforo va a casa del fratello del nobile morto. Vuole chiedere scusa. Nella casa ci sono molte persone.
+Fra Cristoforo si mette in ginocchio. Dice: "Le chiedo perdono." Tutti sono emozionati. Il fratello del nobile perdona fra Cristoforo.
+Fra Cristoforo chiede un pezzo di pane. Tiene il pane sempre con sé. È il "pane del perdono".
+Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma vuole ancora aiutare i deboli. Per questo aiuta Lucia e Renzo contro don Rodrigo.`,
+        glossary: [
+          ['errore', 'una cosa sbagliata'], ['chiedere scusa', 'dire "mi dispiace"'], ['perdonare', 'non essere più arrabbiato con una persona', 'perdona'],
+          ['in ginocchio', 'con le gambe piegate a terra'], ['emozionato', 'quando senti un\'emozione forte', 'emozionati'],
+          ['umile ≠ orgoglioso', 'semplice ≠ che si sente più importante degli altri', 'orgoglioso'], ['pane', 'un cibo fatto con la farina']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['perdonare', 'non essere più arrabbiato con una persona'], ['in ginocchio', 'con le gambe piegate a terra'], ['emozionato', 'che sente un\'emozione forte'], ['umile', 'semplice'], ['orgoglioso', 'che si sente più importante degli altri']] },
+          { t: 'mc', q: 'Completa: «Uccidere una persona è un grande ___ .»', o: ['errore', 'pane', 'ginocchio', 'scusa'], a: 0 },
+          { t: 'mc', q: 'Completa: «Fra Cristoforo vuole chiedere ___ .»', o: ['scusa', 'errore', 'pane', 'ginocchio'], a: 0 },
+          { t: 'mc', q: 'Completa: «Fra Cristoforo si mette in ___ .»', o: ['ginocchio', 'pane', 'errore', 'scusa'], a: 0 },
+          { t: 'mc', q: 'Completa: «Il fratello del nobile ___ fra Cristoforo.»', o: ['perdona', 'uccide', 'chiede', 'mangia'], a: 0 },
+          { t: 'mc', q: 'Completa: «Fra Cristoforo tiene il ___ sempre con sé.»', o: ['pane', 'errore', 'ginocchio', 'nobile'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «umile» è…', o: ['orgoglioso', 'povero', 'triste'], a: 0 },
+          { t: 'mc', q: '«Chiedere scusa» vuol dire…', o: ['dire «mi dispiace»', 'dire «grazie»', 'dire «arrivederci»'], a: 0 },
+          { t: 'gap', q: 'Fra Cristoforo dà tutti i suoi soldi: non è più ricco, è ___ .', hint: '≠ ricco', a: ['povero'] }
+        ],
+        grammatica: {
+          title: 'La forma passiva al presente',
+          theory: `<p><b>Forma attiva</b>: <i>Il fratello <b>perdona</b> fra Cristoforo.</i></p>
+<p><b>Forma passiva</b>: <i>Fra Cristoforo <b>è perdonato</b> dal fratello.</i></p>
+<p>La forma passiva si fa così: <b>essere + participio passato + da</b>. Il participio si accorda con il soggetto: <i>il pane è tenut<b>o</b> · Lucia è aiutat<b>a</b> · i soldi sono dat<b>i</b> · le persone sono aiutat<b>e</b></i>.</p>
+<p>Ricorda: <i>da + il = <b>dal</b> · da + la = <b>dalla</b> · da + i = <b>dai</b></i>.</p>`,
+          items: [
+            { t: 'gap', q: 'Il fratello perdona fra Cristoforo. → Fra Cristoforo ___ dal fratello.', a: ['è perdonato'], topic: 'passivo' },
+            { t: 'gap', q: 'Lodovico dà i soldi alla famiglia. → I soldi ___ alla famiglia da Lodovico.', a: ['sono dati'], topic: 'passivo' },
+            { t: 'gap', q: 'Fra Cristoforo tiene il pane. → Il pane ___ da fra Cristoforo.', a: ['è tenuto'], topic: 'passivo' },
+            { t: 'gap', q: 'La gente porta Lodovico in un convento. → Lodovico ___ in un convento dalla gente.', a: ['è portato'], topic: 'passivo' },
+            { t: 'gap', q: 'I frati aiutano le persone povere. → Le persone povere ___ dai frati.', a: ['sono aiutate'], topic: 'passivo' },
+            { t: 'gap', q: 'Fra Cristoforo aiuta Lucia. → Lucia ___ da fra Cristoforo.', a: ['è aiutata'], topic: 'passivo' },
+            { t: 'mc', q: 'Fra Cristoforo è perdonato ___ fratello del nobile.', o: ['dal', 'del', 'al'], a: 0, topic: 'passivo', exp: 'Nella forma passiva chi fa l\'azione è introdotto da «da»: da + il = dal.' },
+            { t: 'mc', q: 'Le nozze sono ___ da don Abbondio.', o: ['celebrate', 'celebrato', 'celebrata'], a: 0, topic: 'passivo', exp: '«Le nozze» è femminile plurale: celebrate.' },
+            { t: 'order', words: ['Il', 'pane', 'è', 'tenuto', 'da', 'fra', 'Cristoforo'], a: 'Il pane è tenuto da fra Cristoforo', topic: 'passivo' }
+          ]
+        },
+        comprensione: [
+          { t: 'tf', q: 'Lodovico diventa frate.', a: true },
+          { t: 'tf', q: 'Il nuovo nome di Lodovico è Cristoforo.', a: true },
+          { t: 'tf', q: 'Fra Cristoforo tiene tutti i suoi soldi.', a: false },
+          { t: 'tf', q: 'Il fratello del nobile non perdona fra Cristoforo.', a: false },
+          { t: 'tf', q: 'Fra Cristoforo chiede un pezzo di pane.', a: true },
+          { t: 'mc', q: 'Perché Lodovico diventa frate?', o: ['È triste per il suo errore e vuole cambiare vita', 'Vuole diventare ricco', 'Il padre lo obbliga'], a: 0 },
+          { t: 'mc', q: 'Perché sceglie il nome Cristoforo?', o: ['Come il suo servitore morto', 'Come suo padre', 'Come il nobile'], a: 0 },
+          { t: 'mc', q: 'A chi dà i suoi soldi?', o: ['Alla famiglia del servitore', 'Al convento', 'Al fratello del nobile'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa fra Cristoforo a casa del fratello del nobile?', o: ['Si mette in ginocchio e chiede perdono', 'Litiga di nuovo', 'Porta un regalo e va via'], a: 0 },
+          { t: 'mc', q: 'Che cos\'è il «pane del perdono»?', o: ['Il pezzo di pane che fra Cristoforo tiene sempre con sé', 'Il pane che mangiano i poveri', 'Un dolce della festa'], a: 0 },
+          { t: 'mc', q: 'Com\'è fra Cristoforo prima? E dopo?', o: ['Prima ricco e orgoglioso, dopo povero e umile', 'Prima povero, dopo ricco', 'Sempre ricco e orgoglioso'], a: 0 },
+          { t: 'mc', q: 'Perché fra Cristoforo aiuta Renzo e Lucia?', o: ['Perché vuole ancora aiutare i deboli contro i prepotenti', 'Perché è loro parente', 'Perché don Rodrigo glielo chiede'], a: 0 }
+        ],
+        write: { title: 'Ti chiedo scusa', prompt: 'Scrivi una breve lettera (4-5 frasi) per chiedere scusa a una persona. Che cosa è successo?', min: 30, max: 80, use: ['mi dispiace', 'scusa', 'ti chiedo perdono'] }
+      }
+    ]
+  });
+
+  // ---------- Preparazione (uguale per tutti i gruppi) ----------
+  C.verificaPart = {};          // 'idTesto:parte' → { group, text, part }
+  C.verificaTextById = {};
+  C.VERIFICA_PARTS = [['lessico', 'Lessico', 'dict'], ['grammatica', 'Grammatica', 'pen'], ['comprensione', 'Comprensione', 'read']];
+  for (const g of C.verifiche) {
+    for (const t of g.texts) {
+      t.group = g.id;
+      C.verificaTextById[t.id] = t;
+      const parts = { lessico: t.lessico || [], grammatica: (t.grammatica && t.grammatica.items) || [], comprensione: t.comprensione || [] };
+      for (const [k, items] of Object.entries(parts)) {
+        items.forEach(it => {
+          it.lv = it.lv || t.level;
+          it.skill = it.skill || (k === 'lessico' ? 'lessico' : k === 'comprensione' ? 'lettura' : 'grammatica');
+          if (!it.topic) it.topic = k === 'lessico' ? L : k === 'comprensione' ? CO : null;
+        });
+        C.verificaPart[t.id + ':' + k] = { group: g, text: t, part: k, items };
+      }
+      // la traccia di scrittura usa la pagina Scrivere, ma resta fuori dall'elenco generale
+      if (t.write) {
+        C.writing = C.writing || [];
+        C.writing.push(Object.assign({ id: 'w-' + t.id, level: t.level, verifica: t.id }, t.write));
+      }
+    }
+    // «Chi è? Chi lo dice?»: personaggi e battute, per il ripasso di tutto
+    const extra = [];
+    if (g.characters && g.characters.length >= 4) {
+      const ch = g.characters.filter(c => !/servitore/.test(c[1]));
+      for (let i = 0; i < ch.length; i += 5) { const part = ch.slice(i, i + 5); if (part.length >= 3) extra.push({ t: 'match', prompt: 'Chi è? Abbina il personaggio', pairs: part.map(c => [c[1], c[2]]), topic: CO, skill: 'lettura', lv: 'A2' }); }
+    }
+    const who = Array.from(new Set((g.quotes || []).map(q => q[1])));
+    (g.quotes || []).forEach(([q, w], i) => { const others = who.filter(x => x !== w); extra.push({ t: 'mc', q: 'Chi lo dice? ' + q, o: [w, others[i % others.length], others[(i + 1) % others.length]], a: 0, topic: CO, skill: 'lettura', lv: 'A2' }); });
+    g.extraItems = extra;
+    C.verificaPart[g.id + ':personaggi'] = { group: g, text: null, part: 'personaggi', items: extra };
+  }
+})();
+
+;
 /* js/content/placement.js */
 /*
  * Banca di item per il test di livello adattivo (A1–C1).
@@ -5360,6 +6051,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   for (const u of C.units) tag(u.items, u.id, u.level, 'grammatica');
   for (const r of C.readings) tag(r.questions, r.id, r.level, 'lettura');
   for (const l of C.listenings) tag(l.questions, l.id, l.level, 'ascolto');
+  for (const [k, v] of Object.entries(C.verificaPart || {})) tag(v.items, 'v:' + k, v.text ? v.text.level : 'A2', 'grammatica');
 
   C.unitById = Object.fromEntries(C.units.map(u => [u.id, u]));
   C.readingById = Object.fromEntries(C.readings.map(r => [r.id, r]));
@@ -5383,6 +6075,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       case 'writing': return C.writingById[ref] ? 'Scrittura ' + C.writingById[ref].level + ' · ' + C.writingById[ref].title : ref;
       case 'vocab': return C.vocabById[ref] ? 'Parole ' + C.vocabById[ref].level + ' · ' + C.vocabById[ref].title : ref;
       case 'game': { const [g, k] = String(ref).split(':'); if (g === 'bingo') return 'Gioco · Bingo delle parole' + (String(ref).endsWith(':ascolta') ? ' (ascolto)' : ''); const cw = window.IL2.games && window.IL2.games.CROSSWORDS.find(s => s.id === k); return 'Gioco · Cruciverba' + (cw ? ' ' + cw.level + ' · ' + cw.title : ''); }
+      case 'verifica': { const [tid, part] = String(ref).split(':'); const v = C.verificaPart && C.verificaPart[ref]; const g = (C.verifiche || []).find(x => x.id === tid); const lab = { lessico: 'lessico', grammatica: 'grammatica', comprensione: 'comprensione', personaggi: 'personaggi', tutto: 'ripasso di tutto' }[part] || part; if (v && v.text) return 'Verso la verifica · ' + v.group.title + ' · ' + (v.text.levelLabel || v.text.level) + ' ' + v.text.title + ' (' + lab + ')'; if (g) return 'Verso la verifica · ' + g.title + ' (' + lab + ')'; return 'Verso la verifica'; }
       case 'speaking': return 'Pronuncia ' + ref;
       case 'speakcard': { const sc = (C.speakCards || []).find(x => x.id === ref); return sc ? 'Parlato guidato ' + sc.level + ' · ' + sc.title : ref; }
       case 'topic': return C.topics[ref] ? 'Rinforzo · ' + C.topics[ref].name : ref;
@@ -5396,7 +6089,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   C.stats = function () {
     return {
       units: C.units.length, items: C.units.reduce((n, u) => n + u.items.length, 0), words: Object.keys(C.wordById).length,
-      readings: C.readings.length, listenings: C.listenings.length, writing: C.writing.length, placement: C.placement.length
+      readings: C.readings.length, listenings: C.listenings.length, writing: C.writing.filter(w => !w.verifica).length, placement: C.placement.length
     };
   };
 })();
@@ -5876,7 +6569,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (skill === 'lettura') { const r = pickByLevel(C.readings, profile, profile.readingsDone); if (r) plan.push({ kind: 'reading', ref: r.id, label: 'Leggi: ' + r.title, why: 'Allena la comprensione scritta' }); }
     if (skill === 'ascolto') { const r = pickByLevel(C.listenings, profile, profile.listeningsDone); if (r) plan.push({ kind: 'listening', ref: r.id, label: 'Ascolta: ' + r.title, why: 'Allena la comprensione orale' }); }
     if (skill === 'parlato') plan.push({ kind: 'speaking', ref: currentLevel(profile), label: 'Pronuncia e parla', why: 'Allena la pronuncia e la fluidità' });
-    if (skill === 'scrittura') { const w = C.writing.find(x => x.level === currentLevel(profile)); if (w) plan.push({ kind: 'writing', ref: w.id, label: 'Scrivi: ' + w.title, why: 'Allena la produzione scritta' }); }
+    if (skill === 'scrittura') { const w = C.writing.find(x => !x.verifica && x.level === currentLevel(profile)); if (w) plan.push({ kind: 'writing', ref: w.id, label: 'Scrivi: ' + w.title, why: 'Allena la produzione scritta' }); }
     // nuove parole del livello
     const theme = nextVocabTheme(profile);
     if (theme) plan.push({ kind: 'vocab', ref: theme.id, label: 'Nuove parole: ' + theme.title, why: 'Amplia il lessico del tuo livello' });
@@ -7040,7 +7733,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   // ---------- Struttura ----------
   const NAV = {
-    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
+    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['verifiche', 'clip', 'Verifiche'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
     teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['impostazioni', 'gear', 'Impostazioni']]
   };
   function shell() {
@@ -7349,7 +8042,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       const below = list.filter(x => open(x.level) && !isDone(x)).reverse();
       return mine[0] || below[0] || list.filter(x => x.level === lv)[0] || list.filter(x => open(x.level)).slice(-1)[0];
     };
-    const w = pickNew(C.writing, x => doneW.has(x.id));
+    const w = pickNew(C.writing.filter(x => !x.verifica), x => doneW.has(x.id));
     const l = pickNew(C.listenings, x => p.listeningsDone[x.id]);
     const sp = C.speaking[lv] || [];
     const spDone = sp.filter((_, i) => p.speakingDone[lv + '#' + i]).length;
@@ -7623,7 +8316,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       tile('leggi', 'read', 'c-read', 'Leggere', 'Testi di vario tipo', 'lettura') + tile('ascolta', 'headphones', 'c-listen', 'Ascoltare', 'Dialoghi e messaggi', 'ascolto') +
       tile('parla/' + lv, 'mic', 'c-speak', 'Parlare', 'Pronuncia e intonazione', 'parlato') + ((C.speakCards || []).some(c => open(c.level)) ? tile('schede', 'users', 'c-speak', 'Parlato guidato', 'Dialoghi e monologhi come all\'esame') : '') + tile('scrivi', 'pen', 'c-write', 'Scrivere', 'Testi letti dall\'insegnante', 'scrittura') +
       tile('errori', 'wrench', 'c-err', 'I miei errori', openErr + ' da correggere') + tile('test', 'compass', 'c-test', 'Test di livello', testLabel(p)) +
-      tile('materie', 'library', 'c-study', 'Materie scolastiche', 'Facoltativo · scienze, storia, geografia') +
+      tile('materie', 'library', 'c-study', 'Materie scolastiche', 'Facoltativo · scienze, storia, geografia') + ((C.verifiche || []).length ? tile('verifiche', 'clip', 'c-test', 'Verso la verifica', 'Ripasso per le verifiche di classe') : '') +
       tile('giochi', 'puzzle', 'c-game', 'Giochi', 'Bingo delle parole e cruciverba') + '</div>';
   };
   function testLabel(p) {
@@ -7851,16 +8544,18 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     if (!parts[0]) {
       const subs = await IL2.api.call('mySubmissions').catch(() => []);
       const sent = {}; subs.forEach(s => { sent[s.taskId] = { best: s.status === 'corretto' ? 'letto' : subState(s) }; });
-      listByLevel(view, 'Scrivere', 'pen', C.writing, sent, 'scrivi');
+      listByLevel(view, 'Scrivere', 'pen', C.writing.filter(w => !w.verifica), sent, 'scrivi');
       view.insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="#/elaborati">I miei testi (' + subs.length + ')</a></p>');
       return;
     }
     const t = C.writingById[parts[0]]; if (!t) return IL2.go('scrivi');
-    if (guard(view, t.level, ['scrivi', 'Scrivere'])) return;
+    const vt = t.verifica && C.verificaTextById[t.verifica];
+    const backTo = vt ? ['verifiche/' + vt.group + '/' + vt.id, vt.title] : ['scrivi', 'Scrivere'];
+    if (guard(view, t.level, backTo)) return;
     const key = 'il2-draft-' + S().user.id + '-' + t.id;
     let draft = ''; try { draft = localStorage.getItem(key) || ''; } catch (e) { /* nulla */ }
     const started = Date.now();
-    view.innerHTML = '<a class="back" href="#/scrivi">' + icon('back') + 'Scrivere</a><p class="eyebrow">' + t.level + ' · ' + t.min + '–' + t.max + ' parole</p><h1>' + esc(t.title) + '</h1>' +
+    view.innerHTML = '<a class="back" href="#/' + backTo[0] + '">' + icon('back') + esc(backTo[1]) + '</a><p class="eyebrow">' + (vt ? 'Verso la verifica · ' : '') + t.level + ' · ' + t.min + '–' + t.max + ' parole</p><h1>' + esc(t.title) + '</h1>' +
       '<div class="card prompt"><p>' + esc(t.prompt) + '</p>' + (t.points ? '<p class="small"><b>Nel testo devi:</b></p><ol class="w-points">' + t.points.map(x => '<li>' + esc(x) + '</li>').join('') + '</ol>' : '') + (t.use && t.use.length ? '<p class="small">Prova a usare: ' + t.use.map(u => '<span class="chip small">' + esc(u) + '</span>').join(' ') + '</p>' : '') + '</div>' +
       (t.model ? '<details class="card"><summary>Vedi un esempio</summary><p><i>' + esc(t.model) + '</i></p></details>' : '') +
       '<textarea id="txt" rows="10" class="writing" placeholder="Scrivi qui il tuo testo…" spellcheck="false" lang="it">' + esc(draft) + '</textarea>' + X.accentBar() +
@@ -8108,6 +8803,125 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
   }
 
   // Prova dell'audio: verifica la voce italiana e il microfono, con indicazioni se qualcosa non va.
+  // =================== VERSO LA VERIFICA ===================
+  // Materiale dell'insegnante per prepararsi alle verifiche di classe: gruppi (es. Promessi sposi) → testi →
+  // tre parti (lessico, grammatica, comprensione). Nessun voto: si vede solo che cosa hai già ripassato.
+  const VD = () => { const p = P(); return p.verificheDone || (p.verificheDone = {}); };
+  const lvLabel = t => '<span class="lvl lvl-' + t.level + '">' + esc(t.levelLabel || t.level) + '</span>';
+  function vPartsDone(t) { const d = VD(); return C.VERIFICA_PARTS.filter(([k]) => d[t.id + ':' + k]).length; }
+  function vPartItems(t, k) { return (C.verificaPart[t.id + ':' + k] || {}).items || []; }
+
+  R.verifiche = async function (view, parts) {
+    const groups = C.verifiche || [];
+    if (parts[0]) {
+      const g = groups.find(x => x.id === parts[0]); if (!g) return IL2.go('verifiche');
+      if (parts[1]) return verificaText(view, g, parts[1]);
+      return verificaGroup(view, g);
+    }
+    view.innerHTML = '<div class="page-head"><h1>Verso la verifica</h1><p class="muted">Il materiale per prepararti alle verifiche di classe. Per ogni argomento ripassi il lessico, la grammatica e la comprensione dei testi che hai studiato.</p></div>' +
+      (groups.length ? '<div class="theme-grid v-groups">' + groups.map(g => {
+        const texts = g.texts.filter(t => open(t.level));
+        const n = texts.reduce((s, t) => s + C.VERIFICA_PARTS.length, 0), k = texts.reduce((s, t) => s + vPartsDone(t), 0);
+        return '<a class="card theme v-group" href="#/verifiche/' + g.id + '"><span class="th-icon" aria-hidden="true">' + g.icon + '</span><b>' + esc(g.title) + '</b><small>' + g.texts.length + ' testi · ' + Array.from(new Set(g.texts.map(t => t.levelLabel || t.level))).join(', ') + '</small>' +
+          (n ? meter(k, n) + '<small>' + k + ' esercizi fatti su ' + n + '</small>' : '<small>' + icon('lock') + ' Testi di un livello che non hai ancora raggiunto</small>') + '</a>';
+      }).join('') + '</div>' : '<div class="card empty-state"><p>Per ora non c\'è materiale. L\'insegnante lo aggiungerà prima delle prossime verifiche.</p></div>') +
+      '<p class="small muted">Qui non ci sono voti: gli esercizi servono a capire che cosa sai già e che cosa devi ripassare. Gli errori vanno anche in «I miei errori».</p>';
+  };
+
+  function verificaGroup(view, g) {
+    const p = P(), cur = E.currentLevel(p), d = VD();
+    const openT = g.texts.filter(t => open(t.level));
+    const caps = []; for (const t of g.texts) if (!caps.includes(t.cap)) caps.push(t.cap);
+    const capKey = c => c.replace(/ \(.*\)$/, '').replace(/ in breve.*$/, '');
+    const heads = []; for (const c of caps) if (!heads.includes(capKey(c))) heads.push(capKey(c));
+    const total = openT.length * C.VERIFICA_PARTS.length, did = openT.reduce((s, t) => s + vPartsDone(t), 0);
+    let h = '<a class="back" href="#/verifiche">' + icon('back') + 'Verso la verifica</a>' +
+      '<div class="v-hero card"><span class="v-hero-ic" aria-hidden="true">' + g.icon + '</span><div><p class="eyebrow">Verso la verifica</p><h1>' + esc(g.title) + '</h1><p>' + esc(g.desc) + '</p>' +
+      (g.what ? '<p class="small"><b>Nella verifica:</b> ' + g.what.map(esc).join(', ') + '.</p>' : '') + '</div></div>';
+    if (!openT.length) { view.innerHTML = h + lockedPanel(g.texts[0].level); return; }
+    h += '<section class="card v-all"><div class="v-all-body"><b>Ripasso di tutto</b><small>Esercizi misti da tutti i testi del tuo livello, con i personaggi e le loro frasi. Utile il giorno prima della verifica.</small>' + meter(did, total) + '<small>' + did + ' esercizi fatti su ' + total + (d[g.id + ':tutto'] ? ' · ripasso di tutto fatto il ' + fmtDate(d[g.id + ':tutto'].at) : '') + '</small></div>' +
+      '<button class="btn primary" id="vall">' + icon('repeat') + ' Comincia</button></section><div id="vallbox"></div>';
+    if (g.characters) h += '<details class="card v-chars"><summary><b>I personaggi</b> <small class="muted">(' + g.characters.length + ')</small></summary><ul class="v-char-list">' + g.characters.map(c => '<li><span aria-hidden="true">' + c[0] + '</span><span><b>' + esc(c[1]) + '</b><small>' + esc(c[2]) + '</small></span></li>').join('') + '</ul></details>';
+    h += heads.map(cap => '<h2 class="lv-h">' + esc(cap) + '</h2><div class="list">' + g.texts.filter(t => capKey(t.cap) === cap).map(t => {
+      if (!open(t.level)) return '<div class="card row-item locked"><span class="ri-ic">' + icon('lock') + '</span><span class="ri-body"><b>' + esc(t.title) + ' ' + lvLabel(t) + '</b><small>Si sblocca quando raggiungi il livello ' + t.level + '.</small></span></div>';
+      const k = vPartsDone(t);
+      return '<a class="card row-item v-text' + (k === 3 ? ' done' : '') + '" href="#/verifiche/' + g.id + '/' + t.id + '"><span class="ri-ic v-emoji" aria-hidden="true">' + (k === 3 ? icon('check') : t.icon) + '</span><span class="ri-body"><b>' + esc(t.title) + ' ' + lvLabel(t) + (t.level === cur ? ' <span class="tag">il tuo livello</span>' : '') + '</b>' +
+        '<span class="v-chips">' + C.VERIFICA_PARTS.map(([pk, pl]) => '<span class="v-chip' + (d[t.id + ':' + pk] ? ' on' : '') + '">' + (d[t.id + ':' + pk] ? icon('check') : '') + pl + '</span>').join('') + '</span></span>' + icon('chevron') + '</a>';
+    }).join('') + '</div>').join('');
+    view.innerHTML = h;
+    view.querySelector('#vall').addEventListener('click', async () => {
+      // un po' di tutto: da ogni testo aperto 2 di lessico, 2 di grammatica, 1 di comprensione, più i personaggi
+      let items = [];
+      for (const t of openT) items = items.concat(shuffle(vPartItems(t, 'lessico')).slice(0, 2), shuffle(vPartItems(t, 'grammatica')).slice(0, 2), shuffle(vPartItems(t, 'comprensione')).slice(0, 1));
+      items = shuffle(items).slice(0, 24).concat(shuffle(g.extraItems || []).slice(0, 4));
+      const box = view.querySelector('#vallbox'); view.querySelector('.v-all').hidden = true;
+      await runVerifica(view, box, { title: 'Ripasso di tutto: ' + g.title, items, ref: g.id + ':tutto', skill: 'lettura', back: 'verifiche/' + g.id });
+    });
+  }
+
+  async function runVerifica(view, box, o) {
+    const p = P();
+    box.scrollIntoView({ block: 'start' });
+    const r = await X.runSession(box, { title: o.title, items: o.items, onAnswer: (item, rr, first) => { if (first) E.recordAnswer(p, item, rr.ok, { level: item.lv, given: rr.given, src: o.ref }); } });
+    if (r.aborted && !r.total) { IL2.go(o.back); return; }
+    const d = VD(), pv = pctOf(r);
+    if (!r.aborted) d[o.ref] = { at: Date.now(), best: Math.max(pv, (d[o.ref] || {}).best || 0) };
+    done({ type: 'verifica', ref: o.ref, skill: o.skill, correct: r.correct, total: r.total, durationSec: r.durationSec, misses: r.misses });
+    IL2.award(3 + r.correct);
+    const tips = r.misses.length ? '<p>Gli esercizi sbagliati sono in <a href="#/errori">I miei errori</a>: ripassali prima della verifica.</p>' : '<p>Nessun errore al primo tentativo: sei pronto/a!</p>';
+    box.innerHTML = resultCard(r, tips, (o.again ? '<button class="btn ghost" id="vagain">' + icon('repeat') + ' Rifai</button>' : '') + btn(o.back, o.backLabel || 'Torna ai testi', 'primary'));
+    const ag = box.querySelector('#vagain'); if (ag) ag.addEventListener('click', o.again);
+    box.scrollIntoView({ block: 'start' });
+  }
+
+  function verificaText(view, g, tid) {
+    const t = g.texts.find(x => x.id === tid); if (!t) return IL2.go('verifiche/' + g.id);
+    if (guard(view, t.level, ['verifiche/' + g.id, g.title])) return;
+    const d = VD();
+    let text = esc(t.text);
+    for (const [w, m, f] of t.glossary || []) {
+      const find = f == null ? w : f; if (!find) continue;
+      text = text.replace(new RegExp('(^|[^\\p{L}])(' + esc(find).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![\\p{L}])', 'iu'), '$1<button type="button" class="gl" data-g="' + esc(w + ': ' + m) + '">$2</button>');
+    }
+    const partInfo = { lessico: 'Le parole del testo', grammatica: t.grammatica ? t.grammatica.title : 'Grammatica', comprensione: 'Hai capito il testo?' };
+    const writing = t.write && C.writingById['w-' + t.id];
+    view.innerHTML = '<a class="back" href="#/verifiche/' + g.id + '">' + icon('back') + esc(g.title) + '</a>' +
+      '<p class="eyebrow">' + esc(t.levelLabel || t.level) + ' · ' + esc(t.cap) + '</p><h1>' + t.icon + ' ' + esc(t.title) + '</h1>' +
+      (t.summary ? '<div class="card v-summary"><b>Il capitolo 3 in breve</b><p lang="it">' + esc(t.summary) + '</p></div>' : '') +
+      (t.before ? '<div class="note v-before">' + icon('bulb') + ' <span><b>Prima di leggere.</b> ' + esc(t.before) + '</span></div>' : '') +
+      '<article class="card passage long" lang="it">' + text.replace(/\n/g, '<br><br>') + '</article>' +
+      '<div class="row wrap"><button class="btn ghost" id="readall">' + icon('speaker') + ' Ascolta il testo</button></div>' +
+      '<p class="small muted">Le parole sottolineate hanno una spiegazione: toccale.</p>' +
+      '<details class="card v-gloss"><summary><b>Le parole del testo</b> <small class="muted">(' + (t.glossary || []).length + ')</small></summary><table class="tbl small">' + (t.glossary || []).map(([w, m]) => '<tr><td><b lang="it">' + esc(w) + '</b> ' + X.speakBtn(w.split(/ [≠/(]/)[0]) + '</td><td>' + esc(m) + '</td></tr>').join('') + '</table></details>' +
+      '<h2>Esercizi per la verifica</h2><div class="tiles v-parts">' + C.VERIFICA_PARTS.map(([k, l, ic]) => {
+        const st = d[t.id + ':' + k];
+        return '<button type="button" class="card tile v-part' + (st ? ' done' : '') + '" data-part="' + k + '"><span class="t-icon">' + icon(st ? 'check' : ic) + '</span><b>' + l + '</b><small>' + esc(partInfo[k]) + '</small><small>' + vPartItems(t, k).length + ' esercizi' + (st ? ' · fatto' + (st.best != null ? ' (' + st.best + '%)' : '') : '') + '</small></button>';
+      }).join('') + '</div>' +
+      (t.grammatica && t.grammatica.theory ? '<details class="card v-theory"><summary><b>La regola:</b> ' + esc(t.grammatica.title) + '</summary><div class="theory">' + t.grammatica.theory + '</div></details>' : '') +
+      (writing ? '<a class="card row-item" href="#/scrivi/' + writing.id + '"><span class="ri-ic">' + icon('pen') + '</span><span class="ri-body"><b>Scrivi (facoltativo): ' + esc(writing.title) + '</b><small>Il testo arriva all\'insegnante, che lo legge e ti scrive un commento.</small></span>' + icon('chevron') + '</a>' : '') +
+      '<div id="vbox"></div>';
+    view.querySelectorAll('.gl').forEach(b => b.addEventListener('click', () => toast(b.dataset.g)));
+    let reading = false;
+    const rb = view.querySelector('#readall');
+    rb.addEventListener('click', () => {
+      if (reading) { IL2.speech.stop(); reading = false; rb.innerHTML = icon('speaker') + ' Ascolta il testo'; return; }
+      reading = true; rb.innerHTML = icon('stop') + ' Ferma';
+      IL2.speech.sayScript(t.text.split(/\n+/).filter(Boolean).map(x => ['N', x]), { cancelled: () => !reading }).then(() => { reading = false; rb.innerHTML = icon('speaker') + ' Ascolta il testo'; });
+    });
+    const box = view.querySelector('#vbox');
+    const start = k => {
+      IL2.speech.stop(); reading = false; rb.innerHTML = icon('speaker') + ' Ascolta il testo';
+      const run = () => runVerifica(view, box, { title: { lessico: 'Lessico', grammatica: 'Grammatica', comprensione: 'Comprensione' }[k] + ': ' + t.title, items: vPartItems(t, k), ref: t.id + ':' + k, skill: k === 'lessico' ? 'lessico' : k === 'comprensione' ? 'lettura' : 'grammatica', back: 'verifiche/' + g.id + '/' + t.id, backLabel: 'Torna al testo', again: () => start(k) });
+      // prima della grammatica si legge la regola
+      if (k === 'grammatica' && t.grammatica && t.grammatica.theory) {
+        box.innerHTML = '<section class="card v-rule"><p class="eyebrow">La regola</p><h3>' + esc(t.grammatica.title) + '</h3><div class="theory">' + t.grammatica.theory + '</div><div class="row end"><button class="btn primary" id="vgo">Comincia gli esercizi</button></div></section>';
+        box.scrollIntoView({ block: 'start' });
+        box.querySelector('#vgo').addEventListener('click', run);
+      } else run();
+    };
+    view.querySelectorAll('[data-part]').forEach(b => b.addEventListener('click', () => start(b.dataset.part)));
+  }
+
   R.audio = async function (view) {
     const p = P();
     await IL2.speech.waitVoices();
@@ -8835,7 +9649,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     for (const e of all) { const k = e.topic || C.itemByUid[e.key].topic || 'altro'; const t = byTopic[k] = byTopic[k] || { open: 0, res: 0, times: 0 }; if (e.resolved) t.res++; else t.open++; t.times += e.count; }
     const topicRows = Object.entries(byTopic).sort((a, b) => b[1].open - a[1].open || b[1].times - a[1].times);
     const tips = topicRows.filter(([, v]) => v.open).map(([k]) => [k, IL2.l1.tip(s.l1, k)]).filter(x => x[1]).slice(0, 5);
-    const src = e => { const base = e.key.split('#')[0]; return C.unitById[base] ? 'Lezione · ' + C.unitById[base].title : C.readingById[base] ? 'Lettura · ' + C.readingById[base].title : C.listeningById[base] ? 'Ascolto · ' + C.listeningById[base].title : ''; };
+    const src = e => { const base = e.key.split('#')[0]; return C.unitById[base] ? 'Lezione · ' + C.unitById[base].title : C.readingById[base] ? 'Lettura · ' + C.readingById[base].title : C.listeningById[base] ? 'Ascolto · ' + C.listeningById[base].title : (C.verificaPart || {})[base.replace(/^v:/, '')] ? C.describe('verifica', base.replace(/^v:/, '')) : ''; };
     return '<div class="grid2"><div class="card"><h3>Errori per argomento</h3>' + (topicRows.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Argomento</th><th>Aperti</th><th>Corretti</th><th>Volte sbagliato</th></tr>' + topicRows.map(([k, v]) => '<tr><td>' + esc(topicName(k)) + '</td><td>' + (v.open ? '<b class="bad-text">' + v.open + '</b>' : '0') + '</td><td>' + v.res + '</td><td>' + v.times + '</td></tr>').join('') + '</table></div>' : '<p class="muted">Nessun errore registrato.</p>') + '</div>' +
       '<div class="card"><h3>Possibili interferenze con la lingua d\'origine</h3>' + (tips.length ? '<p class="small muted">Note contrastive (' + esc(IL2.l1.name(s.l1)) + ') per gli argomenti con errori aperti. Le vedi solo tu.</p><ul class="small">' + tips.map(([k, t]) => '<li><b>' + esc(topicName(k)) + ':</b> ' + esc(t.it) + '</li>').join('') + '</ul>' : '<p class="muted small">Nessuna nota per gli errori attuali.</p>') + '</div></div>' +
       '<div class="card"><div class="row between wrap"><h3>Registro degli errori</h3><div class="seg">' + [['aperti', 'Aperti'], ['risolti', 'Corretti'], ['tutti', 'Tutti']].map(([k, l]) => '<a class="' + (k === filter ? 'on' : '') + '" href="#/studente/' + s.id + '?sez=errori&e=' + k + '">' + l + ' (' + all.filter(e => inF(e, k)).length + ')</a>').join('') + '</div></div>' +
@@ -8843,7 +9657,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<p class="small muted">Un errore si considera corretto quando lo studente risponde bene due volte di seguito, nel ripasso o rifacendo l\'esercizio.</p></div>';
   }
 
-  const ACT_ICON = { unit: 'path', reading: 'read', listening: 'headphones', writing: 'pen', speaking: 'mic', speakcard: 'users', vocab: 'dict', review: 'repeat', errors: 'wrench', topic: 'target', test: 'compass', mixed: 'repeat', game: 'puzzle' };
+  const ACT_ICON = { unit: 'path', reading: 'read', listening: 'headphones', writing: 'pen', speaking: 'mic', speakcard: 'users', vocab: 'dict', review: 'repeat', errors: 'wrench', topic: 'target', test: 'compass', mixed: 'repeat', game: 'puzzle', verifica: 'clip' };
   function secActivity(s, p, d) {
     const acts = d.activity.slice(-60).reverse();
     const srs = Object.values(p.srs || {}), now = Date.now();
@@ -8858,7 +9672,20 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       '<ul class="activity small">' + (acts.length ? acts.map(a => '<li>' + icon(ACT_ICON[a.type] || 'check') + '<span>' + esc(C.describe(a.type, a.ref) || a.type) + '</span><span class="muted">' + (a.total ? a.correct + '/' + a.total + ' · ' : '') + (a.durationSec ? Math.max(1, Math.round(a.durationSec / 60)) + ' min · ' : '') + fmtDate(a.at, true) + '</span></li>').join('') : '<li class="muted">Nessuna attività.</li>') + '</ul></div>' +
       '<div class="card"><h3>Lessico</h3><div class="mini-stats"><span><b>' + srs.length + '</b> parole incontrate</span><span><b>' + learned + '</b> memorizzate</span><span><b>' + due + '</b> da ripassare</span></div>' +
       (themes.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Tema</th><th>Liv.</th><th>Memorizzate</th></tr>' + themes.map(x => '<tr><td>' + esc(x.t.title) + '</td><td>' + x.t.level + '</td><td class="mcell">' + meter(x.l, x.t.words.length, x.l === x.t.words.length ? 'ok' : '') + '<small>' + x.l + '/' + x.t.words.length + '</small></td></tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora iniziato il lessico.</p>') +
-      '<h4>Parole sbagliate nel bingo <small class="muted">(ultimi 30 giorni)</small></h4>' + (gmList.length ? '<p class="small">' + gmList.map(([w, c]) => '<span class="tag" lang="it">' + esc(w) + (c > 1 ? ' ×' + c : '') + '</span>').join(' ') + '</p><p class="small muted">Queste parole tornano nel suo Ripasso parole.</p>' : '<p class="muted small">Nessuna parola sbagliata nel bingo.</p>') + '</div></div>';
+      '<h4>Parole sbagliate nel bingo <small class="muted">(ultimi 30 giorni)</small></h4>' + (gmList.length ? '<p class="small">' + gmList.map(([w, c]) => '<span class="tag" lang="it">' + esc(w) + (c > 1 ? ' ×' + c : '') + '</span>').join(' ') + '</p><p class="small muted">Queste parole tornano nel suo Ripasso parole.</p>' : '<p class="muted small">Nessuna parola sbagliata nel bingo.</p>') + '</div></div>' +
+      secVerifiche(p);
+  }
+  // Verso la verifica: che cosa ha ripassato per le verifiche di classe (migliore risultato per parte)
+  function secVerifiche(p) {
+    const vd = p.verificheDone || {};
+    const groups = (C.verifiche || []);
+    if (!groups.length) return '';
+    return '<div class="card"><h3>' + icon('clip') + ' Verso la verifica</h3>' + groups.map(g => {
+      const rows = g.texts.filter(t => C.VERIFICA_PARTS.some(([k]) => vd[t.id + ':' + k]));
+      const all = vd[g.id + ':tutto'];
+      return '<h4>' + g.icon + ' ' + esc(g.title) + '</h4>' + (rows.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Testo</th><th>Liv.</th>' + C.VERIFICA_PARTS.map(([, l]) => '<th>' + l + '</th>').join('') + '</tr>' + rows.map(t => '<tr><td>' + esc(t.title) + '</td><td>' + esc(t.levelLabel || t.level) + '</td>' + C.VERIFICA_PARTS.map(([k]) => { const x = vd[t.id + ':' + k]; return '<td>' + (x ? '<b>' + x.best + '%</b> <small class="muted">' + fmtDate(x.at) + '</small>' : '<span class="muted">—</span>') + '</td>'; }).join('') + '</tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora fatto esercizi di questo argomento.</p>') +
+        (all ? '<p class="small">Ripasso di tutto: <b>' + all.best + '%</b> al primo tentativo · ' + fmtDate(all.at) + '</p>' : '');
+    }).join('') + '<p class="small muted">Percentuale di risposte giuste al primo tentativo (la migliore). Gli errori sono anche nel Registro degli errori.</p></div>';
   }
 
   function secWritings(s, d) {
@@ -9113,11 +9940,12 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const cv = await IL2.api.call('listCustomVocab'); IL2.state.customVocab = cv;
     const s = C.stats();
     let h = head('Contenuti', s.units + ' lezioni con ' + s.items + ' esercizi · ' + s.words + ' parole · ' + s.readings + ' letture · ' + s.listenings + ' ascolti · ' + s.writing + ' tracce di scrittura · ' + s.placement + ' domande nel test di livello.') +
-      '<div class="tabs">' + [['unita', 'Lezioni'], ['letture', 'Letture'], ['ascolti', 'Ascolti'], ['scrittura', 'Scrittura'], ['lessico', 'Lessico'], ['mie', 'Le mie liste'], ['lingue', 'Lingue d\'origine'], ['test', 'Test']].map(([k, l]) => '<a class="tab' + (k === tab ? ' on' : '') + '" href="#/contenuti?t=' + k + '">' + l + '</a>').join('') + '</div>';
+      '<div class="tabs">' + [['unita', 'Lezioni'], ['letture', 'Letture'], ['ascolti', 'Ascolti'], ['scrittura', 'Scrittura'], ['verifiche', 'Verso la verifica'], ['lessico', 'Lessico'], ['mie', 'Le mie liste'], ['lingue', 'Lingue d\'origine'], ['test', 'Test']].map(([k, l]) => '<a class="tab' + (k === tab ? ' on' : '') + '" href="#/contenuti?t=' + k + '">' + l + '</a>').join('') + '</div>';
     if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
     if (tab === 'letture') h += C.readings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.genre) + '</summary><p class="pre">' + esc(r.text) + '</p><ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'ascolti') h += C.listenings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.situation) + '</summary>' + r.script.map(([v, t]) => '<p><b>' + v + ':</b> ' + esc(t) + '</p>').join('') + '<ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
-    if (tab === 'scrittura') h += C.writing.map(w => '<div class="card">' + levelBadge(w.level) + ' <b>' + esc(w.title) + '</b> · ' + w.min + '–' + w.max + ' parole<p>' + esc(w.prompt) + '</p></div>').join('');
+    if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Segue i livelli: ognuno vede i testi del suo livello e di quelli precedenti. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
+    if (tab === 'scrittura') h += C.writing.filter(w => !w.verifica).map(w => '<div class="card">' + levelBadge(w.level) + ' <b>' + esc(w.title) + '</b> · ' + w.min + '–' + w.max + ' parole<p>' + esc(w.prompt) + '</p></div>').join('');
     if (tab === 'lessico') h += C.vocab.map(t => '<details class="card"><summary>' + levelBadge(t.level) + ' ' + t.icon + ' <b>' + esc(t.title) + '</b> · ' + t.words.length + ' parole</summary><table class="tbl small">' + t.words.map(w => '<tr><td><b>' + esc(w.it) + '</b></td><td>' + esc(w.def || [w.gloss.en, w.gloss.fr, w.gloss.ar, w.gloss.zh].filter(Boolean).join(' · ')) + '</td><td><i>' + esc(w.ex) + '</i></td></tr>').join('') + '</table></details>').join('');
     if (tab === 'lingue') h += '<p>Per gli studenti la lingua d\'origine compare <b>solo nel dizionario</b>, come traduzione delle parole: tutto il resto dell\'app è in italiano. Le note contrastive qui sotto sono in italiano e le vedi solo tu, nella scheda di ogni studente e nei suggerimenti. In un contesto ufficiale è opportuno far verificare le traduzioni da mediatori linguistici: puoi segnalare correzioni con la revisione periodica.</p>' + IL2.l1.ORDER.map(c => { const p = IL2.l1.profile(c); return '<details class="card"><summary><b>' + esc(p.name) + '</b> · ' + esc(p.native) + '</summary>' + (p.general ? '<p>' + esc(p.general.it) + '</p>' : '') + '<ul>' + Object.entries(p.tips).map(([k, t]) => '<li><b>' + esc(topicName(k)) + ':</b> ' + esc(t.it) + '</li>').join('') + '</ul>' + (p.friends.length ? '<p><b>Falsi amici:</b> ' + p.friends.map(f => esc(f[0]) + ' = ' + esc(f[1])).join(' · ') + '</p>' : '') + '</details>'; }).join('');
     if (tab === 'test') h += '<div class="card"><h3>Come funziona il test di livello</h3><ul><li>Banca di ' + s.placement + ' domande calibrate sui livelli A1–C1 (grammatica, lessico, lettura, ascolto).</li><li>Test adattivo: ogni domanda è scelta in base alle risposte precedenti (modello di Rasch, stima bayesiana EAP).</li><li>Si ferma quando la stima è abbastanza precisa (o al numero massimo di domande, regolabile nelle impostazioni).</li><li>Nei test periodici evita le domande dell\'ultimo test e parte dal livello precedente.</li><li>Restituisce il livello QCER, la posizione nel livello (iniziale, intermedio, avanzato) e un profilo per abilità.</li><li>Il livello raggiunto sblocca le lezioni di quel livello e dei precedenti. Chi completa l\'80% delle lezioni del proprio livello può anticipare il test.</li></ul><p class="small muted">Le soglie e la difficoltà delle domande sono una calibrazione iniziale: con l\'uso reale, la revisione periodica può ricalibrarle sui dati raccolti.</p></div>' +
