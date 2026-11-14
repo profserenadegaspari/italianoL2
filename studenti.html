@@ -728,6 +728,14 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 .v-opt:hover { border-color: var(--lv, var(--primary)); box-shadow: var(--shadow); }
 .v-opt b { font-size: 1.15rem; } .v-opt small { color: var(--muted); }
 @media (max-width: 760px) { .nav a span { line-height: 1.1; } }
+.v-open { padding-left: 1.4em; display: flex; flex-direction: column; gap: 14px; }
+.v-open label { display: flex; flex-direction: column; gap: 6px; }
+.v-open .v-q { font-weight: 600; }
+.v-open textarea { width: 100%; min-height: 0; }
+.v-sent { display: flex; gap: 10px; align-items: flex-start; background: var(--good-soft); }
+.v-sent .ic { color: var(--good); flex: none; }
+.v-scheda { border-left: 4px solid var(--c-write); margin-bottom: 14px; }
+a.tile.v-part { text-decoration: none; }
 
 </style>
 </head>
@@ -5256,6 +5264,45 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
       ['🙏', 'Fra Cristoforo', 'un frate buono e forte; da giovane si chiamava Lodovico'],
       ['🛡️', 'Cristoforo, il servitore', 'il servitore di Lodovico: muore nel duello']
     ],
+    // Domande aperte di ogni brano: le risposte arrivano all'insegnante (dentro il file dei progressi) per la correzione
+    aperte: {
+      'ps-a2-bravi': ['Chi è don Abbondio?', 'Dove incontra i due bravi?', 'Che cosa dicono i bravi a don Abbondio?', 'Come si sente don Abbondio alla fine?'],
+      'ps-b1-bravi': ['Che tipo di persona è don Abbondio? Descrivi il suo carattere con parole tue.', 'Perché don Abbondio non scappa quando vede i due bravi?', 'Che cosa chiedono i bravi a don Abbondio?', 'Chi è il «padrone» dei bravi, secondo te? Che ruolo ha nella storia?', 'Come reagisce don Abbondio dopo l\'incontro con i bravi?'],
+      'ps-a2-perpetua': ['Come sta don Abbondio quando torna a casa?', 'Chi è Perpetua?', 'Che cosa dice don Abbondio all\'inizio?', 'Che cosa racconta don Abbondio alla fine?', 'Che cosa vuole fare Perpetua?'],
+      'ps-b1-perpetua': ['Come si comporta don Abbondio appena entra in casa? Che cosa capisce Perpetua?', 'Perché don Abbondio all\'inizio non vuole raccontare niente a Perpetua?', 'Quale strategia usa Perpetua per farlo parlare?', 'Che cosa racconta infine don Abbondio? Che cosa le chiede subito dopo?', 'Come reagisce Perpetua quando sente la storia? Che consiglio dà a don Abbondio?', 'Secondo te, don Abbondio seguirà il consiglio di Perpetua? Perché?'],
+      'ps-a2p-carattere': ['Perché, secondo il testo, essere deboli era pericoloso in quel periodo storico?', 'Per quale motivo i genitori di don Abbondio hanno deciso che sarebbe diventato prete?', 'Qual è la «strategia» che don Abbondio usa per vivere tranquillo?', 'Spiega con parole tue il paragone tra don Abbondio e il vaso di terracotta.', 'Che cosa conta di più per don Abbondio: la giustizia o la pace personale? Come lo capiamo dal testo?'],
+      'ps-b1-carattere': ['Com\'era la società in cui viveva don Abbondio? Perché era pericolosa per i deboli?', 'Perché i genitori lo hanno spinto a diventare prete? Era una vera vocazione?', 'Qual era la sua «regola di vita»? Come si comportava con i potenti e con i deboli?', 'Spiega con parole tue il paragone del vaso di terracotta tra i vasi di ferro.', 'Secondo te, la regola di vita di don Abbondio è giusta? Perché?'],
+      'ps-a2-renzo': ['Come è Renzo quando arriva da don Abbondio?', 'Perché don Abbondio dice che ci sono «impedimenti»?', 'Perché Renzo si arrabbia quando don Abbondio parla in latino?', 'Che cosa fa Renzo alla fine?'],
+      'ps-b1-renzo': ['Che cosa aveva deciso di fare don Abbondio durante la notte? Perché?', 'Quali scuse usa il curato per non celebrare il matrimonio?', 'Come scopre Renzo che c\'è sotto qualcosa di grave?', 'Perché alla fine don Abbondio dice il nome di don Rodrigo?', 'Come reagiscono Renzo e don Abbondio alla fine del capitolo?'],
+      'ps-a2-cristoforo': ['Chi è fra Cristoforo?', 'Dove va fra Cristoforo?', 'Che cosa vede per la strada?', 'Com\'è fra Cristoforo?'],
+      'ps-b1-cristoforo': ['Riassumi in poche frasi che cosa succede nel capitolo 3.', 'Perché fra Cristoforo si mette in cammino così presto?', 'Che cosa vede lungo la strada? Perché il paesaggio è triste?', 'Descrivi fra Cristoforo: com\'è fisicamente e che cosa rivelano i suoi occhi?'],
+      'ps-a2-lodovico': ['Chi è Lodovico?', 'Che lavoro fa il padre di Lodovico?', 'Perché Lodovico e il nobile litigano?', 'Che cosa fa il servitore Cristoforo?', 'Dove va Lodovico dopo il duello?'],
+      'ps-b1-lodovico': ['Perché i nobili non accettavano Lodovico? Come reagiva lui?', 'Perché era importante passare vicino al muro?', 'Racconta come si svolge il duello e come muore il servitore Cristoforo.', 'Perché Lodovico viene portato in un convento?'],
+      'ps-a2-perdono': ['Perché Lodovico diventa frate?', 'Perché sceglie il nome Cristoforo?', 'Che cosa fa fra Cristoforo a casa del fratello del nobile?', 'Che cos\'è il pane del perdono?', 'Com\'è fra Cristoforo prima? E dopo?'],
+      'ps-b1-perdono': ['Perché Lodovico decide di diventare frate e perché sceglie il nome Cristoforo?', 'Che cosa fa con i suoi beni? Perché?', 'Come organizza l\'incontro il fratello del nobile? Che cosa succede?', 'Che cosa rappresenta il pane del perdono per fra Cristoforo?']
+    },
+    // Scheda finale: esercitazione riassuntiva da mandare all'insegnante, una per difficoltà
+    scheda: {
+      A2: { title: 'Scheda finale: Promessi sposi (Base)', intro: 'Rispondi con frasi complete. Puoi rileggere i brani prima di rispondere.', questions: [
+        'Chi sono questi personaggi? Scrivi una frase per ognuno: don Abbondio, Perpetua, Renzo, don Rodrigo, fra Cristoforo.',
+        'Racconta in 5-6 frasi che cosa succede nei capitoli 1 e 2.',
+        'Perché don Abbondio non vuole celebrare il matrimonio di Renzo e Lucia?',
+        'Racconta la storia di Lodovico: perché diventa fra Cristoforo?',
+        'Spiega con parole tue queste parole: bravo, curato, carestia, convento, perdono.',
+        'Trasforma al passato remoto: «Renzo arriva a casa del curato. Don Abbondio ha paura. I bravi minacciano il curato.»',
+        'Trasforma alla forma passiva: «Fra Cristoforo aiuta Lucia. Il fratello del nobile perdona Lodovico.»'
+      ] },
+      B1: { title: 'Scheda finale: Promessi sposi (Più difficile)', intro: 'Rispondi con frasi complete e collega le idee con i connettivi. Puoi rileggere i brani prima di rispondere.', questions: [
+        'Riassumi in 10-12 frasi la storia dal capitolo 1 al capitolo 4.',
+        'Descrivi il carattere di don Abbondio e spiega il paragone del vaso di terracotta.',
+        'Confronta Perpetua e don Abbondio: come reagiscono alla minaccia dei bravi?',
+        'Come cambia Lodovico dopo il duello? Che cosa rappresenta il pane del perdono?',
+        'Volgi al discorso indiretto: «Il nostro padrone non vuole questo matrimonio», disse il bravo. / «Domani non celebrerò le nozze», pensò don Abbondio.',
+        'Completa con il congiuntivo: «Perpetua pensa che don Abbondio (avere) paura. Renzo vuole che il curato (dire) la verità.»',
+        'Trasforma al passivo (passato remoto): «Lodovico uccise il nobile. I frati accolsero Lodovico.»',
+        'Spiega il significato di: prepotente, impedimento, umiltà, sospettoso, misericordia.'
+      ] }
+    },
     // «Chi lo dice?»: frasi dei testi, per il ripasso di tutto
     quotes: [
       ['«Signor curato, domani lei non deve fare quel matrimonio.»', 'un bravo'],
@@ -6163,6 +6210,18 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
         C.writing.push(Object.assign({ id: 'w-' + t.id, level: t.level, verifica: t.id }, t.write));
       }
     }
+    // domande aperte e scheda finale: usano gli Scritti (l'insegnante le legge, commenta e corregge)
+    C.writing = C.writing || [];
+    const qText = qs => qs.map((q, i) => (i + 1) + '. ' + q).join('\n');
+    for (const t of g.texts) {
+      const qs = (g.aperte || {})[t.id]; if (!qs) continue;
+      t.aperte = qs;
+      C.writing.push({ id: 'aq-' + t.id, level: t.level, verifica: t.id, kind: 'aperte', title: 'Domande aperte: ' + t.title + ' (' + (t.levelLabel || t.level) + ')', prompt: 'Rispondi alle domande sul brano «' + t.title + '»:\n' + qText(qs), questions: qs, min: 20, max: 600 });
+    }
+    for (const [lv, sc] of Object.entries(g.scheda || {})) {
+      sc.id = 'sf-' + g.id + '-' + lv.toLowerCase(); sc.level = lv;
+      C.writing.push({ id: sc.id, level: lv, verifica: 'gruppo:' + g.id, kind: 'scheda', title: sc.title, prompt: sc.intro + '\n' + qText(sc.questions), questions: sc.questions, min: 60, max: 1200 });
+    }
     // «Chi è? Chi lo dice?»: personaggi e battute, per il ripasso di tutto
     const extra = [];
     if (g.characters && g.characters.length >= 4) {
@@ -6394,7 +6453,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       case 'writing': return C.writingById[ref] ? 'Scrittura ' + C.writingById[ref].level + ' · ' + C.writingById[ref].title : ref;
       case 'vocab': return C.vocabById[ref] ? 'Parole ' + C.vocabById[ref].level + ' · ' + C.vocabById[ref].title : ref;
       case 'game': { const [g, k] = String(ref).split(':'); if (g === 'bingo') return 'Gioco · Bingo delle parole' + (String(ref).endsWith(':ascolta') ? ' (ascolto)' : ''); const cw = window.IL2.games && window.IL2.games.CROSSWORDS.find(s => s.id === k); return 'Gioco · Cruciverba' + (cw ? ' ' + cw.level + ' · ' + cw.title : ''); }
-      case 'verifica': { const [tid, part] = String(ref).split(':'); const v = C.verificaPart && C.verificaPart[ref]; const g = (C.verifiche || []).find(x => x.id === tid); const lab = { lessico: 'lessico', grammatica: 'grammatica', comprensione: 'comprensione', personaggi: 'personaggi', tutto: 'ripasso di tutto' }[part] || part; if (v && v.text) return 'Verso la verifica · ' + v.group.title + ' · ' + (v.text.levelLabel || v.text.level) + ' ' + v.text.title + ' (' + lab + ')'; if (g) return 'Verso la verifica · ' + g.title + ' (' + lab + ')'; return 'Verso la verifica'; }
+      case 'verifica': { const [tid, part] = String(ref).split(':'); const v = C.verificaPart && C.verificaPart[ref]; const g = (C.verifiche || []).find(x => x.id === tid); const lab = { lessico: 'lessico', grammatica: 'grammatica', comprensione: 'comprensione', personaggi: 'personaggi', tutto: 'ripasso di tutto', aperte: 'domande aperte' }[part] || (String(part).startsWith('scheda') ? 'scheda finale ' + String(part).slice(7) : part); if (v && v.text) return 'Verso la verifica · ' + v.group.title + ' · ' + (v.text.levelLabel || v.text.level) + ' ' + v.text.title + ' (' + lab + ')'; if (g) return 'Verso la verifica · ' + g.title + ' (' + lab + ')'; return 'Verso la verifica'; }
       case 'speaking': return 'Pronuncia ' + ref;
       case 'speakcard': { const sc = (C.speakCards || []).find(x => x.id === ref); return sc ? 'Parlato guidato ' + sc.level + ' · ' + sc.title : ref; }
       case 'topic': return C.topics[ref] ? 'Rinforzo · ' + C.topics[ref].name : ref;
@@ -9134,6 +9193,16 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const groups = C.verifiche || [];
     if (parts[0]) {
       const g = groups.find(x => x.id === parts[0]); if (!g) return IL2.go('verifiche');
+      if (parts[1] === 'scheda') {
+        const lv = vLevel(g); const sc = lv && g.scheda && (g.scheda[lv] || Object.values(g.scheda)[0]);
+        if (!sc) return IL2.go('verifiche/' + g.id);
+        return verificaOpen(view, C.writingById[sc.id], ['verifiche/' + g.id, g.title], g.id + ':scheda-' + sc.level);
+      }
+      if (parts[1] && parts[2] === 'aperte') {
+        const t = g.texts.find(x => x.id === parts[1]); const task = t && C.writingById['aq-' + t.id];
+        if (!task) return IL2.go('verifiche/' + g.id);
+        return verificaOpen(view, task, ['verifiche/' + g.id + '/' + t.id, t.title], t.id + ':aperte');
+      }
       if (parts[1]) return verificaText(view, g, parts[1]);
       return verificaGroup(view, g);
     }
@@ -9183,6 +9252,8 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     h += '<div class="v-level-row"><span class="small muted">Difficoltà:</span>' + vLevelSwitch(g, lv) + '</div>';
     h += '<section class="card v-all"><div class="v-all-body"><b>Ripasso di tutto</b><small>Esercizi misti da tutti i testi, con i personaggi e le loro frasi. Utile il giorno prima della verifica.</small>' + meter(did, total) + '<small>' + did + ' esercizi fatti su ' + total + (d[g.id + ':tutto'] ? ' · ripasso di tutto fatto il ' + fmtDate(d[g.id + ':tutto'].at) : '') + '</small></div>' +
       '<button class="btn primary" id="vall">' + icon('repeat') + ' Comincia</button></section><div id="vallbox"></div>';
+    const sc = g.scheda && (g.scheda[lv] || null);
+    if (sc) { const sd = d[g.id + ':scheda-' + sc.level]; h += '<a class="card row-item v-scheda" href="#/verifiche/' + g.id + '/scheda"><span class="ri-ic">' + icon(sd ? 'check' : 'clip') + '</span><span class="ri-body"><b>Scheda finale</b><small>Esercitazione riassuntiva su tutti i brani: la mandi all\'insegnante, che la corregge.' + (sd ? ' Mandata il ' + fmtDate(sd.at) + '.' : '') + '</small></span>' + icon('chevron') + '</a>'; }
     if (g.characters) h += '<details class="card v-chars"><summary><b>I personaggi</b> <small class="muted">(' + g.characters.length + ')</small></summary><ul class="v-char-list">' + g.characters.map(c => '<li><span aria-hidden="true">' + c[0] + '</span><span><b>' + esc(c[1]) + '</b><small>' + esc(c[2]) + '</small></span></li>').join('') + '</ul></details>';
     h += heads.map(cap => '<h2 class="lv-h">' + esc(cap) + '</h2><div class="list">' + texts.filter(t => capKey(t.cap) === cap).map(t => {
       const k = vPartsDone(t);
@@ -9198,6 +9269,60 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       items = shuffle(items).slice(0, 24).concat(shuffle(g.extraItems || []).slice(0, 4));
       const box = view.querySelector('#vallbox'); view.querySelector('.v-all').hidden = true;
       await runVerifica(view, box, { title: 'Ripasso di tutto: ' + g.title, items, ref: g.id + ':tutto', skill: 'lettura', back: 'verifiche/' + g.id });
+    });
+  }
+
+  // Domande aperte di un brano e scheda finale: le risposte vanno all'insegnante, che le corregge negli Scritti.
+  // Senza server arrivano dentro il file dei progressi, insieme a tutti i progressi registrati fino a quel momento.
+  async function verificaOpen(view, task, back, doneKey) {
+    const p = P(), d = VD();
+    const key = 'il2-draft-' + S().user.id + '-' + task.id;
+    let draft = []; try { draft = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { /* nulla */ }
+    const subs = await IL2.api.call('mySubmissions').catch(() => []);
+    const mine = subs.filter(s => s.taskId === task.id);
+    const last = mine[mine.length - 1];
+    const started = Date.now();
+    view.innerHTML = '<a class="back" href="#/' + back[0] + '">' + icon('back') + esc(back[1]) + '</a>' +
+      '<p class="eyebrow">Verso la verifica · ' + esc(task.level) + ' · per l\'insegnante</p><h1>' + esc(task.kind === 'scheda' ? task.title : 'Domande aperte') + '</h1>' +
+      '<div class="note v-before">' + icon('pen') + ' <span>Scrivi le risposte con frasi complete. Quando hai finito, le mandi all\'insegnante: le corregge e ti scrive un commento, che trovi in <a href="#/elaborati">I miei testi</a>.' + (window.IL2_SITE === 'studenti' ? ' Insieme alle risposte arrivano anche i tuoi progressi nell\'app.' : '') + '</span></div>' +
+      (last ? '<div class="card v-sent">' + icon('check') + ' <span>Hai già mandato le risposte il ' + fmtDate(last.at, true) + (last.status === 'corretto' ? '. <b>L\'insegnante le ha corrette:</b> leggi il commento in <a href="#/elaborati">I miei testi</a>.' : '.') + ' Puoi mandarle di nuovo, se vuoi.</span></div>' : '') +
+      (task.kind === 'aperte' ? '<p class="small"><a href="#/' + back[0] + '">Rileggi il brano</a> prima di rispondere.</p>' : '') +
+      '<ol class="v-open">' + task.questions.map((q, i) => '<li><label><span class="v-q">' + esc(q) + '</span><textarea rows="' + (task.kind === 'scheda' && i === 0 ? 6 : 3) + '" class="writing" data-i="' + i + '" spellcheck="false" lang="it" placeholder="La tua risposta…">' + esc(draft[i] || '') + '</textarea></label></li>').join('') + '</ol>' + X.accentBar() +
+      '<div class="row between wrap"><span class="small muted" id="vcount"></span><button class="btn primary" id="vsend">' + icon('upload') + ' Manda all\'insegnante</button></div>';
+    const tas = Array.from(view.querySelectorAll('textarea[data-i]'));
+    let lastTa = tas[0];
+    const count = () => { const n = tas.filter(t => t.value.trim()).length; view.querySelector('#vcount').textContent = 'Risposte scritte: ' + n + ' su ' + tas.length; };
+    tas.forEach(t => {
+      t.addEventListener('focus', () => { lastTa = t; });
+      t.addEventListener('input', () => { count(); try { localStorage.setItem(key, JSON.stringify(tas.map(x => x.value))); } catch (e) { /* nulla */ } });
+    });
+    count();
+    view.querySelectorAll('.accents .key').forEach(k => { k.addEventListener('mousedown', e => e.preventDefault()); k.addEventListener('click', () => {
+      const inp = lastTa; const st = inp.selectionStart != null ? inp.selectionStart : inp.value.length, en = inp.selectionEnd != null ? inp.selectionEnd : inp.value.length;
+      inp.value = inp.value.slice(0, st) + k.dataset.ch + inp.value.slice(en); inp.focus(); inp.selectionStart = inp.selectionEnd = st + 1; inp.dispatchEvent(new Event('input'));
+    }); });
+    view.querySelector('#vsend').addEventListener('click', async () => {
+      const answers = tas.map(t => t.value.trim());
+      const n = answers.filter(Boolean).length;
+      if (!n) return toast('Scrivi almeno una risposta', 'bad');
+      if (n < answers.length && !await IL2.ui.confirm('Hai risposto a ' + n + ' domande su ' + answers.length + '. Vuoi mandare le risposte lo stesso?', 'Manda')) return;
+      const text = task.questions.map((q, i) => (i + 1) + '. ' + q + '\n» ' + (answers[i] || '(nessuna risposta)')).join('\n\n');
+      const chk = IL2.checker.check(answers.filter(Boolean).join('\n'), task);
+      try {
+        await IL2.api.call('submitWriting', { taskId: task.id, title: task.title, level: task.level, text, autoFeedback: { stats: chk.stats, issues: chk.issues.length, tips: chk.tips } });
+        d[doneKey] = { at: Date.now() };
+        done({ type: 'verifica', ref: doneKey, skill: 'scrittura', correct: n, total: answers.length, durationSec: Math.round((Date.now() - started) / 1000) });
+        p.stats = p.stats || {}; p.stats.writings = (p.stats.writings || 0) + 1;
+        IL2.award(10);
+        try { localStorage.removeItem(key); } catch (e) { /* nulla */ }
+        if (window.IL2_SITE === 'studenti') {
+          view.innerHTML = '<section class="result card">' + icon('pen', 'big') + '<h2>Risposte salvate. Ultimo passo: manda il file!</h2><p>Le risposte arrivano all\'insegnante <b>solo dentro il file dei tuoi progressi</b>, insieme a tutto quello che hai fatto finora nell\'app. Mandale il file per email.</p>' +
+            '<p class="small muted">Quando l\'insegnante le avrà corrette, trovi il suo commento in «I miei testi».</p>' +
+            '<div class="row center wrap"><button class="btn primary" id="sendw">' + icon('upload') + ' Manda il file all\'insegnante</button>' + btn(back[0], 'Torna indietro') + '</div></section>';
+          view.querySelector('#sendw').addEventListener('click', e => sendProgress(e.currentTarget, () => toast('Grazie! Il file è pronto per l\'insegnante.', 'good')));
+          await sendProgress(view.querySelector('#sendw'));
+        } else view.innerHTML = '<section class="result card">' + icon('pen', 'big') + '<h2>Risposte inviate!</h2><p>L\'insegnante le correggerà e vedrai il suo commento in «I miei testi».</p><div class="row center wrap">' + btn('elaborati', 'I miei testi') + btn(back[0], 'Torna indietro', 'primary') + '</div></section>';
+      } catch (e) { toast(e.message, 'bad'); }
     });
   }
 
@@ -9239,7 +9364,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       '<h2>Esercizi per la verifica</h2><div class="tiles v-parts">' + C.VERIFICA_PARTS.map(([k, l, ic]) => {
         const st = d[t.id + ':' + k];
         return '<button type="button" class="card tile v-part' + (st ? ' done' : '') + '" data-part="' + k + '"><span class="t-icon">' + icon(st ? 'check' : ic) + '</span><b>' + l + '</b><small>' + esc(partInfo[k]) + '</small><small>' + vPartItems(t, k).length + ' esercizi' + (st ? ' · fatto' + (st.best != null ? ' (' + st.best + '%)' : '') : '') + '</small></button>';
-      }).join('') + '</div>' +
+      }).join('') + (t.aperte ? '<a class="card tile v-part c-write' + (d[t.id + ':aperte'] ? ' done' : '') + '" href="#/verifiche/' + g.id + '/' + t.id + '/aperte"><span class="t-icon">' + icon(d[t.id + ':aperte'] ? 'check' : 'upload') + '</span><b>Domande aperte</b><small>Le corregge l\'insegnante</small><small>' + t.aperte.length + ' domande' + (d[t.id + ':aperte'] ? ' · mandate il ' + fmtDate(d[t.id + ':aperte'].at) : '') + '</small></a>' : '') + '</div>' +
       (t.grammatica && t.grammatica.theory ? '<details class="card v-theory"><summary><b>La regola:</b> ' + esc(t.grammatica.title) + '</summary><div class="theory">' + t.grammatica.theory + '</div></details>' : '') +
       (writing ? '<a class="card row-item" href="#/scrivi/' + writing.id + '"><span class="ri-ic">' + icon('pen') + '</span><span class="ri-body"><b>Scrivi (facoltativo): ' + esc(writing.title) + '</b><small>Il testo arriva all\'insegnante, che lo legge e ti scrive un commento.</small></span>' + icon('chevron') + '</a>' : '') +
       '<div id="vbox"></div>';
@@ -10025,11 +10150,12 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const groups = (C.verifiche || []);
     if (!groups.length) return '';
     return '<div class="card"><h3>' + icon('clip') + ' Verso la verifica</h3>' + groups.map(g => {
-      const rows = g.texts.filter(t => C.VERIFICA_PARTS.some(([k]) => vd[t.id + ':' + k]));
+      const rows = g.texts.filter(t => C.VERIFICA_PARTS.some(([k]) => vd[t.id + ':' + k]) || vd[t.id + ':aperte']);
       const all = vd[g.id + ':tutto'];
-      return '<h4>' + g.icon + ' ' + esc(g.title) + '</h4>' + (rows.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Testo</th><th>Liv.</th>' + C.VERIFICA_PARTS.map(([, l]) => '<th>' + l + '</th>').join('') + '</tr>' + rows.map(t => '<tr><td>' + esc(t.title) + '</td><td>' + esc(t.levelLabel || t.level) + '</td>' + C.VERIFICA_PARTS.map(([k]) => { const x = vd[t.id + ':' + k]; return '<td>' + (x ? '<b>' + x.best + '%</b> <small class="muted">' + fmtDate(x.at) + '</small>' : '<span class="muted">—</span>') + '</td>'; }).join('') + '</tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora fatto esercizi di questo argomento.</p>') +
-        (all ? '<p class="small">Ripasso di tutto: <b>' + all.best + '%</b> al primo tentativo · ' + fmtDate(all.at) + '</p>' : '');
-    }).join('') + '<p class="small muted">Percentuale di risposte giuste al primo tentativo (la migliore). Gli errori sono anche nel Registro degli errori.</p></div>';
+      return '<h4>' + g.icon + ' ' + esc(g.title) + '</h4>' + (rows.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Testo</th><th>Liv.</th>' + C.VERIFICA_PARTS.map(([, l]) => '<th>' + l + '</th>').join('') + '<th>Domande aperte</th></tr>' + rows.map(t => '<tr><td>' + esc(t.title) + '</td><td>' + esc(t.levelLabel || t.level) + '</td>' + C.VERIFICA_PARTS.map(([k]) => { const x = vd[t.id + ':' + k]; return '<td>' + (x ? '<b>' + x.best + '%</b> <small class="muted">' + fmtDate(x.at) + '</small>' : '<span class="muted">—</span>') + '</td>'; }).join('') + '<td>' + (vd[t.id + ':aperte'] ? 'mandate ' + fmtDate(vd[t.id + ':aperte'].at) : '<span class="muted">—</span>') + '</td></tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora fatto esercizi di questo argomento.</p>') +
+        (all ? '<p class="small">Ripasso di tutto: <b>' + all.best + '%</b> al primo tentativo · ' + fmtDate(all.at) + '</p>' : '') +
+        Object.values(g.scheda || {}).filter(sc => vd[g.id + ':scheda-' + sc.level]).map(sc => '<p class="small">Scheda finale ' + sc.level + ' mandata il ' + fmtDate(vd[g.id + ':scheda-' + sc.level].at) + ': la trovi negli Scritti.</p>').join('');
+    }).join('') + '<p class="small muted">Percentuale di risposte giuste al primo tentativo (la migliore). Gli errori sono anche nel Registro degli errori. Domande aperte e scheda finale arrivano negli Scritti, da correggere.</p></div>';
   }
 
   function secWritings(s, d) {
@@ -10288,7 +10414,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
     if (tab === 'letture') h += C.readings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.genre) + '</summary><p class="pre">' + esc(r.text) + '</p><ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'ascolti') h += C.listenings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.situation) + '</summary>' + r.script.map(([v, t]) => '<p><b>' + v + ':</b> ' + esc(t) + '</p>').join('') + '<ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
-    if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Lo studente sceglie la difficoltà (Base A2 o Più difficile B1) e vede la versione di ogni testo per quella difficoltà. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + (t.draft ? ' <span class="tag warn">versione B1 scritta da Claude: da rivedere</span>' : '') + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
+    if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Lo studente sceglie la difficoltà (Base A2 o Più difficile B1) e vede la versione di ogni testo per quella difficoltà. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + (t.draft ? ' <span class="tag warn">versione B1 scritta da Claude: da rivedere</span>' : '') + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.aperte ? '<h4>Domande aperte (le correggi tu, negli Scritti)</h4><ol class="small">' + t.aperte.map(q => '<li>' + esc(q) + '</li>').join('') + '</ol>' : '') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + Object.values(g.scheda || {}).map(sc => '<details class="card"><summary>' + levelBadge(sc.level) + ' <b>' + esc(sc.title) + '</b> (la correggi tu, negli Scritti)</summary><p class="small">' + esc(sc.intro) + '</p><ol class="small">' + sc.questions.map(q => '<li>' + esc(q) + '</li>').join('') + '</ol></details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
     if (tab === 'scrittura') h += C.writing.filter(w => !w.verifica).map(w => '<div class="card">' + levelBadge(w.level) + ' <b>' + esc(w.title) + '</b> · ' + w.min + '–' + w.max + ' parole<p>' + esc(w.prompt) + '</p></div>').join('');
     if (tab === 'lessico') h += C.vocab.map(t => '<details class="card"><summary>' + levelBadge(t.level) + ' ' + t.icon + ' <b>' + esc(t.title) + '</b> · ' + t.words.length + ' parole</summary><table class="tbl small">' + t.words.map(w => '<tr><td><b>' + esc(w.it) + '</b></td><td>' + esc(w.def || [w.gloss.en, w.gloss.fr, w.gloss.ar, w.gloss.zh].filter(Boolean).join(' · ')) + '</td><td><i>' + esc(w.ex) + '</i></td></tr>').join('') + '</table></details>').join('');
     if (tab === 'lingue') h += '<p>Per gli studenti la lingua d\'origine compare <b>solo nel dizionario</b>, come traduzione delle parole: tutto il resto dell\'app è in italiano. Le note contrastive qui sotto sono in italiano e le vedi solo tu, nella scheda di ogni studente e nei suggerimenti. In un contesto ufficiale è opportuno far verificare le traduzioni da mediatori linguistici: puoi segnalare correzioni con la revisione periodica.</p>' + IL2.l1.ORDER.map(c => { const p = IL2.l1.profile(c); return '<details class="card"><summary><b>' + esc(p.name) + '</b> · ' + esc(p.native) + '</summary>' + (p.general ? '<p>' + esc(p.general.it) + '</p>' : '') + '<ul>' + Object.entries(p.tips).map(([k, t]) => '<li><b>' + esc(topicName(k)) + ':</b> ' + esc(t.it) + '</li>').join('') + '</ul>' + (p.friends.length ? '<p><b>Falsi amici:</b> ' + p.friends.map(f => esc(f[0]) + ' = ' + esc(f[1])).join(' · ') + '</p>' : '') + '</details>'; }).join('');
