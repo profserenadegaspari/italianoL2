@@ -1623,7 +1623,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 (function () {
   'use strict';
   const IL2 = window.IL2 = window.IL2 || {};
-  const ORDER = ['en', 'fr', 'es', 'pt', 'ro', 'sq', 'uk', 'ru', 'ar', 'zh', 'bn', 'ur'];
+  const ORDER = ['en', 'fr', 'es', 'pt', 'ro', 'sq', 'uk', 'ru', 'ar', 'zh', 'bn', 'ur', 'si'];
   const KEYS = ['chooseAnswer', 'writeAnswer', 'orderWords', 'listenWrite', 'matchPairs', 'trueFalse', 'speak', 'check', 'next', 'correct', 'wrong', 'placementIntro', 'dontKnow', 'today', 'listen', 'read'];
 
   const UI = {
@@ -1638,7 +1638,8 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
     ar: ['اختر الإجابة الصحيحة', 'اكتب الإجابة', 'رتّب الكلمات', 'استمع واكتب ما تسمعه', 'صِل بين الأزواج', 'صحيح أم خطأ؟', 'اضغط على الميكروفون واقرأ بصوت عالٍ', 'تحقّق', 'التالي', 'صحيح!', 'ليس تمامًا. الإجابة الصحيحة هي:', 'هذا الاختبار يحدد مستواك. يتكيّف معك: تصبح الأسئلة أسهل أو أصعب. إذا لم تعرف، اختر «لا أعرف»: لا بأس!', 'لا أعرف', 'خطتك لليوم', 'استمع', 'اقرأ'],
     zh: ['选择正确答案', '写出答案', '把词语排好顺序', '听一听，写下你听到的内容', '连线配对', '对还是错？', '点击麦克风，大声朗读', '检查', '下一题', '正确！', '不太对。正确答案是：', '这个测试会找到你的水平。它会根据你调整：题目会变得更容易或更难。如果不知道，就选"我不知道"，没关系！', '我不知道', '你今天的计划', '听', '读'],
     bn: ['সঠিক উত্তরটি বেছে নাও', 'উত্তর লেখো', 'শব্দগুলো সাজাও', 'শোনো এবং যা শুনছ তা লেখো', 'জোড়া মেলাও', 'সত্য না মিথ্যা?', 'মাইক্রোফোনে চাপ দাও এবং জোরে পড়ো', 'যাচাই করো', 'পরবর্তী', 'সঠিক!', 'পুরোপুরি নয়। সঠিক উত্তর:', 'এই পরীক্ষা তোমার স্তর খুঁজে বের করে। এটা তোমার সাথে মানিয়ে নেয়: প্রশ্ন সহজ বা কঠিন হয়। না জানলে "জানি না" বেছে নাও: কোনো সমস্যা নেই!', 'জানি না', 'আজকের পরিকল্পনা', 'শোনো', 'পড়ো'],
-    ur: ['صحیح جواب چنیں', 'جواب لکھیں', 'الفاظ کو ترتیب دیں', 'سنیں اور جو سنیں وہ لکھیں', 'جوڑے ملائیں', 'صحیح یا غلط؟', 'مائیکروفون دبائیں اور بلند آواز سے پڑھیں', 'جانچیں', 'اگلا', 'درست!', 'بالکل نہیں۔ صحیح جواب ہے:', 'یہ ٹیسٹ آپ کی سطح معلوم کرتا ہے۔ یہ آپ کے مطابق بدلتا ہے: سوال آسان یا مشکل ہو جاتے ہیں۔ اگر معلوم نہ ہو تو "معلوم نہیں" چنیں: کوئی بات نہیں!', 'معلوم نہیں', 'آج کا منصوبہ', 'سنیں', 'پڑھیں']
+    ur: ['صحیح جواب چنیں', 'جواب لکھیں', 'الفاظ کو ترتیب دیں', 'سنیں اور جو سنیں وہ لکھیں', 'جوڑے ملائیں', 'صحیح یا غلط؟', 'مائیکروفون دبائیں اور بلند آواز سے پڑھیں', 'جانچیں', 'اگلا', 'درست!', 'بالکل نہیں۔ صحیح جواب ہے:', 'یہ ٹیسٹ آپ کی سطح معلوم کرتا ہے۔ یہ آپ کے مطابق بدلتا ہے: سوال آسان یا مشکل ہو جاتے ہیں۔ اگر معلوم نہ ہو تو "معلوم نہیں" چنیں: کوئی بات نہیں!', 'معلوم نہیں', 'آج کا منصوبہ', 'سنیں', 'پڑھیں'],
+    si: ['නිවැරදි පිළිතුර තෝරන්න', 'පිළිතුර ලියන්න', 'වචන පිළිවෙළට තබන්න', 'අහලා ඇහෙන දේ ලියන්න', 'යුගල ගළපන්න', 'සත්‍යද අසත්‍යද?', 'මයික්‍රෆෝනය ඔබලා ශබ්ද නඟා කියවන්න', 'පරීක්ෂා කරන්න', 'ඊළඟ', 'නිවැරදියි!', 'සම්පූර්ණයෙන්ම නොවේ. නිවැරදි පිළිතුර:', 'මෙම පරීක්ෂණය ඔබේ මට්ටම සොයා ගනී. එය ඔබට අනුව වෙනස් වේ: ප්‍රශ්න පහසු හෝ අමාරු වේ. නොදන්නේ නම් "මම දන්නේ නැහැ" තෝරන්න: කමක් නැහැ!', 'මම දන්නේ නැහැ', 'අද ඔබේ සැලැස්ම', 'අහන්න', 'කියවන්න']
   };
 
   const P = {
@@ -1778,6 +1779,18 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
         'preposizioni': { t: 'اردو میں "میں، پر، سے" اسم کے بعد آتے ہیں، اطالوی میں پہلے: in classe (جماعت میں)۔', it: 'Posposizioni in urdu, preposizioni in italiano.' },
         'pronomi-soggetto': { t: 'اچھی خبر: "آپ" = Lei اور "تم" = tu۔', it: 'Aap/tum corrispondono a Lei/tu.' },
         'ortografia': { t: 'اطالوی t اور d دانتوں سے ادا ہوتے ہیں، اردو کے ٹ/ڈ کی طرح نہیں۔', it: 'In italiano t e d sono dentali, non retroflesse.' }
+      },
+      friends: []
+    },
+    si: {
+      name: 'Cingalese', native: 'සිංහල', focus: { grammatica: 0.8, scrittura: 0.4 },
+      general: { t: 'සිංහලයේ ක්‍රියාපදය වාක්‍යයේ අගට එයි (මම බත් කනවා), ඉතාලි භාෂාවේ ක්‍රියාපදය මැදට එයි: Io mangio il riso.', it: 'In cingalese il verbo va alla fine della frase; in italiano in mezzo (SVO).' },
+      tips: {
+        'genere-numero': { t: 'සිංහලයේ පුරුෂ / ස්ත්‍රී ලිංග භේදය ප්‍රධාන වශයෙන් ජීවීන්ට පමණි. ඉතාලි භාෂාවේ සෑම නාම පදයක්ම පුරුෂ හෝ ස්ත්‍රී ලිංග වේ: il libro (පු.), la penna (ස්ත්‍රී.).', it: 'In cingalese il genere riguarda soprattutto gli esseri animati; in italiano ogni nome è maschile o femminile.' },
+        'articoli': { t: 'සිංහලයේ "පොතක්" / "පොත" වගේ වෙනස නාම පදයේ අගින් පෙන්වයි. ඉතාලි භාෂාවේ ලිපිය (article) නාම පදයට පෙර එයි: un libro = පොතක්, il libro = පොත.', it: 'Il cingalese distingue definito/indefinito con suffissi (-ක්); l\'italiano usa articoli prima del nome.' },
+        'preposizioni': { t: 'සිංහලයේ "-ට", "-ේ", "-ගෙන්" නාම පදයට පසුව එයි; ඉතාලි භාෂාවේ පෙරසර්ග නාම පදයට පෙර එයි: a casa (ගෙදරට), in classe (පන්තියේ).', it: 'In cingalese i casi sono suffissi/posposizioni; in italiano preposizioni prima del nome.' },
+        'pronomi-soggetto': { t: 'හොඳ පුවතක්: "ඔබ" = Lei, "ඔයා" = tu. ඉතාලි භාෂාවේත් ගෞරවාර්ථ රූපයක් තිබේ.', it: 'Oba/oyaa corrispondono a Lei/tu: transfer positivo.' },
+        'ortografia': { t: 'ඉතාලි t සහ d දත් ළඟින් උච්චාරණය කරන්න (ත / ද වගේ), ට / ඩ වගේ නොවේ. ද්විත්ව ව්‍යඤ්ජන දිගට කියන්න: pala ≠ palla.', it: 'In italiano t e d sono dentali, non retroflesse; attenzione alle doppie.' }
       },
       friends: []
     }
@@ -3366,7 +3379,7 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
 /* js/content/vocab-a1.js */
 /*
  * Lessico con glosse nelle lingue d'origine.
- * Formato riga: italiano | en | fr | es | pt | ro | sq | uk | ru | ar | zh | bn | ur | esempio
+ * Formato riga: italiano | en | fr | es | pt | ro | sq | uk | ru | ar | zh | bn | ur | si | esempio
  * Le traduzioni sono un supporto: l'insegnante può segnalarne o sostituirne tramite le liste personalizzate.
  */
 (function () {
@@ -3374,163 +3387,163 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
   C.vocabRaw = C.vocabRaw || [];
   C.vocabRaw.push(
     { id: 'a1-saluti', level: 'A1', title: 'Saluti e presentazioni', icon: '👋', rows: `
-ciao|hi / bye|salut|hola / adiós|olá / tchau|salut / pa|përshëndetje / mirupafshim|привіт / бувай|привет / пока|مرحبا / وداعا|你好 / 再见|হ্যালো / বিদায়|ہیلو / خدا حافظ|Ciao Luca, come stai?
-buongiorno|good morning|bonjour|buenos días|bom dia|bună dimineața|mirëmëngjes|добрий день|добрый день|صباح الخير|早上好|সুপ্রভাত|صبح بخیر|Buongiorno, professoressa!
-buonasera|good evening|bonsoir|buenas tardes / noches|boa tarde / noite|bună seara|mirëmbrëma|добрий вечір|добрый вечер|مساء الخير|晚上好|শুভ সন্ধ্যা|شام بخیر|Buonasera a tutti.
-arrivederci|goodbye|au revoir|adiós|adeus|la revedere|mirupafshim|до побачення|до свидания|إلى اللقاء|再见|আবার দেখা হবে|خدا حافظ|Arrivederci, a domani!
-grazie|thank you|merci|gracias|obrigado|mulțumesc|faleminderit|дякую|спасибо|شكرا|谢谢|ধন্যবাদ|شکریہ|Grazie mille!
-prego|you're welcome / please|de rien / je vous en prie|de nada|de nada|cu plăcere|ju lutem|будь ласка|пожалуйста|عفوا|不客气|স্বাগতম|کوئی بات نہیں|Grazie! — Prego.
-per favore|please|s'il te plaît|por favor|por favor|te rog|të lutem|будь ласка|пожалуйста|من فضلك|请|দয়া করে|براہ کرم|Un bicchiere d'acqua, per favore.
-scusa|sorry / excuse me|pardon|perdón|desculpa|scuze|më fal|вибач|извини|آسف / عفوا|对不起|দুঃখিত|معاف کیجیے|Scusa, non ho capito.
-chiamarsi|to be called|s'appeler|llamarse|chamar-se|a se numi|quhem|називатися|называться|اسمه|名叫|নাম হওয়া|نام ہونا|Come ti chiami?
-piacere|nice to meet you|enchanté|encantado|prazer|încântat|gëzohem|приємно познайомитися|приятно познакомиться|تشرفنا|很高兴认识你|পরিচিত হয়ে ভালো লাগল|آپ سے مل کر خوشی ہوئی|Piacere, io sono Ana.
-nome|name|prénom|nombre|nome|prenume|emër|ім'я|имя|اسم|名字|নাম|نام|Il mio nome è Karim.
-cognome|surname|nom de famille|apellido|sobrenome|nume de familie|mbiemër|прізвище|фамилия|اسم العائلة|姓|পদবি|خاندانی نام|Qual è il tuo cognome?
-anni|years (age)|ans|años|anos|ani|vjeç|років|лет|سنة / عمر|岁|বছর|سال|Ho quattordici anni.
-paese|country|pays|país|país|țară|vend|країна|страна|بلد|国家|দেশ|ملک|Il mio paese è il Senegal.
-lingua|language|langue|idioma|língua|limbă|gjuhë|мова|язык|لغة|语言|ভাষা|زبان|Parlo tre lingue.
-abitare|to live (reside)|habiter|vivir|morar|a locui|banoj|жити|жить|يسكن|住|বাস করা|رہنا|Abito in via Roma.
+ciao|hi / bye|salut|hola / adiós|olá / tchau|salut / pa|përshëndetje / mirupafshim|привіт / бувай|привет / пока|مرحبا / وداعا|你好 / 再见|হ্যালো / বিদায়|ہیلو / خدا حافظ|හලෝ / ගිහින් එන්නම්|Ciao Luca, come stai?
+buongiorno|good morning|bonjour|buenos días|bom dia|bună dimineața|mirëmëngjes|добрий день|добрый день|صباح الخير|早上好|সুপ্রভাত|صبح بخیر|සුබ උදෑසනක්|Buongiorno, professoressa!
+buonasera|good evening|bonsoir|buenas tardes / noches|boa tarde / noite|bună seara|mirëmbrëma|добрий вечір|добрый вечер|مساء الخير|晚上好|শুভ সন্ধ্যা|شام بخیر|සුබ සන්ධ්‍යාවක්|Buonasera a tutti.
+arrivederci|goodbye|au revoir|adiós|adeus|la revedere|mirupafshim|до побачення|до свидания|إلى اللقاء|再见|আবার দেখা হবে|خدا حافظ|නැවත හමුවෙමු|Arrivederci, a domani!
+grazie|thank you|merci|gracias|obrigado|mulțumesc|faleminderit|дякую|спасибо|شكرا|谢谢|ধন্যবাদ|شکریہ|ස්තූතියි|Grazie mille!
+prego|you're welcome / please|de rien / je vous en prie|de nada|de nada|cu plăcere|ju lutem|будь ласка|пожалуйста|عفوا|不客气|স্বাগতম|کوئی بات نہیں|කමක් නැහැ / කරුණාකර|Grazie! — Prego.
+per favore|please|s'il te plaît|por favor|por favor|te rog|të lutem|будь ласка|пожалуйста|من فضلك|请|দয়া করে|براہ کرم|කරුණාකර|Un bicchiere d'acqua, per favore.
+scusa|sorry / excuse me|pardon|perdón|desculpa|scuze|më fal|вибач|извини|آسف / عفوا|对不起|দুঃখিত|معاف کیجیے|සමාවෙන්න|Scusa, non ho capito.
+chiamarsi|to be called|s'appeler|llamarse|chamar-se|a se numi|quhem|називатися|называться|اسمه|名叫|নাম হওয়া|نام ہونا|නම ... වෙනවා (මගේ නම)|Come ti chiami?
+piacere|nice to meet you|enchanté|encantado|prazer|încântat|gëzohem|приємно познайомитися|приятно познакомиться|تشرفنا|很高兴认识你|পরিচিত হয়ে ভালো লাগল|آپ سے مل کر خوشی ہوئی|හමුවීම සතුටක්|Piacere, io sono Ana.
+nome|name|prénom|nombre|nome|prenume|emër|ім'я|имя|اسم|名字|নাম|نام|නම|Il mio nome è Karim.
+cognome|surname|nom de famille|apellido|sobrenome|nume de familie|mbiemër|прізвище|фамилия|اسم العائلة|姓|পদবি|خاندانی نام|වාසගම|Qual è il tuo cognome?
+anni|years (age)|ans|años|anos|ani|vjeç|років|лет|سنة / عمر|岁|বছর|سال|අවුරුදු (වයස)|Ho quattordici anni.
+paese|country|pays|país|país|țară|vend|країна|страна|بلد|国家|দেশ|ملک|රට|Il mio paese è il Senegal.
+lingua|language|langue|idioma|língua|limbă|gjuhë|мова|язык|لغة|语言|ভাষা|زبان|භාෂාව|Parlo tre lingue.
+abitare|to live (reside)|habiter|vivir|morar|a locui|banoj|жити|жить|يسكن|住|বাস করা|رہنا|පදිංචිව සිටිනවා|Abito in via Roma.
 ` },
     { id: 'a1-consegne', level: 'A1', title: 'Le consegne a scuola', icon: '✏️', studio: true, rows: `
-leggi|read|lis|lee|lê|citește|lexo|читай|читай|اقرأ|读|পড়ো|پڑھو|Leggi il testo a pagina 10.
-scrivi|write|écris|escribe|escreve|scrie|shkruaj|пиши|пиши|اكتب|写|লেখো|لکھو|Scrivi la data sul quaderno.
-ascolta|listen|écoute|escucha|escuta|ascultă|dëgjo|слухай|слушай|استمع|听|শোনো|سنو|Ascolta e ripeti.
-ripeti|repeat|répète|repite|repete|repetă|përsërit|повтори|повтори|كرّر|重复|পুনরাবৃত্তি করো|دہراؤ|Ripeti la frase ad alta voce.
-completa|complete / fill in|complète|completa|completa|completează|plotëso|доповни|дополни|أكمل|填写|পূরণ করো|مکمل کرو|Completa le frasi con il verbo.
-sottolinea|underline|souligne|subraya|sublinha|subliniază|nënvizo|підкресли|подчеркни|ضع خطا تحت|画线|নিচে দাগ দাও|خط کھینچو|Sottolinea i verbi in rosso.
-cerchia|circle|entoure|rodea con un círculo|circula|încercuiește|rrethoji|обведи|обведи|ضع دائرة|圈出|গোল দাগ দাও|دائرہ لگاؤ|Cerchia la risposta giusta.
-abbina|match|associe|une / relaciona|associa|potrivește|lidh|з'єднай|соедини|طابق|连线|মেলাও|ملاؤ|Abbina le parole alle immagini.
-scegli|choose|choisis|elige|escolhe|alege|zgjidh|обери|выбери|اختر|选择|বেছে নাও|منتخب کرو|Scegli l'alternativa corretta.
-rispondi|answer|réponds|responde|responde|răspunde|përgjigju|відповідай|отвечай|أجب|回答|উত্তর দাও|جواب دو|Rispondi alle domande.
-riassumi|summarize|résume|resume|resume|rezumă|përmblidh|підсумуй|кратко перескажи|لخّص|总结|সারাংশ করো|خلاصہ لکھو|Riassumi il testo in cinque righe.
-spiega|explain|explique|explica|explica|explică|shpjego|поясни|объясни|اشرح|解释|ব্যাখ্যা করো|وضاحت کرو|Spiega con parole tue.
-correggi|correct|corrige|corrige|corrige|corectează|korrigjo|виправ|исправь|صحّح|改正|সংশোধন করো|درست کرو|Correggi gli errori.
-vero|true|vrai|verdadero|verdadeiro|adevărat|e vërtetë|правда|правда|صحيح|对|সত্য|صحیح|Vero o falso?
-falso|false|faux|falso|falso|fals|e gabuar|неправда|ложь|خطأ|错|মিথ্যা|غلط|L'affermazione è falsa.
-consegna|instruction / task|consigne|consigna|enunciado|cerință|detyrë / udhëzim|завдання|задание|تعليمات|题目要求|নির্দেশনা|ہدایت|Leggi bene la consegna.
+leggi|read|lis|lee|lê|citește|lexo|читай|читай|اقرأ|读|পড়ো|پڑھو|කියවන්න|Leggi il testo a pagina 10.
+scrivi|write|écris|escribe|escreve|scrie|shkruaj|пиши|пиши|اكتب|写|লেখো|لکھو|ලියන්න|Scrivi la data sul quaderno.
+ascolta|listen|écoute|escucha|escuta|ascultă|dëgjo|слухай|слушай|استمع|听|শোনো|سنو|අහන්න|Ascolta e ripeti.
+ripeti|repeat|répète|repite|repete|repetă|përsërit|повтори|повтори|كرّر|重复|পুনরাবৃত্তি করো|دہراؤ|නැවත කියන්න|Ripeti la frase ad alta voce.
+completa|complete / fill in|complète|completa|completa|completează|plotëso|доповни|дополни|أكمل|填写|পূরণ করো|مکمل کرو|සම්පූර්ණ කරන්න|Completa le frasi con il verbo.
+sottolinea|underline|souligne|subraya|sublinha|subliniază|nënvizo|підкресли|подчеркни|ضع خطا تحت|画线|নিচে দাগ দাও|خط کھینچو|යටින් ඉරක් අඳින්න|Sottolinea i verbi in rosso.
+cerchia|circle|entoure|rodea con un círculo|circula|încercuiește|rrethoji|обведи|обведи|ضع دائرة|圈出|গোল দাগ দাও|دائرہ لگاؤ|රවුම් කරන්න|Cerchia la risposta giusta.
+abbina|match|associe|une / relaciona|associa|potrivește|lidh|з'єднай|соедини|طابق|连线|মেলাও|ملاؤ|ගළපන්න|Abbina le parole alle immagini.
+scegli|choose|choisis|elige|escolhe|alege|zgjidh|обери|выбери|اختر|选择|বেছে নাও|منتخب کرو|තෝරන්න|Scegli l'alternativa corretta.
+rispondi|answer|réponds|responde|responde|răspunde|përgjigju|відповідай|отвечай|أجب|回答|উত্তর দাও|جواب دو|පිළිතුරු දෙන්න|Rispondi alle domande.
+riassumi|summarize|résume|resume|resume|rezumă|përmblidh|підсумуй|кратко перескажи|لخّص|总结|সারাংশ করো|خلاصہ لکھو|සාරාංශ කරන්න|Riassumi il testo in cinque righe.
+spiega|explain|explique|explica|explica|explică|shpjego|поясни|объясни|اشرح|解释|ব্যাখ্যা করো|وضاحت کرو|පැහැදිලි කරන්න|Spiega con parole tue.
+correggi|correct|corrige|corrige|corrige|corectează|korrigjo|виправ|исправь|صحّح|改正|সংশোধন করো|درست کرو|නිවැරදි කරන්න|Correggi gli errori.
+vero|true|vrai|verdadero|verdadeiro|adevărat|e vërtetë|правда|правда|صحيح|对|সত্য|صحیح|සත්‍ය|Vero o falso?
+falso|false|faux|falso|falso|fals|e gabuar|неправда|ложь|خطأ|错|মিথ্যা|غلط|අසත්‍ය|L'affermazione è falsa.
+consegna|instruction / task|consigne|consigna|enunciado|cerință|detyrë / udhëzim|завдання|задание|تعليمات|题目要求|নির্দেশনা|ہدایت|උපදෙස් / කාර්යය|Leggi bene la consegna.
 ` },
     { id: 'a1-scuola', level: 'A1', title: 'A scuola', icon: '🏫', rows: `
-scuola|school|école|escuela|escola|școală|shkollë|школа|школа|مدرسة|学校|স্কুল|اسکول|La scuola comincia alle otto.
-classe|class / classroom|classe|clase|turma|clasă|klasë|клас|класс|صف|班级|শ্রেণি|جماعت|La mia classe è al secondo piano.
-aula|classroom|salle de classe|aula|sala de aula|sală de clasă|klasë / sallë|клас|класс|قاعة|教室|শ্রেণিকক্ষ|کمرہ جماعت|L'aula di scienze è grande.
-banco|school desk|pupitre|pupitre|carteira|bancă|bankë|парта|парта|طاولة الدراسة|课桌|বেঞ্চ|ڈیسک|Metti lo zaino sotto il banco.
-lavagna|blackboard|tableau|pizarra|quadro|tablă|dërrasë e zezë|дошка|доска|سبورة|黑板|ব্ল্যাকবোর্ড|تختہ سیاہ|Scrivi alla lavagna, per favore.
-libro|book|livre|libro|livro|carte|libër|книга|книга|كتاب|书|বই|کتاب|Apri il libro a pagina venti.
-quaderno|notebook|cahier|cuaderno|caderno|caiet|fletore|зошит|тетрадь|دفتر|练习本|খাতা|کاپی|Scrivo gli esercizi sul quaderno.
-penna|pen|stylo|bolígrafo|caneta|pix|stilolaps|ручка|ручка|قلم|笔 / 圆珠笔|কলম|قلم|Mi presti una penna?
-matita|pencil|crayon|lápiz|lápis|creion|laps|олівець|карандаш|قلم رصاص|铅笔|পেন্সিল|پنسل|Disegno con la matita.
-gomma|eraser|gomme|goma|borracha|radieră|gomë|гумка|ластик|ممحاة|橡皮|রাবার|ربڑ|Uso la gomma per cancellare.
-zaino|backpack|sac à dos|mochila|mochila|ghiozdan|çantë shpine|рюкзак|рюкзак|حقيبة ظهر|书包|ব্যাকপ্যাক|بستہ|Il mio zaino è pesante.
-compagno|classmate|camarade|compañero|colega|coleg|shok klase|однокласник|одноклассник|زميل|同学|সহপাঠী|ہم جماعت|Ali è il mio compagno di banco.
-insegnante|teacher|enseignant|profesor|professor|profesor|mësues|вчитель|учитель|معلم|老师|শিক্ষক|استاد|L'insegnante spiega la lezione.
-lezione|lesson|leçon|lección / clase|aula|lecție|mësim|урок|урок|درس|课|পাঠ|سبق|La lezione di storia è interessante.
-compiti|homework|devoirs|deberes|dever de casa|teme|detyra shtëpie|домашнє завдання|домашнее задание|واجبات|作业|বাড়ির কাজ|ہوم ورک|Faccio i compiti dopo pranzo.
-orario|timetable|emploi du temps|horario|horário|orar|orar|розклад|расписание|جدول|课程表|সময়সূচি|ٹائم ٹیبل|Guardo l'orario delle lezioni.
-ricreazione|break (school)|récréation|recreo|recreio|pauză|pushim|перерва|перемена|استراحة|课间休息|বিরতি|وقفہ|Durante la ricreazione mangio la merenda.
-palestra|gym|gymnase|gimnasio|ginásio|sală de sport|palestër|спортзал|спортзал|صالة رياضية|体育馆|জিমনেসিয়াম|جم|Oggi abbiamo lezione in palestra.
-voto|grade / mark|note|nota|nota|notă|notë|оцінка|оценка|علامة|分数|নম্বর|نمبر|Ho preso un bel voto in matematica.
-capire|to understand|comprendre|entender|entender|a înțelege|kuptoj|розуміти|понимать|يفهم|懂|বোঝা|سمجھنا|Non capisco questa parola.
+scuola|school|école|escuela|escola|școală|shkollë|школа|школа|مدرسة|学校|স্কুল|اسکول|පාසල|La scuola comincia alle otto.
+classe|class / classroom|classe|clase|turma|clasă|klasë|клас|класс|صف|班级|শ্রেণি|جماعت|පන්තිය|La mia classe è al secondo piano.
+aula|classroom|salle de classe|aula|sala de aula|sală de clasă|klasë / sallë|клас|класс|قاعة|教室|শ্রেণিকক্ষ|کمرہ جماعت|පන්ති කාමරය|L'aula di scienze è grande.
+banco|school desk|pupitre|pupitre|carteira|bancă|bankë|парта|парта|طاولة الدراسة|课桌|বেঞ্চ|ڈیسک|පාසල් මේසය|Metti lo zaino sotto il banco.
+lavagna|blackboard|tableau|pizarra|quadro|tablă|dërrasë e zezë|дошка|доска|سبورة|黑板|ব্ল্যাকবোর্ড|تختہ سیاہ|කළු ලෑල්ල|Scrivi alla lavagna, per favore.
+libro|book|livre|libro|livro|carte|libër|книга|книга|كتاب|书|বই|کتاب|පොත|Apri il libro a pagina venti.
+quaderno|notebook|cahier|cuaderno|caderno|caiet|fletore|зошит|тетрадь|دفتر|练习本|খাতা|کاپی|අභ්‍යාස පොත|Scrivo gli esercizi sul quaderno.
+penna|pen|stylo|bolígrafo|caneta|pix|stilolaps|ручка|ручка|قلم|笔 / 圆珠笔|কলম|قلم|පෑන|Mi presti una penna?
+matita|pencil|crayon|lápiz|lápis|creion|laps|олівець|карандаш|قلم رصاص|铅笔|পেন্সিল|پنسل|පැන්සල|Disegno con la matita.
+gomma|eraser|gomme|goma|borracha|radieră|gomë|гумка|ластик|ممحاة|橡皮|রাবার|ربڑ|මකනය|Uso la gomma per cancellare.
+zaino|backpack|sac à dos|mochila|mochila|ghiozdan|çantë shpine|рюкзак|рюкзак|حقيبة ظهر|书包|ব্যাকপ্যাক|بستہ|පාසල් බෑගය|Il mio zaino è pesante.
+compagno|classmate|camarade|compañero|colega|coleg|shok klase|однокласник|одноклассник|زميل|同学|সহপাঠী|ہم جماعت|පන්තියේ යාළුවා|Ali è il mio compagno di banco.
+insegnante|teacher|enseignant|profesor|professor|profesor|mësues|вчитель|учитель|معلم|老师|শিক্ষক|استاد|ගුරුවරයා / ගුරුවරිය|L'insegnante spiega la lezione.
+lezione|lesson|leçon|lección / clase|aula|lecție|mësim|урок|урок|درس|课|পাঠ|سبق|පාඩම|La lezione di storia è interessante.
+compiti|homework|devoirs|deberes|dever de casa|teme|detyra shtëpie|домашнє завдання|домашнее задание|واجبات|作业|বাড়ির কাজ|ہوم ورک|ගෙදර වැඩ|Faccio i compiti dopo pranzo.
+orario|timetable|emploi du temps|horario|horário|orar|orar|розклад|расписание|جدول|课程表|সময়সূচি|ٹائم ٹیبل|කාලසටහන|Guardo l'orario delle lezioni.
+ricreazione|break (school)|récréation|recreo|recreio|pauză|pushim|перерва|перемена|استراحة|课间休息|বিরতি|وقفہ|විවේක කාලය|Durante la ricreazione mangio la merenda.
+palestra|gym|gymnase|gimnasio|ginásio|sală de sport|palestër|спортзал|спортзал|صالة رياضية|体育馆|জিমনেসিয়াম|جم|ව්‍යායාම ශාලාව|Oggi abbiamo lezione in palestra.
+voto|grade / mark|note|nota|nota|notă|notë|оцінка|оценка|علامة|分数|নম্বর|نمبر|ලකුණු|Ho preso un bel voto in matematica.
+capire|to understand|comprendre|entender|entender|a înțelege|kuptoj|розуміти|понимать|يفهم|懂|বোঝা|سمجھنا|තේරුම් ගන්නවා|Non capisco questa parola.
 ` },
     { id: 'a1-famiglia', level: 'A1', title: 'La famiglia', icon: '👨‍👩‍👧', rows: `
-famiglia|family|famille|familia|família|familie|familje|родина|семья|عائلة|家庭|পরিবার|خاندان|La mia famiglia è numerosa.
-madre|mother|mère|madre|mãe|mamă|nënë|мати|мать|أم|母亲|মা|ماں|Mia madre lavora in un ospedale.
-padre|father|père|padre|pai|tată|baba|батько|отец|أب|父亲|বাবা|باپ|Mio padre fa il cuoco.
-genitori|parents|parents|padres|pais|părinți|prindër|батьки|родители|والدان|父母|বাবা-মা|والدین|I miei genitori vengono al colloquio.
-fratello|brother|frère|hermano|irmão|frate|vëlla|брат|брат|أخ|兄弟|ভাই|بھائی|Ho un fratello più piccolo.
-sorella|sister|sœur|hermana|irmã|soră|motër|сестра|сестра|أخت|姐妹|বোন|بہن|Mia sorella ha diciotto anni.
-figlio|son|fils|hijo|filho|fiu|bir|син|сын|ابن|儿子|ছেলে|بیٹا|Il figlio di Marta si chiama Leo.
-figlia|daughter|fille|hija|filha|fiică|bijë|донька|дочь|ابنة|女儿|মেয়ে|بیٹی|Hanno una figlia di cinque anni.
-nonno|grandfather|grand-père|abuelo|avô|bunic|gjysh|дідусь|дедушка|جد|爷爷 / 外公|দাদা / নানা|دادا / نانا|Mio nonno abita in Marocco.
-nonna|grandmother|grand-mère|abuela|avó|bunică|gjyshe|бабуся|бабушка|جدة|奶奶 / 外婆|দাদি / নানি|دادی / نانی|La nonna cucina benissimo.
-zio|uncle|oncle|tío|tio|unchi|xhaxha / dajë|дядько|дядя|عم / خال|叔叔 / 舅舅|চাচা / মামা|چچا / ماموں|Mio zio vive a Torino.
-zia|aunt|tante|tía|tia|mătușă|teze / hallë|тітка|тётя|عمة / خالة|阿姨 / 姑姑|খালা / ফুফু|خالہ / پھوپھی|La zia ci porta al parco.
-cugino|cousin|cousin|primo|primo|văr|kushëri|двоюрідний брат|двоюродный брат|ابن العم|堂兄弟 / 表兄弟|চাচাতো ভাই|کزن|Gioco a calcio con mio cugino.
-marito|husband|mari|marido|marido|soț|burrë / bashkëshort|чоловік|муж|زوج|丈夫|স্বামী|شوہر|Suo marito è medico.
-moglie|wife|femme / épouse|esposa|esposa|soție|grua / bashkëshorte|дружина|жена|زوجة|妻子|স্ত্রী|بیوی|Sua moglie è insegnante.
-alto|tall|grand|alto|alto|înalt|i gjatë|високий|высокий|طويل|高|লম্বা|لمبا|Mio padre è molto alto.
-basso|short|petit|bajo|baixo|scund|i shkurtër|низький|низкий|قصير|矮|খাটো|چھوٹے قد کا|Il nonno è basso e simpatico.
-gentile|kind|gentil|amable|gentil|amabil|i sjellshëm|добрий|добрый|لطيف|友善|দয়ালু|مہربان|La mia vicina è molto gentile.
+famiglia|family|famille|familia|família|familie|familje|родина|семья|عائلة|家庭|পরিবার|خاندان|පවුල|La mia famiglia è numerosa.
+madre|mother|mère|madre|mãe|mamă|nënë|мати|мать|أم|母亲|মা|ماں|අම්මා / මව|Mia madre lavora in un ospedale.
+padre|father|père|padre|pai|tată|baba|батько|отец|أب|父亲|বাবা|باپ|තාත්තා / පියා|Mio padre fa il cuoco.
+genitori|parents|parents|padres|pais|părinți|prindër|батьки|родители|والدان|父母|বাবা-মা|والدین|දෙමාපියන්|I miei genitori vengono al colloquio.
+fratello|brother|frère|hermano|irmão|frate|vëlla|брат|брат|أخ|兄弟|ভাই|بھائی|සහෝදරයා (අයියා / මල්ලී)|Ho un fratello più piccolo.
+sorella|sister|sœur|hermana|irmã|soră|motër|сестра|сестра|أخت|姐妹|বোন|بہن|සහෝදරිය (අක්කා / නංගී)|Mia sorella ha diciotto anni.
+figlio|son|fils|hijo|filho|fiu|bir|син|сын|ابن|儿子|ছেলে|بیٹا|පුතා|Il figlio di Marta si chiama Leo.
+figlia|daughter|fille|hija|filha|fiică|bijë|донька|дочь|ابنة|女儿|মেয়ে|بیٹی|දුව|Hanno una figlia di cinque anni.
+nonno|grandfather|grand-père|abuelo|avô|bunic|gjysh|дідусь|дедушка|جد|爷爷 / 外公|দাদা / নানা|دادا / نانا|සීයා|Mio nonno abita in Marocco.
+nonna|grandmother|grand-mère|abuela|avó|bunică|gjyshe|бабуся|бабушка|جدة|奶奶 / 外婆|দাদি / নানি|دادی / نانی|ආච්චී|La nonna cucina benissimo.
+zio|uncle|oncle|tío|tio|unchi|xhaxha / dajë|дядько|дядя|عم / خال|叔叔 / 舅舅|চাচা / মামা|چچا / ماموں|මාමා / බාප්පා|Mio zio vive a Torino.
+zia|aunt|tante|tía|tia|mătușă|teze / hallë|тітка|тётя|عمة / خالة|阿姨 / 姑姑|খালা / ফুফু|خالہ / پھوپھی|නැන්දා / පුංචි අම්මා|La zia ci porta al parco.
+cugino|cousin|cousin|primo|primo|văr|kushëri|двоюрідний брат|двоюродный брат|ابن العم|堂兄弟 / 表兄弟|চাচাতো ভাই|کزن|ඥාති සහෝදරයා|Gioco a calcio con mio cugino.
+marito|husband|mari|marido|marido|soț|burrë / bashkëshort|чоловік|муж|زوج|丈夫|স্বামী|شوہر|සැමියා|Suo marito è medico.
+moglie|wife|femme / épouse|esposa|esposa|soție|grua / bashkëshorte|дружина|жена|زوجة|妻子|স্ত্রী|بیوی|බිරිඳ|Sua moglie è insegnante.
+alto|tall|grand|alto|alto|înalt|i gjatë|високий|высокий|طويل|高|লম্বা|لمبا|උස|Mio padre è molto alto.
+basso|short|petit|bajo|baixo|scund|i shkurtër|низький|низкий|قصير|矮|খাটো|چھوٹے قد کا|මිටි|Il nonno è basso e simpatico.
+gentile|kind|gentil|amable|gentil|amabil|i sjellshëm|добрий|добрый|لطيف|友善|দয়ালু|مہربان|කාරුණික|La mia vicina è molto gentile.
 ` },
     { id: 'a1-giornata', level: 'A1', title: 'La giornata', icon: '⏰', rows: `
-svegliarsi|to wake up|se réveiller|despertarse|acordar|a se trezi|zgjohem|прокидатися|просыпаться|يستيقظ|醒来|ঘুম থেকে ওঠা|جاگنا|Mi sveglio alle sette.
-alzarsi|to get up|se lever|levantarse|levantar-se|a se ridica|ngrihem|вставати|вставать|ينهض|起床|উঠা|اٹھنا|Mi alzo subito.
-lavarsi|to wash oneself|se laver|lavarse|lavar-se|a se spăla|lahem|митися|мыться|يغتسل|洗漱|ধোয়া|نہانا / دھونا|Mi lavo la faccia.
-vestirsi|to get dressed|s'habiller|vestirse|vestir-se|a se îmbrăca|vishem|одягатися|одеваться|يرتدي ملابسه|穿衣服|জামা পরা|کپڑے پہننا|Mi vesto in fretta.
-colazione|breakfast|petit-déjeuner|desayuno|café da manhã|micul dejun|mëngjes|сніданок|завтрак|فطور|早餐|সকালের নাস্তা|ناشتہ|A colazione bevo il latte.
-pranzo|lunch|déjeuner|almuerzo|almoço|prânz|drekë|обід|обед|غداء|午饭|দুপুরের খাবার|دوپہر کا کھانا|Il pranzo è all'una.
-cena|dinner|dîner|cena|jantar|cină|darkë|вечеря|ужин|عشاء|晚饭|রাতের খাবার|رات کا کھانا|Ceniamo alle otto.
-dormire|to sleep|dormir|dormir|dormir|a dormi|fle|спати|спать|ينام|睡觉|ঘুমানো|سونا|Dormo otto ore.
-mattina|morning|matin|mañana|manhã|dimineață|mëngjes|ранок|утро|صباح|早上|সকাল|صبح|La mattina vado a scuola.
-pomeriggio|afternoon|après-midi|tarde|tarde|după-amiază|pasdite|день / після обіду|после обеда|بعد الظهر|下午|বিকেল|سہ پہر|Il pomeriggio faccio sport.
-sera|evening|soir|tarde / noche|noite|seară|mbrëmje|вечір|вечер|مساء|晚上|সন্ধ্যা|شام|La sera guardo la TV.
-notte|night|nuit|noche|noite|noapte|natë|ніч|ночь|ليل|夜里|রাত|رات|Buonanotte!
-ora|hour / time|heure|hora|hora|oră|orë|година|час|ساعة|小时 / 点钟|ঘণ্টা|گھنٹہ|Che ora è?
-presto|early|tôt|temprano|cedo|devreme|herët|рано|рано|مبكرا|早|সকাল সকাল|جلدی|Mi alzo presto.
-tardi|late|tard|tarde|tarde|târziu|vonë|пізно|поздно|متأخرا|晚|দেরিতে|دیر سے|Sono arrivato tardi.
-sempre|always|toujours|siempre|sempre|mereu|gjithmonë|завжди|всегда|دائما|总是|সবসময়|ہمیشہ|Faccio sempre colazione.
-spesso|often|souvent|a menudo|frequentemente|des|shpesh|часто|часто|غالبا|经常|প্রায়ই|اکثر|Vado spesso in biblioteca.
-mai|never|jamais|nunca|nunca|niciodată|kurrë|ніколи|никогда|أبدا|从不|কখনো না|کبھی نہیں|Non bevo mai il caffè.
+svegliarsi|to wake up|se réveiller|despertarse|acordar|a se trezi|zgjohem|прокидатися|просыпаться|يستيقظ|醒来|ঘুম থেকে ওঠা|جاگنا|අවදි වෙනවා|Mi sveglio alle sette.
+alzarsi|to get up|se lever|levantarse|levantar-se|a se ridica|ngrihem|вставати|вставать|ينهض|起床|উঠা|اٹھنا|නැගිටිනවා|Mi alzo subito.
+lavarsi|to wash oneself|se laver|lavarse|lavar-se|a se spăla|lahem|митися|мыться|يغتسل|洗漱|ধোয়া|نہانا / دھونا|සෝදාගන්නවා / නාගන්නවා|Mi lavo la faccia.
+vestirsi|to get dressed|s'habiller|vestirse|vestir-se|a se îmbrăca|vishem|одягатися|одеваться|يرتدي ملابسه|穿衣服|জামা পরা|کپڑے پہننا|ඇඳුම් අඳිනවා|Mi vesto in fretta.
+colazione|breakfast|petit-déjeuner|desayuno|café da manhã|micul dejun|mëngjes|сніданок|завтрак|فطور|早餐|সকালের নাস্তা|ناشتہ|උදේ කෑම|A colazione bevo il latte.
+pranzo|lunch|déjeuner|almuerzo|almoço|prânz|drekë|обід|обед|غداء|午饭|দুপুরের খাবার|دوپہر کا کھانا|දවල් කෑම|Il pranzo è all'una.
+cena|dinner|dîner|cena|jantar|cină|darkë|вечеря|ужин|عشاء|晚饭|রাতের খাবার|رات کا کھانا|රෑ කෑම|Ceniamo alle otto.
+dormire|to sleep|dormir|dormir|dormir|a dormi|fle|спати|спать|ينام|睡觉|ঘুমানো|سونا|නිදාගන්නවා|Dormo otto ore.
+mattina|morning|matin|mañana|manhã|dimineață|mëngjes|ранок|утро|صباح|早上|সকাল|صبح|උදේ|La mattina vado a scuola.
+pomeriggio|afternoon|après-midi|tarde|tarde|după-amiază|pasdite|день / після обіду|после обеда|بعد الظهر|下午|বিকেল|سہ پہر|දහවල / හවස|Il pomeriggio faccio sport.
+sera|evening|soir|tarde / noche|noite|seară|mbrëmje|вечір|вечер|مساء|晚上|সন্ধ্যা|شام|සවස|La sera guardo la TV.
+notte|night|nuit|noche|noite|noapte|natë|ніч|ночь|ليل|夜里|রাত|رات|රාත්‍රිය|Buonanotte!
+ora|hour / time|heure|hora|hora|oră|orë|година|час|ساعة|小时 / 点钟|ঘণ্টা|گھنٹہ|පැය / වේලාව|Che ora è?
+presto|early|tôt|temprano|cedo|devreme|herët|рано|рано|مبكرا|早|সকাল সকাল|جلدی|කලින්|Mi alzo presto.
+tardi|late|tard|tarde|tarde|târziu|vonë|пізно|поздно|متأخرا|晚|দেরিতে|دیر سے|පරක්කුයි|Sono arrivato tardi.
+sempre|always|toujours|siempre|sempre|mereu|gjithmonë|завжди|всегда|دائما|总是|সবসময়|ہمیشہ|හැමවිටම|Faccio sempre colazione.
+spesso|often|souvent|a menudo|frequentemente|des|shpesh|часто|часто|غالبا|经常|প্রায়ই|اکثر|නිතර|Vado spesso in biblioteca.
+mai|never|jamais|nunca|nunca|niciodată|kurrë|ніколи|никогда|أبدا|从不|কখনো না|کبھی نہیں|කවදාවත් නැහැ|Non bevo mai il caffè.
 ` },
     { id: 'a1-cibo', level: 'A1', title: 'Cibo e bevande', icon: '🍕', rows: `
-pane|bread|pain|pan|pão|pâine|bukë|хліб|хлеб|خبز|面包|রুটি|روٹی|Compro il pane.
-acqua|water|eau|agua|água|apă|ujë|вода|вода|ماء|水|পানি|پانی|Bevo molta acqua.
-latte|milk|lait|leche|leite|lapte|qumësht|молоко|молоко|حليب|牛奶|দুধ|دودھ|Il latte è caldo.
-pasta|pasta|pâtes|pasta|massa|paste|makarona|макарони|макароны|معكرونة|意大利面|পাস্তা|پاستا|Mangiamo la pasta a pranzo.
-riso|rice|riz|arroz|arroz|orez|oriz|рис|рис|أرز|米饭|ভাত|چاول|In Cina mangiamo molto riso.
-carne|meat|viande|carne|carne|carne|mish|м'ясо|мясо|لحم|肉|মাংস|گوشت|Non mangio carne di maiale.
-pesce|fish|poisson|pescado|peixe|pește|peshk|риба|рыба|سمك|鱼|মাছ|مچھلی|Il venerdì mangiamo il pesce.
-pollo|chicken|poulet|pollo|frango|pui|pulë|курка|курица|دجاج|鸡肉|মুরগি|مرغی|Il pollo con le patate è buono.
-uovo|egg|œuf|huevo|ovo|ou|vezë|яйце|яйцо|بيضة|鸡蛋|ডিম|انڈا|Mangio un uovo a colazione.
-formaggio|cheese|fromage|queso|queijo|brânză|djathë|сир|сыр|جبن|奶酪|পনির|پنیر|Il formaggio italiano è famoso.
-frutta|fruit|fruits|fruta|fruta|fructe|fruta|фрукти|фрукты|فواكه|水果|ফল|پھل|Mangio frutta ogni giorno.
-verdura|vegetables|légumes|verdura|legumes|legume|perime|овочі|овощи|خضار|蔬菜|সবজি|سبزی|La verdura fa bene.
-mela|apple|pomme|manzana|maçã|măr|mollë|яблуко|яблоко|تفاحة|苹果|আপেল|سیب|Una mela al giorno.
-dolce|sweet / dessert|sucré / dessert|dulce / postre|doce / sobremesa|dulce / desert|ëmbël / ëmbëlsirë|солодкий / десерт|сладкий / десерт|حلو|甜 / 甜点|মিষ্টি|میٹھا|Il tiramisù è un dolce italiano.
-fame|hunger|faim|hambre|fome|foame|uri|голод|голод|جوع|饿|ক্ষুধা|بھوک|Ho fame!
-sete|thirst|soif|sed|sede|sete|etje|спрага|жажда|عطش|渴|তৃষ্ণা|پیاس|Ho sete, vorrei dell'acqua.
-mangiare|to eat|manger|comer|comer|a mânca|ha|їсти|есть|يأكل|吃|খাওয়া|کھانا|Mangio alla mensa.
-bere|to drink|boire|beber|beber|a bea|pi|пити|пить|يشرب|喝|পান করা|پینا|Bevo un succo di frutta.
-buono|good (tasty)|bon|bueno|bom|bun|i mirë|смачний|вкусный|لذيذ|好吃|ভালো / সুস্বাদু|اچھا / مزیدار|Questa torta è buonissima.
+pane|bread|pain|pan|pão|pâine|bukë|хліб|хлеб|خبز|面包|রুটি|روٹی|පාන්|Compro il pane.
+acqua|water|eau|agua|água|apă|ujë|вода|вода|ماء|水|পানি|پانی|වතුර|Bevo molta acqua.
+latte|milk|lait|leche|leite|lapte|qumësht|молоко|молоко|حليب|牛奶|দুধ|دودھ|කිරි|Il latte è caldo.
+pasta|pasta|pâtes|pasta|massa|paste|makarona|макарони|макароны|معكرونة|意大利面|পাস্তা|پاستا|පාස්ටා|Mangiamo la pasta a pranzo.
+riso|rice|riz|arroz|arroz|orez|oriz|рис|рис|أرز|米饭|ভাত|چاول|බත් / සහල්|In Cina mangiamo molto riso.
+carne|meat|viande|carne|carne|carne|mish|м'ясо|мясо|لحم|肉|মাংস|گوشت|මස්|Non mangio carne di maiale.
+pesce|fish|poisson|pescado|peixe|pește|peshk|риба|рыба|سمك|鱼|মাছ|مچھلی|මාළු|Il venerdì mangiamo il pesce.
+pollo|chicken|poulet|pollo|frango|pui|pulë|курка|курица|دجاج|鸡肉|মুরগি|مرغی|කුකුළු මස්|Il pollo con le patate è buono.
+uovo|egg|œuf|huevo|ovo|ou|vezë|яйце|яйцо|بيضة|鸡蛋|ডিম|انڈا|බිත්තරය|Mangio un uovo a colazione.
+formaggio|cheese|fromage|queso|queijo|brânză|djathë|сир|сыр|جبن|奶酪|পনির|پنیر|චීස්|Il formaggio italiano è famoso.
+frutta|fruit|fruits|fruta|fruta|fructe|fruta|фрукти|фрукты|فواكه|水果|ফল|پھل|පලතුරු|Mangio frutta ogni giorno.
+verdura|vegetables|légumes|verdura|legumes|legume|perime|овочі|овощи|خضار|蔬菜|সবজি|سبزی|එළවළු|La verdura fa bene.
+mela|apple|pomme|manzana|maçã|măr|mollë|яблуко|яблоко|تفاحة|苹果|আপেল|سیب|ඇපල්|Una mela al giorno.
+dolce|sweet / dessert|sucré / dessert|dulce / postre|doce / sobremesa|dulce / desert|ëmbël / ëmbëlsirë|солодкий / десерт|сладкий / десерт|حلو|甜 / 甜点|মিষ্টি|میٹھا|පැණිරස / අතුරුපස|Il tiramisù è un dolce italiano.
+fame|hunger|faim|hambre|fome|foame|uri|голод|голод|جوع|饿|ক্ষুধা|بھوک|බඩගින්න|Ho fame!
+sete|thirst|soif|sed|sede|sete|etje|спрага|жажда|عطش|渴|তৃষ্ণা|پیاس|පිපාසය|Ho sete, vorrei dell'acqua.
+mangiare|to eat|manger|comer|comer|a mânca|ha|їсти|есть|يأكل|吃|খাওয়া|کھانا|කනවා|Mangio alla mensa.
+bere|to drink|boire|beber|beber|a bea|pi|пити|пить|يشرب|喝|পান করা|پینا|බොනවා|Bevo un succo di frutta.
+buono|good (tasty)|bon|bueno|bom|bun|i mirë|смачний|вкусный|لذيذ|好吃|ভালো / সুস্বাদু|اچھا / مزیدار|රසයි / හොඳයි|Questa torta è buonissima.
 ` },
     { id: 'a1-citta', level: 'A1', title: 'La città', icon: '🏙️', rows: `
-città|city|ville|ciudad|cidade|oraș|qytet|місто|город|مدينة|城市|শহর|شہر|Bologna è una città antica.
-strada|street / road|rue / route|calle|rua|stradă|rrugë|вулиця|улица|شارع|街道|রাস্তা|سڑک|Attraversa la strada con attenzione.
-piazza|square|place|plaza|praça|piață|shesh|площа|площадь|ساحة|广场|চত্বর|چوک|Ci vediamo in piazza.
-casa|house / home|maison|casa|casa|casă|shtëpi|дім|дом|بيت|家|বাড়ি|گھر|Torno a casa alle cinque.
-negozio|shop|magasin|tienda|loja|magazin|dyqan|магазин|магазин|متجر|商店|দোকান|دکان|Il negozio apre alle nove.
-supermercato|supermarket|supermarché|supermercado|supermercado|supermarket|supermarket|супермаркет|супермаркет|سوبرماركت|超市|সুপারমার্কেট|سپر مارکیٹ|Faccio la spesa al supermercato.
-farmacia|pharmacy|pharmacie|farmacia|farmácia|farmacie|farmaci|аптека|аптека|صيدلية|药店|ফার্মেসি|دواخانہ|La farmacia è vicino alla piazza.
-ospedale|hospital|hôpital|hospital|hospital|spital|spital|лікарня|больница|مستشفى|医院|হাসপাতাল|ہسپتال|Mia zia lavora in ospedale.
-stazione|station|gare|estación|estação|gară|stacion|вокзал|вокзал|محطة|车站|স্টেশন|اسٹیشن|Il treno parte dalla stazione centrale.
-autobus|bus|bus|autobús|ônibus / autocarro|autobuz|autobus|автобус|автобус|حافلة|公交车|বাস|بس|Prendo l'autobus numero 12.
-fermata|stop (bus)|arrêt|parada|parada / paragem|stație|stacion autobusi|зупинка|остановка|موقف|车站|স্টপেজ|اسٹاپ|Scendo alla prossima fermata.
-biglietto|ticket|billet|billete|bilhete|bilet|biletë|квиток|билет|تذكرة|票|টিকিট|ٹکٹ|Ho comprato il biglietto dal tabaccaio.
-biblioteca|library|bibliothèque|biblioteca|biblioteca|bibliotecă|bibliotekë|бібліотека|библиотека|مكتبة|图书馆|গ্রন্থাগার|لائبریری|Studio in biblioteca il sabato.
-parco|park|parc|parque|parque|parc|park|парк|парк|حديقة|公园|পার্ক|پارک|Giochiamo al parco.
-destra|right|droite|derecha|direita|dreapta|djathtas|праворуч|направо|يمين|右|ডান|دائیں|Gira a destra.
-sinistra|left|gauche|izquierda|esquerda|stânga|majtas|ліворуч|налево|يسار|左|বাম|بائیں|La scuola è a sinistra.
-dritto|straight on|tout droit|recto|em frente|drept înainte|drejt|прямо|прямо|إلى الأمام|直走|সোজা|سیدھا|Vai sempre dritto.
-vicino|near|près|cerca|perto|aproape|afër|близько|близко|قريب|近|কাছে|قریب|Abito vicino alla scuola.
-lontano|far|loin|lejos|longe|departe|larg|далеко|далеко|بعيد|远|দূরে|دور|La stazione è lontana.
+città|city|ville|ciudad|cidade|oraș|qytet|місто|город|مدينة|城市|শহর|شہر|නගරය|Bologna è una città antica.
+strada|street / road|rue / route|calle|rua|stradă|rrugë|вулиця|улица|شارع|街道|রাস্তা|سڑک|පාර|Attraversa la strada con attenzione.
+piazza|square|place|plaza|praça|piață|shesh|площа|площадь|ساحة|广场|চত্বর|چوک|නගර චතුරශ්‍රය|Ci vediamo in piazza.
+casa|house / home|maison|casa|casa|casă|shtëpi|дім|дом|بيت|家|বাড়ি|گھر|ගෙදර / නිවස|Torno a casa alle cinque.
+negozio|shop|magasin|tienda|loja|magazin|dyqan|магазин|магазин|متجر|商店|দোকান|دکان|කඩය|Il negozio apre alle nove.
+supermercato|supermarket|supermarché|supermercado|supermercado|supermarket|supermarket|супермаркет|супермаркет|سوبرماركت|超市|সুপারমার্কেট|سپر مارکیٹ|සුපිරි වෙළඳසැල|Faccio la spesa al supermercato.
+farmacia|pharmacy|pharmacie|farmacia|farmácia|farmacie|farmaci|аптека|аптека|صيدلية|药店|ফার্মেসি|دواخانہ|ෆාමසිය|La farmacia è vicino alla piazza.
+ospedale|hospital|hôpital|hospital|hospital|spital|spital|лікарня|больница|مستشفى|医院|হাসপাতাল|ہسپتال|රෝහල|Mia zia lavora in ospedale.
+stazione|station|gare|estación|estação|gară|stacion|вокзал|вокзал|محطة|车站|স্টেশন|اسٹیشن|දුම්රිය ස්ථානය|Il treno parte dalla stazione centrale.
+autobus|bus|bus|autobús|ônibus / autocarro|autobuz|autobus|автобус|автобус|حافلة|公交车|বাস|بس|බස් රථය|Prendo l'autobus numero 12.
+fermata|stop (bus)|arrêt|parada|parada / paragem|stație|stacion autobusi|зупинка|остановка|موقف|车站|স্টপেজ|اسٹاپ|බස් නැවතුම|Scendo alla prossima fermata.
+biglietto|ticket|billet|billete|bilhete|bilet|biletë|квиток|билет|تذكرة|票|টিকিট|ٹکٹ|ටිකට් පත|Ho comprato il biglietto dal tabaccaio.
+biblioteca|library|bibliothèque|biblioteca|biblioteca|bibliotecă|bibliotekë|бібліотека|библиотека|مكتبة|图书馆|গ্রন্থাগার|لائبریری|පුස්තකාලය|Studio in biblioteca il sabato.
+parco|park|parc|parque|parque|parc|park|парк|парк|حديقة|公园|পার্ক|پارک|උද්‍යානය|Giochiamo al parco.
+destra|right|droite|derecha|direita|dreapta|djathtas|праворуч|направо|يمين|右|ডান|دائیں|දකුණු පැත්ත|Gira a destra.
+sinistra|left|gauche|izquierda|esquerda|stânga|majtas|ліворуч|налево|يسار|左|বাম|بائیں|වම් පැත්ත|La scuola è a sinistra.
+dritto|straight on|tout droit|recto|em frente|drept înainte|drejt|прямо|прямо|إلى الأمام|直走|সোজা|سیدھا|කෙළින්ම|Vai sempre dritto.
+vicino|near|près|cerca|perto|aproape|afër|близько|близко|قريب|近|কাছে|قریب|ළඟ|Abito vicino alla scuola.
+lontano|far|loin|lejos|longe|departe|larg|далеко|далеко|بعيد|远|দূরে|دور|ඈත|La stazione è lontana.
 ` },
     { id: 'a1-tempo', level: 'A1', title: 'Giorni, mesi e meteo', icon: '📅', rows: `
-giorno|day|jour|día|dia|zi|ditë|день|день|يوم|天|দিন|دن|Che giorno è oggi?
-settimana|week|semaine|semana|semana|săptămână|javë|тиждень|неделя|أسبوع|星期 / 周|সপ্তাহ|ہفتہ|La settimana prossima ho un test.
-mese|month|mois|mes|mês|lună|muaj|місяць|месяц|شهر|月|মাস|مہینہ|Agosto è il mese delle vacanze.
-anno|year|an / année|año|ano|an|vit|рік|год|سنة|年|বছর|سال|Quest'anno studio italiano.
-oggi|today|aujourd'hui|hoy|hoje|azi|sot|сьогодні|сегодня|اليوم|今天|আজ|آج|Oggi c'è il sole.
-ieri|yesterday|hier|ayer|ontem|ieri|dje|вчора|вчера|أمس|昨天|গতকাল|کل (گزشتہ)|Ieri ho giocato a calcio.
-domani|tomorrow|demain|mañana|amanhã|mâine|nesër|завтра|завтра|غدا|明天|আগামীকাল|کل (آئندہ)|Domani non c'è scuola.
-lunedì|Monday|lundi|lunes|segunda-feira|luni|e hënë|понеділок|понедельник|الاثنين|星期一|সোমবার|پیر|Il lunedì ho matematica.
-fine settimana|weekend|week-end|fin de semana|fim de semana|weekend|fundjavë|вихідні|выходные|عطلة نهاية الأسبوع|周末|সপ্তাহান্ত|ویک اینڈ|Nel fine settimana vado dai nonni.
-compleanno|birthday|anniversaire|cumpleaños|aniversário|zi de naștere|ditëlindje|день народження|день рождения|عيد ميلاد|生日|জন্মদিন|سالگرہ|Buon compleanno!
-estate|summer|été|verano|verão|vară|verë|літо|лето|صيف|夏天|গ্রীষ্ম|گرمی کا موسم|In estate fa caldo.
-inverno|winter|hiver|invierno|inverno|iarnă|dimër|зима|зима|شتاء|冬天|শীত|سردی کا موسم|In inverno nevica in montagna.
-caldo|hot / warm|chaud|calor / caliente|calor / quente|cald|nxehtë|спекотно / теплий|жарко / тёплый|حار|热|গরম|گرم|Oggi fa molto caldo.
-freddo|cold|froid|frío|frio|frig / rece|ftohtë|холодно|холодно|بارد|冷|ঠান্ডা|ٹھنڈا|Ho freddo, chiudi la finestra.
-sole|sun|soleil|sol|sol|soare|diell|сонце|солнце|شمس|太阳|সূর্য|سورج|C'è il sole, andiamo fuori!
-pioggia|rain|pluie|lluvia|chuva|ploaie|shi|дощ|дождь|مطر|雨|বৃষ্টি|بارش|Con la pioggia prendo l'ombrello.
-piovere|to rain|pleuvoir|llover|chover|a ploua|bie shi|йде дощ|идёт дождь|تمطر|下雨|বৃষ্টি হওয়া|بارش ہونا|Oggi piove tutto il giorno.
+giorno|day|jour|día|dia|zi|ditë|день|день|يوم|天|দিন|دن|දවස|Che giorno è oggi?
+settimana|week|semaine|semana|semana|săptămână|javë|тиждень|неделя|أسبوع|星期 / 周|সপ্তাহ|ہفتہ|සතිය|La settimana prossima ho un test.
+mese|month|mois|mes|mês|lună|muaj|місяць|месяц|شهر|月|মাস|مہینہ|මාසය|Agosto è il mese delle vacanze.
+anno|year|an / année|año|ano|an|vit|рік|год|سنة|年|বছর|سال|අවුරුද්ද|Quest'anno studio italiano.
+oggi|today|aujourd'hui|hoy|hoje|azi|sot|сьогодні|сегодня|اليوم|今天|আজ|آج|අද|Oggi c'è il sole.
+ieri|yesterday|hier|ayer|ontem|ieri|dje|вчора|вчера|أمس|昨天|গতকাল|کل (گزشتہ)|ඊයේ|Ieri ho giocato a calcio.
+domani|tomorrow|demain|mañana|amanhã|mâine|nesër|завтра|завтра|غدا|明天|আগামীকাল|کل (آئندہ)|හෙට|Domani non c'è scuola.
+lunedì|Monday|lundi|lunes|segunda-feira|luni|e hënë|понеділок|понедельник|الاثنين|星期一|সোমবার|پیر|සඳුදා|Il lunedì ho matematica.
+fine settimana|weekend|week-end|fin de semana|fim de semana|weekend|fundjavë|вихідні|выходные|عطلة نهاية الأسبوع|周末|সপ্তাহান্ত|ویک اینڈ|සති අන්තය|Nel fine settimana vado dai nonni.
+compleanno|birthday|anniversaire|cumpleaños|aniversário|zi de naștere|ditëlindje|день народження|день рождения|عيد ميلاد|生日|জন্মদিন|سالگرہ|උපන්දිනය|Buon compleanno!
+estate|summer|été|verano|verão|vară|verë|літо|лето|صيف|夏天|গ্রীষ্ম|گرمی کا موسم|ගිම්හානය|In estate fa caldo.
+inverno|winter|hiver|invierno|inverno|iarnă|dimër|зима|зима|شتاء|冬天|শীত|سردی کا موسم|ශීත සෘතුව|In inverno nevica in montagna.
+caldo|hot / warm|chaud|calor / caliente|calor / quente|cald|nxehtë|спекотно / теплий|жарко / тёплый|حار|热|গরম|گرم|රස්නෙ / උණුසුම්|Oggi fa molto caldo.
+freddo|cold|froid|frío|frio|frig / rece|ftohtë|холодно|холодно|بارد|冷|ঠান্ডা|ٹھنڈا|සීතල|Ho freddo, chiudi la finestra.
+sole|sun|soleil|sol|sol|soare|diell|сонце|солнце|شمس|太阳|সূর্য|سورج|ඉර / හිරු|C'è il sole, andiamo fuori!
+pioggia|rain|pluie|lluvia|chuva|ploaie|shi|дощ|дождь|مطر|雨|বৃষ্টি|بارش|වැස්ස|Con la pioggia prendo l'ombrello.
+piovere|to rain|pleuvoir|llover|chover|a ploua|bie shi|йде дощ|идёт дождь|تمطر|下雨|বৃষ্টি হওয়া|بارش ہونا|වහිනවා|Oggi piove tutto il giorno.
 ` }
   );
 })();
@@ -3543,298 +3556,298 @@ piovere|to rain|pleuvoir|llover|chover|a ploua|bie shi|йде дощ|идёт д
   C.vocabRaw = C.vocabRaw || [];
   C.vocabRaw.push(
     { id: 'a2-tempo-libero', level: 'A2', title: 'Tempo libero e sport', icon: '⚽', rows: `
-tempo libero|free time|temps libre|tiempo libre|tempo livre|timp liber|kohë e lirë|вільний час|свободное время|وقت الفراغ|业余时间|অবসর সময়|فارغ وقت|Nel tempo libero leggo fumetti.
-giocare|to play|jouer|jugar|jogar|a juca / a se juca|luaj|грати|играть|يلعب|玩|খেলা|کھیلنا|Giochiamo a pallavolo.
-squadra|team|équipe|equipo|equipe / time|echipă|skuadër|команда|команда|فريق|球队|দল|ٹیم|La mia squadra ha vinto.
-partita|match / game|match|partido|partida / jogo|meci|ndeshje|матч|матч|مباراة|比赛|ম্যাচ|میچ|Stasera c'è la partita.
-vincere|to win|gagner|ganar|ganhar|a câștiga|fitoj|перемагати|побеждать|يفوز|赢|জেতা|جیتنا|Abbiamo vinto tre a uno.
-perdere|to lose|perdre|perder|perder|a pierde|humb|програвати / губити|проигрывать / терять|يخسر / يفقد|输 / 丢|হারানো|ہارنا / کھونا|Ho perso le chiavi.
-nuotare|to swim|nager|nadar|nadar|a înota|notoj|плавати|плавать|يسبح|游泳|সাঁতার কাটা|تیرنا|D'estate nuoto al mare.
-correre|to run|courir|correr|correr|a alerga|vrapoj|бігати|бегать|يركض|跑|দৌড়ানো|دوڑنا|Corro nel parco ogni mattina.
-ballare|to dance|danser|bailar|dançar|a dansa|kërcej|танцювати|танцевать|يرقص|跳舞|নাচা|ناچنا|Mi piace ballare.
-disegnare|to draw|dessiner|dibujar|desenhar|a desena|vizatoj|малювати|рисовать|يرسم|画画|আঁকা|ڈرائنگ کرنا|Disegno fumetti.
-cantare|to sing|chanter|cantar|cantar|a cânta|këndoj|співати|петь|يغني|唱歌|গান গাওয়া|گانا|Canto nel coro della scuola.
-uscire|to go out|sortir|salir|sair|a ieși|dal|виходити|выходить|يخرج|出去|বের হওয়া|باہر جانا|Esco con gli amici il sabato.
-film|film / movie|film|película|filme|film|film|фільм|фильм|فيلم|电影|সিনেমা|فلم|Abbiamo visto un film comico.
-musica|music|musique|música|música|muzică|muzikë|музика|музыка|موسيقى|音乐|সংগীত|موسیقی|Ascolto musica rap.
+tempo libero|free time|temps libre|tiempo libre|tempo livre|timp liber|kohë e lirë|вільний час|свободное время|وقت الفراغ|业余时间|অবসর সময়|فارغ وقت|නිදහස් කාලය|Nel tempo libero leggo fumetti.
+giocare|to play|jouer|jugar|jogar|a juca / a se juca|luaj|грати|играть|يلعب|玩|খেলা|کھیلنا|සෙල්ලම් කරනවා|Giochiamo a pallavolo.
+squadra|team|équipe|equipo|equipe / time|echipă|skuadër|команда|команда|فريق|球队|দল|ٹیم|කණ්ඩායම|La mia squadra ha vinto.
+partita|match / game|match|partido|partida / jogo|meci|ndeshje|матч|матч|مباراة|比赛|ম্যাচ|میچ|තරගය|Stasera c'è la partita.
+vincere|to win|gagner|ganar|ganhar|a câștiga|fitoj|перемагати|побеждать|يفوز|赢|জেতা|جیتنا|දිනනවා|Abbiamo vinto tre a uno.
+perdere|to lose|perdre|perder|perder|a pierde|humb|програвати / губити|проигрывать / терять|يخسر / يفقد|输 / 丢|হারানো|ہارنا / کھونا|පරදිනවා / නැති කරගන්නවා|Ho perso le chiavi.
+nuotare|to swim|nager|nadar|nadar|a înota|notoj|плавати|плавать|يسبح|游泳|সাঁতার কাটা|تیرنا|පීනනවා|D'estate nuoto al mare.
+correre|to run|courir|correr|correr|a alerga|vrapoj|бігати|бегать|يركض|跑|দৌড়ানো|دوڑنا|දුවනවා|Corro nel parco ogni mattina.
+ballare|to dance|danser|bailar|dançar|a dansa|kërcej|танцювати|танцевать|يرقص|跳舞|নাচা|ناچنا|නටනවා|Mi piace ballare.
+disegnare|to draw|dessiner|dibujar|desenhar|a desena|vizatoj|малювати|рисовать|يرسم|画画|আঁকা|ڈرائنگ کرنا|චිත්‍ර අඳිනවා|Disegno fumetti.
+cantare|to sing|chanter|cantar|cantar|a cânta|këndoj|співати|петь|يغني|唱歌|গান গাওয়া|گانا|සින්දු කියනවා|Canto nel coro della scuola.
+uscire|to go out|sortir|salir|sair|a ieși|dal|виходити|выходить|يخرج|出去|বের হওয়া|باہر جانا|එළියට යනවා|Esco con gli amici il sabato.
+film|film / movie|film|película|filme|film|film|фільм|фильм|فيلم|电影|সিনেমা|فلم|චිත්‍රපටය|Abbiamo visto un film comico.
+musica|music|musique|música|música|muzică|muzikë|музика|музыка|موسيقى|音乐|সংগীত|موسیقی|සංගීතය|Ascolto musica rap.
 ` },
     { id: 'a2-viaggi', level: 'A2', title: 'Viaggi e trasporti', icon: '🧳', rows: `
-viaggio|trip / journey|voyage|viaje|viagem|călătorie|udhëtim|подорож|путешествие|رحلة|旅行|ভ্রমণ|سفر|Il viaggio è durato tre ore.
-treno|train|train|tren|trem|tren|tren|потяг|поезд|قطار|火车|ট্রেন|ٹرین|Il treno è in ritardo.
-aereo|plane|avion|avión|avião|avion|aeroplan|літак|самолёт|طائرة|飞机|বিমান|ہوائی جہاز|Siamo arrivati in aereo.
-nave|ship|bateau / navire|barco|navio|navă|anije|корабель|корабль|سفينة|船|জাহাজ|جہاز|La nave parte da Genova.
-valigia|suitcase|valise|maleta|mala|valiză|valixhe|валіза|чемодан|حقيبة سفر|行李箱|স্যুটকেস|سوٹ کیس|Preparo la valigia.
-partire|to leave|partir|salir / partir|partir|a pleca|nisem|від'їжджати|уезжать|يغادر|出发|রওনা দেওয়া|روانہ ہونا|Partiamo domani mattina.
-arrivare|to arrive|arriver|llegar|chegar|a sosi|arrij|прибувати|прибывать|يصل|到达|পৌঁছানো|پہنچنا|Il treno arriva alle cinque.
-tornare|to return|revenir / rentrer|volver|voltar|a se întoarce|kthehem|повертатися|возвращаться|يعود|回来|ফিরে আসা|واپس آنا|Torno a casa per cena.
-albergo|hotel|hôtel|hotel|hotel|hotel|hotel|готель|гостиница|فندق|酒店|হোটেল|ہوٹل|L'albergo è vicino al mare.
-mare|sea|mer|mar|mar|mare|det|море|море|بحر|大海|সমুদ্র|سمندر|Andiamo al mare in agosto.
-montagna|mountain|montagne|montaña|montanha|munte|mal|гори|горы|جبل|山|পাহাড়|پہاڑ|In montagna c'è la neve.
-passaporto|passport|passeport|pasaporte|passaporte|pașaport|pasaportë|паспорт|паспорт|جواز سفر|护照|পাসপোর্ট|پاسپورٹ|Non dimenticare il passaporto!
-in ritardo|late (delayed)|en retard|con retraso|atrasado|cu întârziere|me vonesë|із запізненням|с опозданием|متأخر|晚点|দেরিতে|تاخیر سے|L'autobus è in ritardo.
+viaggio|trip / journey|voyage|viaje|viagem|călătorie|udhëtim|подорож|путешествие|رحلة|旅行|ভ্রমণ|سفر|ගමන|Il viaggio è durato tre ore.
+treno|train|train|tren|trem|tren|tren|потяг|поезд|قطار|火车|ট্রেন|ٹرین|දුම්රිය / කෝච්චිය|Il treno è in ritardo.
+aereo|plane|avion|avión|avião|avion|aeroplan|літак|самолёт|طائرة|飞机|বিমান|ہوائی جہاز|ගුවන් යානය|Siamo arrivati in aereo.
+nave|ship|bateau / navire|barco|navio|navă|anije|корабель|корабль|سفينة|船|জাহাজ|جہاز|නැව|La nave parte da Genova.
+valigia|suitcase|valise|maleta|mala|valiză|valixhe|валіза|чемодан|حقيبة سفر|行李箱|স্যুটকেস|سوٹ کیس|ගමන් මල්ල|Preparo la valigia.
+partire|to leave|partir|salir / partir|partir|a pleca|nisem|від'їжджати|уезжать|يغادر|出发|রওনা দেওয়া|روانہ ہونا|පිටත් වෙනවා|Partiamo domani mattina.
+arrivare|to arrive|arriver|llegar|chegar|a sosi|arrij|прибувати|прибывать|يصل|到达|পৌঁছানো|پہنچنا|පැමිණෙනවා|Il treno arriva alle cinque.
+tornare|to return|revenir / rentrer|volver|voltar|a se întoarce|kthehem|повертатися|возвращаться|يعود|回来|ফিরে আসা|واپس آنا|ආපසු එනවා|Torno a casa per cena.
+albergo|hotel|hôtel|hotel|hotel|hotel|hotel|готель|гостиница|فندق|酒店|হোটেল|ہوٹل|හෝටලය|L'albergo è vicino al mare.
+mare|sea|mer|mar|mar|mare|det|море|море|بحر|大海|সমুদ্র|سمندر|මුහුද|Andiamo al mare in agosto.
+montagna|mountain|montagne|montaña|montanha|munte|mal|гори|горы|جبل|山|পাহাড়|پہاڑ|කන්ද|In montagna c'è la neve.
+passaporto|passport|passeport|pasaporte|passaporte|pașaport|pasaportë|паспорт|паспорт|جواز سفر|护照|পাসপোর্ট|پاسپورٹ|ගමන් බලපත්‍රය|Non dimenticare il passaporto!
+in ritardo|late (delayed)|en retard|con retraso|atrasado|cu întârziere|me vonesë|із запізненням|с опозданием|متأخر|晚点|দেরিতে|تاخیر سے|ප්‍රමාදයි|L'autobus è in ritardo.
 ` },
     { id: 'a2-casa', level: 'A2', title: 'La casa', icon: '🏠', rows: `
-cucina|kitchen|cuisine|cocina|cozinha|bucătărie|kuzhinë|кухня|кухня|مطبخ|厨房|রান্নাঘর|باورچی خانہ|Mangiamo in cucina.
-camera da letto|bedroom|chambre|dormitorio|quarto|dormitor|dhomë gjumi|спальня|спальня|غرفة نوم|卧室|শোবার ঘর|سونے کا کمرہ|Divido la camera da letto con mio fratello.
-bagno|bathroom|salle de bain|baño|banheiro|baie|banjo|ванна кімната|ванная|حمام|浴室|বাথরুম|غسل خانہ|Il bagno è in fondo al corridoio.
-soggiorno|living room|salon|salón|sala de estar|sufragerie|dhomë ndenjeje|вітальня|гостиная|غرفة الجلوس|客厅|বসার ঘর|بیٹھک|La TV è in soggiorno.
-letto|bed|lit|cama|cama|pat|shtrat|ліжко|кровать|سرير|床|বিছানা|بستر|Il letto è comodo.
-tavolo|table|table|mesa|mesa|masă|tavolinë|стіл|стол|طاولة|桌子|টেবিল|میز|Apparecchio il tavolo.
-sedia|chair|chaise|silla|cadeira|scaun|karrige|стілець|стул|كرسي|椅子|চেয়ার|کرسی|Prendi una sedia e siediti.
-armadio|wardrobe|armoire|armario|armário|dulap|dollap|шафа|шкаф|خزانة|衣柜|আলমারি|الماری|I vestiti sono nell'armadio.
-finestra|window|fenêtre|ventana|janela|fereastră|dritare|вікно|окно|نافذة|窗户|জানালা|کھڑکی|Apri la finestra, fa caldo.
-porta|door|porte|puerta|porta|ușă|derë|двері|дверь|باب|门|দরজা|دروازہ|Chiudi la porta, per favore.
-chiave|key|clé|llave|chave|cheie|çelës|ключ|ключ|مفتاح|钥匙|চাবি|چابی|Dove sono le chiavi di casa?
-affitto|rent|loyer|alquiler|aluguel|chirie|qira|оренда|аренда|إيجار|房租|ভাড়া|کرایہ|L'affitto costa 600 euro.
-vicino di casa|neighbour|voisin|vecino|vizinho|vecin|fqinj|сусід|сосед|جار|邻居|প্রতিবেশী|پڑوسی|Il mio vicino di casa è molto gentile.
+cucina|kitchen|cuisine|cocina|cozinha|bucătărie|kuzhinë|кухня|кухня|مطبخ|厨房|রান্নাঘর|باورچی خانہ|කුස්සිය|Mangiamo in cucina.
+camera da letto|bedroom|chambre|dormitorio|quarto|dormitor|dhomë gjumi|спальня|спальня|غرفة نوم|卧室|শোবার ঘর|سونے کا کمرہ|නිදන කාමරය|Divido la camera da letto con mio fratello.
+bagno|bathroom|salle de bain|baño|banheiro|baie|banjo|ванна кімната|ванная|حمام|浴室|বাথরুম|غسل خانہ|නාන කාමරය|Il bagno è in fondo al corridoio.
+soggiorno|living room|salon|salón|sala de estar|sufragerie|dhomë ndenjeje|вітальня|гостиная|غرفة الجلوس|客厅|বসার ঘর|بیٹھک|සාලය|La TV è in soggiorno.
+letto|bed|lit|cama|cama|pat|shtrat|ліжко|кровать|سرير|床|বিছানা|بستر|ඇඳ|Il letto è comodo.
+tavolo|table|table|mesa|mesa|masă|tavolinë|стіл|стол|طاولة|桌子|টেবিল|میز|මේසය|Apparecchio il tavolo.
+sedia|chair|chaise|silla|cadeira|scaun|karrige|стілець|стул|كرسي|椅子|চেয়ার|کرسی|පුටුව|Prendi una sedia e siediti.
+armadio|wardrobe|armoire|armario|armário|dulap|dollap|шафа|шкаф|خزانة|衣柜|আলমারি|الماری|ඇඳුම් අල්මාරිය|I vestiti sono nell'armadio.
+finestra|window|fenêtre|ventana|janela|fereastră|dritare|вікно|окно|نافذة|窗户|জানালা|کھڑکی|ජනේලය|Apri la finestra, fa caldo.
+porta|door|porte|puerta|porta|ușă|derë|двері|дверь|باب|门|দরজা|دروازہ|දොර|Chiudi la porta, per favore.
+chiave|key|clé|llave|chave|cheie|çelës|ключ|ключ|مفتاح|钥匙|চাবি|چابی|යතුර|Dove sono le chiavi di casa?
+affitto|rent|loyer|alquiler|aluguel|chirie|qira|оренда|аренда|إيجار|房租|ভাড়া|کرایہ|කුලිය|L'affitto costa 600 euro.
+vicino di casa|neighbour|voisin|vecino|vizinho|vecin|fqinj|сусід|сосед|جار|邻居|প্রতিবেশী|پڑوسی|අසල්වැසියා|Il mio vicino di casa è molto gentile.
 ` },
     { id: 'a2-infanzia', level: 'A2', title: 'Ricordi d\'infanzia', icon: '🧸', rows: `
-bambino|child|enfant|niño|criança|copil|fëmijë|дитина|ребёнок|طفل|孩子|শিশু|بچہ|Da bambino vivevo in campagna.
-infanzia|childhood|enfance|infancia|infância|copilărie|fëmijëri|дитинство|детство|طفولة|童年|শৈশব|بچپن|Ho bei ricordi della mia infanzia.
-ricordo|memory|souvenir|recuerdo|lembrança|amintire|kujtim|спогад|воспоминание|ذكرى|回忆|স্মৃতি|یاد|È un ricordo bellissimo.
-ricordare|to remember|se souvenir|recordar|lembrar|a-și aminti|kujtoj|пам'ятати|помнить|يتذكر|记得|মনে রাখা|یاد رکھنا|Ricordi il nome della maestra?
-giocattolo|toy|jouet|juguete|brinquedo|jucărie|lodër|іграшка|игрушка|لعبة|玩具|খেলনা|کھلونا|Il mio giocattolo preferito era un trenino.
-cortile|courtyard|cour|patio|pátio|curte|oborr|двір|двор|فناء|院子|উঠান|صحن|Giocavamo in cortile.
-villaggio|village|village|pueblo|aldeia|sat|fshat|село|деревня|قرية|村庄|গ্রাম|گاؤں|Sono cresciuto in un piccolo villaggio.
-crescere|to grow (up)|grandir|crecer|crescer|a crește|rritem|рости|расти|يكبر|长大|বড় হওয়া|بڑا ہونا|Sono cresciuta a Lagos.
-paura|fear|peur|miedo|medo|frică|frikë|страх|страх|خوف|害怕|ভয়|ڈر|Avevo paura dei cani.
-felice|happy|heureux|feliz|feliz|fericit|i lumtur|щасливий|счастливый|سعيد|幸福|সুখী|خوش|Ero un bambino felice.
-triste|sad|triste|triste|triste|trist|i trishtuar|сумний|грустный|حزين|难过|দুঃখী|اداس|Quando sono partito ero triste.
-nascere|to be born|naître|nacer|nascer|a se naște|lind|народитися|родиться|يولد|出生|জন্ম নেওয়া|پیدا ہونا|Sono nato nel 2011.
+bambino|child|enfant|niño|criança|copil|fëmijë|дитина|ребёнок|طفل|孩子|শিশু|بچہ|ළමයා|Da bambino vivevo in campagna.
+infanzia|childhood|enfance|infancia|infância|copilărie|fëmijëri|дитинство|детство|طفولة|童年|শৈশব|بچپن|ළමා කාලය|Ho bei ricordi della mia infanzia.
+ricordo|memory|souvenir|recuerdo|lembrança|amintire|kujtim|спогад|воспоминание|ذكرى|回忆|স্মৃতি|یاد|මතකය|È un ricordo bellissimo.
+ricordare|to remember|se souvenir|recordar|lembrar|a-și aminti|kujtoj|пам'ятати|помнить|يتذكر|记得|মনে রাখা|یاد رکھنا|මතක් කරනවා|Ricordi il nome della maestra?
+giocattolo|toy|jouet|juguete|brinquedo|jucărie|lodër|іграшка|игрушка|لعبة|玩具|খেলনা|کھلونا|සෙල්ලම් බඩුව|Il mio giocattolo preferito era un trenino.
+cortile|courtyard|cour|patio|pátio|curte|oborr|двір|двор|فناء|院子|উঠান|صحن|මිදුල|Giocavamo in cortile.
+villaggio|village|village|pueblo|aldeia|sat|fshat|село|деревня|قرية|村庄|গ্রাম|گاؤں|ගම|Sono cresciuto in un piccolo villaggio.
+crescere|to grow (up)|grandir|crecer|crescer|a crește|rritem|рости|расти|يكبر|长大|বড় হওয়া|بڑا ہونا|ලොකු වෙනවා / වැඩෙනවා|Sono cresciuta a Lagos.
+paura|fear|peur|miedo|medo|frică|frikë|страх|страх|خوف|害怕|ভয়|ڈر|බය|Avevo paura dei cani.
+felice|happy|heureux|feliz|feliz|fericit|i lumtur|щасливий|счастливый|سعيد|幸福|সুখী|خوش|සතුටුයි|Ero un bambino felice.
+triste|sad|triste|triste|triste|trist|i trishtuar|сумний|грустный|حزين|难过|দুঃখী|اداس|දුකයි|Quando sono partito ero triste.
+nascere|to be born|naître|nacer|nascer|a se naște|lind|народитися|родиться|يولد|出生|জন্ম নেওয়া|پیدا ہونا|උපදිනවා|Sono nato nel 2011.
 ` },
     { id: 'a2-negozi', level: 'A2', title: 'Negozi, acquisti e soldi', icon: '🛒', rows: `
-costare|to cost|coûter|costar|custar|a costa|kushton|коштувати|стоить|يكلف|花费 / 价格是|দাম হওয়া|قیمت ہونا|Quanto costa questa maglietta?
-prezzo|price|prix|precio|preço|preț|çmim|ціна|цена|سعر|价格|দাম|قیمت|Il prezzo è scritto sull'etichetta.
-caro|expensive / dear|cher|caro|caro|scump|i shtrenjtë|дорогий|дорогой|غالي|贵|দামি|مہنگا|Questo telefono è troppo caro.
-economico|cheap|bon marché|barato|barato|ieftin|i lirë|дешевий|дешёвый|رخيص|便宜|সস্তা|سستا|Il mercato è più economico.
-sconto|discount|réduction|descuento|desconto|reducere|zbritje|знижка|скидка|تخفيض|折扣|ছাড়|رعایت|C'è uno sconto del 20%.
-soldi|money|argent|dinero|dinheiro|bani|para|гроші|деньги|نقود|钱|টাকা|پیسے|Non ho abbastanza soldi.
-pagare|to pay|payer|pagar|pagar|a plăti|paguaj|платити|платить|يدفع|付钱|টাকা দেওয়া|ادا کرنا|Posso pagare con la carta?
-resto|change (money)|monnaie|cambio / vuelta|troco|rest|kusur|решта|сдача|الباقي|找零|খুচরা|بقایا|Ecco il resto: due euro.
-scontrino|receipt|ticket de caisse|recibo / tique|recibo / talão|bon fiscal|faturë|чек|чек|إيصال|小票|রসিদ|رسید|Conservi lo scontrino.
-taglia|size (clothes)|taille|talla|tamanho|mărime|masë|розмір|размер|مقاس|尺码|সাইজ|سائز|Che taglia porta?
-provare|to try (on)|essayer|probar|experimentar|a proba|provoj|приміряти|примерять|يجرب|试|চেষ্টা করা / পরে দেখা|آزمانا|Posso provare questi pantaloni?
-mercato|market|marché|mercado|mercado / feira|piață|treg|ринок|рынок|سوق|市场|বাজার|بازار|Il martedì c'è il mercato in piazza.
-chilo|kilo|kilo|kilo|quilo|kilogram|kilogram|кілограм|килограмм|كيلو|公斤|কেজি|کلو|Un chilo di pomodori, per favore.
+costare|to cost|coûter|costar|custar|a costa|kushton|коштувати|стоить|يكلف|花费 / 价格是|দাম হওয়া|قیمت ہونا|මිල වෙනවා|Quanto costa questa maglietta?
+prezzo|price|prix|precio|preço|preț|çmim|ціна|цена|سعر|价格|দাম|قیمت|මිල|Il prezzo è scritto sull'etichetta.
+caro|expensive / dear|cher|caro|caro|scump|i shtrenjtë|дорогий|дорогой|غالي|贵|দামি|مہنگا|මිල අධික / ආදරණීය|Questo telefono è troppo caro.
+economico|cheap|bon marché|barato|barato|ieftin|i lirë|дешевий|дешёвый|رخيص|便宜|সস্তা|سستا|ලාභයි|Il mercato è più economico.
+sconto|discount|réduction|descuento|desconto|reducere|zbritje|знижка|скидка|تخفيض|折扣|ছাড়|رعایت|වට්ටම|C'è uno sconto del 20%.
+soldi|money|argent|dinero|dinheiro|bani|para|гроші|деньги|نقود|钱|টাকা|پیسے|සල්ලි / මුදල්|Non ho abbastanza soldi.
+pagare|to pay|payer|pagar|pagar|a plăti|paguaj|платити|платить|يدفع|付钱|টাকা দেওয়া|ادا کرنا|ගෙවනවා|Posso pagare con la carta?
+resto|change (money)|monnaie|cambio / vuelta|troco|rest|kusur|решта|сдача|الباقي|找零|খুচরা|بقایا|ඉතිරි මුදල|Ecco il resto: due euro.
+scontrino|receipt|ticket de caisse|recibo / tique|recibo / talão|bon fiscal|faturë|чек|чек|إيصال|小票|রসিদ|رسید|රිසිට්පත|Conservi lo scontrino.
+taglia|size (clothes)|taille|talla|tamanho|mărime|masë|розмір|размер|مقاس|尺码|সাইজ|سائز|ඇඳුමේ ප්‍රමාණය|Che taglia porta?
+provare|to try (on)|essayer|probar|experimentar|a proba|provoj|приміряти|примерять|يجرب|试|চেষ্টা করা / পরে দেখা|آزمانا|ඇඳලා බලනවා / උත්සාහ කරනවා|Posso provare questi pantaloni?
+mercato|market|marché|mercado|mercado / feira|piață|treg|ринок|рынок|سوق|市场|বাজার|بازار|පොළ|Il martedì c'è il mercato in piazza.
+chilo|kilo|kilo|kilo|quilo|kilogram|kilogram|кілограм|килограмм|كيلو|公斤|কেজি|کلو|කිලෝ|Un chilo di pomodori, per favore.
 ` },
     { id: 'a2-lavori', level: 'A2', title: 'Lavori e progetti', icon: '👷', rows: `
-lavoro|work / job|travail|trabajo|trabalho|muncă|punë|робота|работа|عمل|工作|কাজ|کام|Mio padre cerca lavoro.
-lavorare|to work|travailler|trabajar|trabalhar|a lucra|punoj|працювати|работать|يعمل|工作|কাজ করা|کام کرنا|Mia madre lavora in un ristorante.
-medico|doctor|médecin|médico|médico|medic|mjek|лікар|врач|طبيب|医生|ডাক্তার|ڈاکٹر|Da grande voglio fare il medico.
-infermiere|nurse|infirmier|enfermero|enfermeiro|asistent medical|infermier|медбрат / медсестра|медбрат|ممرض|护士|নার্স|نرس|L'infermiera è molto gentile.
-cuoco|cook / chef|cuisinier|cocinero|cozinheiro|bucătar|kuzhinier|кухар|повар|طباخ|厨师|রাঁধুনি|باورچی|Lo zio fa il cuoco in un hotel.
-meccanico|mechanic|mécanicien|mecánico|mecânico|mecanic|mekanik|механік|механик|ميكانيكي|修理工|মেকানিক|مستری|Il meccanico ripara la macchina.
-commesso|shop assistant|vendeur|dependiente|vendedor|vânzător|shitës|продавець|продавец|بائع|店员|বিক্রেতা|سیلز مین|La commessa mi ha aiutato.
-ingegnere|engineer|ingénieur|ingeniero|engenheiro|inginer|inxhinier|інженер|инженер|مهندس|工程师|প্রকৌশলী|انجینئر|Mia sorella studia per diventare ingegnere.
-avvocato|lawyer|avocat|abogado|advogado|avocat|avokat|адвокат|адвокат|محامٍ|律师|আইনজীবী|وکیل|L'avvocato lavora in tribunale.
-ufficio|office|bureau|oficina|escritório|birou|zyrë|офіс|офис|مكتب|办公室|অফিস|دفتر|L'ufficio chiude alle sei.
-stipendio|salary|salaire|sueldo|salário|salariu|rrogë|зарплата|зарплата|راتب|工资|বেতন|تنخواہ|Lo stipendio arriva a fine mese.
-futuro|future|avenir|futuro|futuro|viitor|e ardhme|майбутнє|будущее|مستقبل|未来|ভবিষ্যৎ|مستقبل|Penso spesso al mio futuro.
-sogno|dream|rêve|sueño|sonho|vis|ëndërr|мрія|мечта|حلم|梦想|স্বপ্ন|خواب|Il mio sogno è viaggiare.
+lavoro|work / job|travail|trabajo|trabalho|muncă|punë|робота|работа|عمل|工作|কাজ|کام|රැකියාව / වැඩ|Mio padre cerca lavoro.
+lavorare|to work|travailler|trabajar|trabalhar|a lucra|punoj|працювати|работать|يعمل|工作|কাজ করা|کام کرنا|වැඩ කරනවා|Mia madre lavora in un ristorante.
+medico|doctor|médecin|médico|médico|medic|mjek|лікар|врач|طبيب|医生|ডাক্তার|ڈاکٹر|වෛද්‍යවරයා / දොස්තර|Da grande voglio fare il medico.
+infermiere|nurse|infirmier|enfermero|enfermeiro|asistent medical|infermier|медбрат / медсестра|медбрат|ممرض|护士|নার্স|نرس|හෙද නිලධාරියා|L'infermiera è molto gentile.
+cuoco|cook / chef|cuisinier|cocinero|cozinheiro|bucătar|kuzhinier|кухар|повар|طباخ|厨师|রাঁধুনি|باورچی|කෝකියා / සූපවේදියා|Lo zio fa il cuoco in un hotel.
+meccanico|mechanic|mécanicien|mecánico|mecânico|mecanic|mekanik|механік|механик|ميكانيكي|修理工|মেকানিক|مستری|කාර්මිකයා (මෝටර් කාර්මික)|Il meccanico ripara la macchina.
+commesso|shop assistant|vendeur|dependiente|vendedor|vânzător|shitës|продавець|продавец|بائع|店员|বিক্রেতা|سیلز مین|වෙළඳසැල් සහායකයා|La commessa mi ha aiutato.
+ingegnere|engineer|ingénieur|ingeniero|engenheiro|inginer|inxhinier|інженер|инженер|مهندس|工程师|প্রকৌশলী|انجینئر|ඉංජිනේරුවා|Mia sorella studia per diventare ingegnere.
+avvocato|lawyer|avocat|abogado|advogado|avocat|avokat|адвокат|адвокат|محامٍ|律师|আইনজীবী|وکیل|නීතිඥයා|L'avvocato lavora in tribunale.
+ufficio|office|bureau|oficina|escritório|birou|zyrë|офіс|офис|مكتب|办公室|অফিস|دفتر|කාර්යාලය|L'ufficio chiude alle sei.
+stipendio|salary|salaire|sueldo|salário|salariu|rrogë|зарплата|зарплата|راتب|工资|বেতন|تنخواہ|වැටුප / පඩිය|Lo stipendio arriva a fine mese.
+futuro|future|avenir|futuro|futuro|viitor|e ardhme|майбутнє|будущее|مستقبل|未来|ভবিষ্যৎ|مستقبل|අනාගතය|Penso spesso al mio futuro.
+sogno|dream|rêve|sueño|sonho|vis|ëndërr|мрія|мечта|حلم|梦想|স্বপ্ন|خواب|සිහිනය|Il mio sogno è viaggiare.
 ` },
     { id: 'a2-corpo-salute', level: 'A2', title: 'Corpo e salute', icon: '🩺', rows: `
-testa|head|tête|cabeza|cabeça|cap|kokë|голова|голова|رأس|头|মাথা|سر|Ho mal di testa.
-occhio|eye|œil|ojo|olho|ochi|sy|око|глаз|عين|眼睛|চোখ|آنکھ|Ha gli occhi verdi.
-orecchio|ear|oreille|oreja|orelha|ureche|vesh|вухо|ухо|أذن|耳朵|কান|کان|Mi fa male l'orecchio.
-bocca|mouth|bouche|boca|boca|gură|gojë|рот|рот|فم|嘴|মুখ|منہ|Apri la bocca, dice il dentista.
-mano|hand|main|mano|mão|mână|dorë|рука (кисть)|рука (кисть)|يد|手|হাত|ہاتھ|Alza la mano per parlare.
-braccio|arm|bras|brazo|braço|braț|krah|рука|рука|ذراع|胳膊|বাহু|بازو|Mi sono rotto un braccio.
-gamba|leg|jambe|pierna|perna|picior|këmbë|нога|нога|ساق|腿|পা|ٹانگ|Ho male a una gamba.
-piede|foot|pied|pie|pé|picior (laba)|shputë|стопа|ступня|قدم|脚|পায়ের পাতা|پاؤں|Vado a scuola a piedi.
-pancia|belly / tummy|ventre|barriga|barriga|burtă|bark|живіт|живот|بطن|肚子|পেট|پیٹ|Mi fa male la pancia.
-febbre|fever|fièvre|fiebre|febre|febră|temperaturë|температура|температура|حمى|发烧|জ্বর|بخار|Ho la febbre a 38.
-malato|ill / sick|malade|enfermo|doente|bolnav|i sëmurë|хворий|больной|مريض|生病|অসুস্থ|بیمار|Oggi sono malato e resto a casa.
-medicina|medicine|médicament|medicina|remédio|medicament|ilaç|ліки|лекарство|دواء|药|ওষুধ|دوا|Prendi la medicina dopo i pasti.
-far male|to hurt|faire mal|doler|doer|a durea|më dhemb|боліти|болеть|يؤلم|疼|ব্যথা করা|درد ہونا|Mi fanno male i denti.
+testa|head|tête|cabeza|cabeça|cap|kokë|голова|голова|رأس|头|মাথা|سر|හිස / ඔළුව|Ho mal di testa.
+occhio|eye|œil|ojo|olho|ochi|sy|око|глаз|عين|眼睛|চোখ|آنکھ|ඇස|Ha gli occhi verdi.
+orecchio|ear|oreille|oreja|orelha|ureche|vesh|вухо|ухо|أذن|耳朵|কান|کان|කන|Mi fa male l'orecchio.
+bocca|mouth|bouche|boca|boca|gură|gojë|рот|рот|فم|嘴|মুখ|منہ|කට|Apri la bocca, dice il dentista.
+mano|hand|main|mano|mão|mână|dorë|рука (кисть)|рука (кисть)|يد|手|হাত|ہاتھ|අත (අත්ල)|Alza la mano per parlare.
+braccio|arm|bras|brazo|braço|braț|krah|рука|рука|ذراع|胳膊|বাহু|بازو|බාහුව|Mi sono rotto un braccio.
+gamba|leg|jambe|pierna|perna|picior|këmbë|нога|нога|ساق|腿|পা|ٹانگ|කකුල|Ho male a una gamba.
+piede|foot|pied|pie|pé|picior (laba)|shputë|стопа|ступня|قدم|脚|পায়ের পাতা|پاؤں|පාදය|Vado a scuola a piedi.
+pancia|belly / tummy|ventre|barriga|barriga|burtă|bark|живіт|живот|بطن|肚子|পেট|پیٹ|බඩ|Mi fa male la pancia.
+febbre|fever|fièvre|fiebre|febre|febră|temperaturë|температура|температура|حمى|发烧|জ্বর|بخار|උණ|Ho la febbre a 38.
+malato|ill / sick|malade|enfermo|doente|bolnav|i sëmurë|хворий|больной|مريض|生病|অসুস্থ|بیمار|අසනීපයි|Oggi sono malato e resto a casa.
+medicina|medicine|médicament|medicina|remédio|medicament|ilaç|ліки|лекарство|دواء|药|ওষুধ|دوا|බෙහෙත|Prendi la medicina dopo i pasti.
+far male|to hurt|faire mal|doler|doer|a durea|më dhemb|боліти|болеть|يؤلم|疼|ব্যথা করা|درد ہونا|රිදෙනවා|Mi fanno male i denti.
 ` },
     { id: 'b1-emozioni', level: 'B1', title: 'Emozioni e carattere', icon: '🎭', rows: `
-emozione|emotion|émotion|emoción|emoção|emoție|emocion|емоція|эмоция|عاطفة|情绪|আবেগ|جذبہ|È difficile esprimere le emozioni.
-arrabbiato|angry|en colère|enfadado|zangado|furios|i zemëruar|сердитий|сердитый|غاضب|生气|রাগান্বিত|ناراض|Perché sei arrabbiato?
-preoccupato|worried|inquiet|preocupado|preocupado|îngrijorat|i shqetësuar|стурбований|обеспокоенный|قلق|担心|চিন্তিত|فکرمند|Sono preoccupato per l'esame.
-emozionato|excited / moved|ému|emocionado|emocionado|emoționat|i emocionuar|схвильований|взволнованный|متحمس|激动|উত্তেজিত|پرجوش|Ero emozionato il primo giorno.
-deluso|disappointed|déçu|decepcionado|decepcionado|dezamăgit|i zhgënjyer|розчарований|разочарованный|خائب الأمل|失望|হতাশ|مایوس|Sono deluso dal risultato.
-orgoglioso|proud|fier|orgulloso|orgulhoso|mândru|krenar|гордий|гордый|فخور|自豪|গর্বিত|فخر محسوس کرنا|I miei genitori sono orgogliosi di me.
-timido|shy|timide|tímido|tímido|timid|i turpshëm|сором'язливий|застенчивый|خجول|害羞|লাজুক|شرمیلا|All'inizio ero timido.
-sincero|honest / sincere|sincère|sincero|sincero|sincer|i sinqertë|щирий|искренний|صادق|真诚|আন্তরিক|سچا / مخلص|Un amico sincero dice la verità.
-nostalgia|homesickness / nostalgia|nostalgie|nostalgia|saudade|nostalgie / dor|mall|туга за домом|тоска по дому|حنين|思乡|স্মৃতিকাতরতা|وطن کی یاد|Ho nostalgia del mio paese.
-fiducia|trust|confiance|confianza|confiança|încredere|besim|довіра|доверие|ثقة|信任|আস্থা|اعتماد|Ho fiducia in te.
-sentirsi|to feel|se sentir|sentirse|sentir-se|a se simți|ndihem|почуватися|чувствовать себя|يشعر|感觉|অনুভব করা|محسوس کرنا|Oggi mi sento meglio.
-sorpreso|surprised|surpris|sorprendido|surpreso|surprins|i habitur|здивований|удивлённый|متفاجئ|惊讶|অবাক|حیران|Sono rimasto sorpreso dalla notizia.
+emozione|emotion|émotion|emoción|emoção|emoție|emocion|емоція|эмоция|عاطفة|情绪|আবেগ|جذبہ|හැඟීම|È difficile esprimere le emozioni.
+arrabbiato|angry|en colère|enfadado|zangado|furios|i zemëruar|сердитий|сердитый|غاضب|生气|রাগান্বিত|ناراض|තරහින්|Perché sei arrabbiato?
+preoccupato|worried|inquiet|preocupado|preocupado|îngrijorat|i shqetësuar|стурбований|обеспокоенный|قلق|担心|চিন্তিত|فکرمند|කනස්සල්ලෙන්|Sono preoccupato per l'esame.
+emozionato|excited / moved|ému|emocionado|emocionado|emoționat|i emocionuar|схвильований|взволнованный|متحمس|激动|উত্তেজিত|پرجوش|උද්යෝගිමත් / හැඟීම්බර|Ero emozionato il primo giorno.
+deluso|disappointed|déçu|decepcionado|decepcionado|dezamăgit|i zhgënjyer|розчарований|разочарованный|خائب الأمل|失望|হতাশ|مایوس|බලාපොරොත්තු කඩවුණු|Sono deluso dal risultato.
+orgoglioso|proud|fier|orgulloso|orgulhoso|mândru|krenar|гордий|гордый|فخور|自豪|গর্বিত|فخر محسوس کرنا|ආඩම්බරයි|I miei genitori sono orgogliosi di me.
+timido|shy|timide|tímido|tímido|timid|i turpshëm|сором'язливий|застенчивый|خجول|害羞|লাজুক|شرمیلا|ලැජ්ජාශීලී|All'inizio ero timido.
+sincero|honest / sincere|sincère|sincero|sincero|sincer|i sinqertë|щирий|искренний|صادق|真诚|আন্তরিক|سچا / مخلص|අවංක|Un amico sincero dice la verità.
+nostalgia|homesickness / nostalgia|nostalgie|nostalgia|saudade|nostalgie / dor|mall|туга за домом|тоска по дому|حنين|思乡|স্মৃতিকাতরতা|وطن کی یاد|ගෙදර මතක් වීම / අතීතකාමය|Ho nostalgia del mio paese.
+fiducia|trust|confiance|confianza|confiança|încredere|besim|довіра|доверие|ثقة|信任|আস্থা|اعتماد|විශ්වාසය|Ho fiducia in te.
+sentirsi|to feel|se sentir|sentirse|sentir-se|a se simți|ndihem|почуватися|чувствовать себя|يشعر|感觉|অনুভব করা|محسوس کرنا|දැනෙනවා|Oggi mi sento meglio.
+sorpreso|surprised|surpris|sorprendido|surpreso|surprins|i habitur|здивований|удивлённый|متفاجئ|惊讶|অবাক|حیران|පුදුමයට පත්|Sono rimasto sorpreso dalla notizia.
 ` },
     { id: 'b1-comunicazione', level: 'B1', title: 'Comunicazione e tecnologia', icon: '📱', rows: `
-messaggio|message|message|mensaje|mensagem|mesaj|mesazh|повідомлення|сообщение|رسالة|消息|বার্তা|پیغام|Ti ho mandato un messaggio.
-telefonare|to phone|téléphoner|llamar por teléfono|telefonar|a telefona|telefonoj|телефонувати|звонить|يتصل|打电话|ফোন করা|فون کرنا|Telefono alla nonna ogni domenica.
-rispondere|to answer|répondre|responder|responder|a răspunde|përgjigjem|відповідати|отвечать|يجيب|回复|উত্তর দেওয়া|جواب دینا|Non ha risposto al messaggio.
-chiedere|to ask|demander|preguntar / pedir|perguntar / pedir|a întreba / a cere|pyes / kërkoj|питати / просити|спрашивать / просить|يسأل|问|জিজ্ঞাসা করা|پوچھنا|Posso chiederti un favore?
-spiegare|to explain|expliquer|explicar|explicar|a explica|shpjegoj|пояснювати|объяснять|يشرح|解释|ব্যাখ্যা করা|سمجھانا|Mi spieghi questa regola?
-schermo|screen|écran|pantalla|tela|ecran|ekran|екран|экран|شاشة|屏幕|স্ক্রিন|اسکرین|Lo schermo del telefono è rotto.
-scaricare|to download|télécharger|descargar|baixar|a descărca|shkarkoj|завантажувати|скачивать|يحمّل|下载|ডাউনলোড করা|ڈاؤن لوڈ کرنا|Ho scaricato l'app della scuola.
-password|password|mot de passe|contraseña|senha|parolă|fjalëkalim|пароль|пароль|كلمة المرور|密码|পাসওয়ার্ড|پاس ورڈ|Non dire a nessuno la tua password.
-notizia|news (item)|nouvelle|noticia|notícia|știre|lajm|новина|новость|خبر|新闻|সংবাদ|خبر|Hai sentito la notizia?
-discussione|discussion / argument|discussion|discusión|discussão|discuție|diskutim|обговорення / суперечка|обсуждение / спор|نقاش|讨论|আলোচনা|بحث|Abbiamo avuto una discussione in classe.
-d'accordo|agreed / in agreement|d'accord|de acuerdo|de acordo|de acord|dakord|згоден|согласен|موافق|同意|একমত|متفق|Sono d'accordo con te.
-privacy|privacy|vie privée|privacidad|privacidade|confidențialitate|privatësi|приватність|конфиденциальность|الخصوصية|隐私|গোপনীয়তা|رازداری|Rispetta la privacy degli altri.
+messaggio|message|message|mensaje|mensagem|mesaj|mesazh|повідомлення|сообщение|رسالة|消息|বার্তা|پیغام|පණිවිඩය|Ti ho mandato un messaggio.
+telefonare|to phone|téléphoner|llamar por teléfono|telefonar|a telefona|telefonoj|телефонувати|звонить|يتصل|打电话|ফোন করা|فون کرنا|දුරකථනයෙන් කතා කරනවා|Telefono alla nonna ogni domenica.
+rispondere|to answer|répondre|responder|responder|a răspunde|përgjigjem|відповідати|отвечать|يجيب|回复|উত্তর দেওয়া|جواب دینا|පිළිතුරු දෙනවා|Non ha risposto al messaggio.
+chiedere|to ask|demander|preguntar / pedir|perguntar / pedir|a întreba / a cere|pyes / kërkoj|питати / просити|спрашивать / просить|يسأل|问|জিজ্ঞাসা করা|پوچھنا|අහනවා|Posso chiederti un favore?
+spiegare|to explain|expliquer|explicar|explicar|a explica|shpjegoj|пояснювати|объяснять|يشرح|解释|ব্যাখ্যা করা|سمجھانا|පැහැදිලි කරනවා|Mi spieghi questa regola?
+schermo|screen|écran|pantalla|tela|ecran|ekran|екран|экран|شاشة|屏幕|স্ক্রিন|اسکرین|තිරය|Lo schermo del telefono è rotto.
+scaricare|to download|télécharger|descargar|baixar|a descărca|shkarkoj|завантажувати|скачивать|يحمّل|下载|ডাউনলোড করা|ڈاؤن لوڈ کرنا|බාගත කරනවා|Ho scaricato l'app della scuola.
+password|password|mot de passe|contraseña|senha|parolă|fjalëkalim|пароль|пароль|كلمة المرور|密码|পাসওয়ার্ড|پاس ورڈ|මුරපදය|Non dire a nessuno la tua password.
+notizia|news (item)|nouvelle|noticia|notícia|știre|lajm|новина|новость|خبر|新闻|সংবাদ|خبر|පුවත|Hai sentito la notizia?
+discussione|discussion / argument|discussion|discusión|discussão|discuție|diskutim|обговорення / суперечка|обсуждение / спор|نقاش|讨论|আলোচনা|بحث|සාකච්ඡාව / වාදය|Abbiamo avuto una discussione in classe.
+d'accordo|agreed / in agreement|d'accord|de acuerdo|de acordo|de acord|dakord|згоден|согласен|موافق|同意|একমত|متفق|එකඟයි|Sono d'accordo con te.
+privacy|privacy|vie privée|privacidad|privacidade|confidențialitate|privatësi|приватність|конфиденциальность|الخصوصية|隐私|গোপনীয়তা|رازداری|පෞද්ගලිකත්වය|Rispetta la privacy degli altri.
 ` },
     { id: 'b1-lavoro-studio', level: 'B1', title: 'Studio e orientamento', icon: '🎓', rows: `
-materia|school subject|matière|asignatura|matéria|materie|lëndë|предмет|предмет|مادة دراسية|科目|বিষয়|مضمون|La mia materia preferita è la storia.
-esame|exam|examen|examen|exame|examen|provim|іспит|экзамен|امتحان|考试|পরীক্ষা|امتحان|L'esame di terza media è a giugno.
-interrogazione|oral test|interrogation orale|examen oral|prova oral|ascultare / examinare orală|pyetje me gojë|усне опитування|устный опрос|اختبار شفهي|口头提问|মৌখিক পরীক্ষা|زبانی امتحان|Domani ho l'interrogazione di scienze.
-verifica|written test|contrôle|prueba / control|prova|test|test|контрольна|контрольная|اختبار|测验|লিখিত পরীক্ষা|ٹیسٹ|La verifica di matematica è andata bene.
-iscriversi|to enrol|s'inscrire|inscribirse|inscrever-se|a se înscrie|regjistrohem|записатися|записаться|يسجّل|报名|ভর্তি হওয়া|داخلہ لینا|Mi iscrivo al liceo scientifico.
-diploma|diploma|diplôme|título / diploma|diploma|diplomă|diplomë|атестат / диплом|аттестат / диплом|شهادة|毕业证书|ডিপ্লোমা|ڈپلومہ|Con il diploma posso andare all'università.
-scegliere|to choose|choisir|elegir|escolher|a alege|zgjedh|обирати|выбирать|يختار|选择|বেছে নেওয়া|چننا|Devo scegliere la scuola superiore.
-impegnarsi|to commit / make an effort|s'appliquer / faire des efforts|esforzarse|esforçar-se|a se strădui|angazhohem|старатися|стараться|يجتهد|努力|চেষ্টা করা|محنت کرنا|Se ti impegni, ce la fai.
-riuscire|to manage / succeed|réussir|lograr|conseguir|a reuși|ia dal|вдаватися|удаваться|ينجح|成功做到|সফল হওয়া|کامیاب ہونا|Sono riuscito a finire il compito.
-sbagliare|to make a mistake|se tromper|equivocarse|errar|a greși|gaboj|помилятися|ошибаться|يخطئ|弄错|ভুল করা|غلطی کرنا|Non avere paura di sbagliare.
-errore|mistake|erreur|error|erro|greșeală|gabim|помилка|ошибка|خطأ|错误|ভুল|غلطی|Dagli errori si impara.
-colloquio|interview / meeting|entretien|entrevista|entrevista|întâlnire / interviu|takim / intervistë|зустріч / співбесіда|встреча / собеседование|لقاء / مقابلة|面试 / 面谈|সাক্ষাৎকার|انٹرویو|I genitori hanno il colloquio con i professori.
+materia|school subject|matière|asignatura|matéria|materie|lëndë|предмет|предмет|مادة دراسية|科目|বিষয়|مضمون|විෂය|La mia materia preferita è la storia.
+esame|exam|examen|examen|exame|examen|provim|іспит|экзамен|امتحان|考试|পরীক্ষা|امتحان|විභාගය|L'esame di terza media è a giugno.
+interrogazione|oral test|interrogation orale|examen oral|prova oral|ascultare / examinare orală|pyetje me gojë|усне опитування|устный опрос|اختبار شفهي|口头提问|মৌখিক পরীক্ষা|زبانی امتحان|වාචික පරීක්ෂණය|Domani ho l'interrogazione di scienze.
+verifica|written test|contrôle|prueba / control|prova|test|test|контрольна|контрольная|اختبار|测验|লিখিত পরীক্ষা|ٹیسٹ|ලිඛිත පරීක්ෂණය|La verifica di matematica è andata bene.
+iscriversi|to enrol|s'inscrire|inscribirse|inscrever-se|a se înscrie|regjistrohem|записатися|записаться|يسجّل|报名|ভর্তি হওয়া|داخلہ لینا|ලියාපදිංචි වෙනවා|Mi iscrivo al liceo scientifico.
+diploma|diploma|diplôme|título / diploma|diploma|diplomă|diplomë|атестат / диплом|аттестат / диплом|شهادة|毕业证书|ডিপ্লোমা|ڈپلومہ|ඩිප්ලෝමාව / සහතිකය|Con il diploma posso andare all'università.
+scegliere|to choose|choisir|elegir|escolher|a alege|zgjedh|обирати|выбирать|يختار|选择|বেছে নেওয়া|چننا|තෝරනවා|Devo scegliere la scuola superiore.
+impegnarsi|to commit / make an effort|s'appliquer / faire des efforts|esforzarse|esforçar-se|a se strădui|angazhohem|старатися|стараться|يجتهد|努力|চেষ্টা করা|محنت کرنا|මහන්සි වෙනවා / කැපවෙනවා|Se ti impegni, ce la fai.
+riuscire|to manage / succeed|réussir|lograr|conseguir|a reuși|ia dal|вдаватися|удаваться|ينجح|成功做到|সফল হওয়া|کامیاب ہونا|සාර්ථක වෙනවා|Sono riuscito a finire il compito.
+sbagliare|to make a mistake|se tromper|equivocarse|errar|a greși|gaboj|помилятися|ошибаться|يخطئ|弄错|ভুল করা|غلطی کرنا|වැරදි කරනවා|Non avere paura di sbagliare.
+errore|mistake|erreur|error|erro|greșeală|gabim|помилка|ошибка|خطأ|错误|ভুল|غلطی|වැරැද්ද|Dagli errori si impara.
+colloquio|interview / meeting|entretien|entrevista|entrevista|întâlnire / interviu|takim / intervistë|зустріч / співбесіда|встреча / собеседование|لقاء / مقابلة|面试 / 面谈|সাক্ষাৎকার|انٹرویو|සම්මුඛ සාකච්ඡාව / හමුව|I genitori hanno il colloquio con i professori.
 ` },
     { id: 'b1-casa-regole', level: 'B1', title: 'Regole e convivenza', icon: '📋', rows: `
-regola|rule|règle|regla|regra|regulă|rregull|правило|правило|قاعدة|规则|নিয়ম|قاعدہ|Rispettiamo le regole della classe.
-permesso|permission / permit|permission|permiso|permissão|permisiune|leje|дозвіл|разрешение|إذن|允许 / 许可|অনুমতি|اجازت|Posso uscire? — Chiedi il permesso.
-vietato|forbidden|interdit|prohibido|proibido|interzis|e ndaluar|заборонено|запрещено|ممنوع|禁止|নিষিদ্ধ|ممنوع|È vietato fumare.
-obbligatorio|compulsory|obligatoire|obligatorio|obrigatório|obligatoriu|i detyrueshëm|обов'язковий|обязательный|إلزامي|必须的|বাধ্যতামূলক|لازمی|La scuola è obbligatoria fino a 16 anni.
-rispetto|respect|respect|respeto|respeito|respect|respekt|повага|уважение|احترام|尊重|সম্মান|احترام|Il rispetto è importante.
-aiutare|to help|aider|ayudar|ajudar|a ajuta|ndihmoj|допомагати|помогать|يساعد|帮助|সাহায্য করা|مدد کرنا|Ti aiuto a portare lo zaino.
-dividere|to share / divide|partager / diviser|compartir / dividir|dividir|a împărți|ndaj|ділити|делить|يقسم|分享 / 分|ভাগ করা|بانٹنا|Dividiamo la merenda.
-pulire|to clean|nettoyer|limpiar|limpar|a curăța|pastroj|прибирати|убирать|ينظف|打扫|পরিষ্কার করা|صاف کرنا|Puliamo la classe alla fine.
-raccolta differenziata|recycling (separate collection)|tri sélectif|reciclaje|coleta seletiva|colectare selectivă|grumbullim i diferencuar|сортування сміття|раздельный сбор мусора|فرز النفايات|垃圾分类|বর্জ্য পৃথকীকরণ|کچرے کی علیحدگی|La plastica va nella raccolta differenziata.
-rumore|noise|bruit|ruido|barulho|zgomot|zhurmë|шум|шум|ضجيج|噪音|শব্দ / গোলমাল|شور|Non fate rumore dopo le dieci.
-puntuale|punctual|ponctuel|puntual|pontual|punctual|i përpiktë|пунктуальний|пунктуальный|دقيق في المواعيد|准时|সময়নিষ্ঠ|وقت کا پابند|Bisogna essere puntuali.
+regola|rule|règle|regla|regra|regulă|rregull|правило|правило|قاعدة|规则|নিয়ম|قاعدہ|නීතිය / රීතිය|Rispettiamo le regole della classe.
+permesso|permission / permit|permission|permiso|permissão|permisiune|leje|дозвіл|разрешение|إذن|允许 / 许可|অনুমতি|اجازت|අවසරය / බලපත්‍රය|Posso uscire? — Chiedi il permesso.
+vietato|forbidden|interdit|prohibido|proibido|interzis|e ndaluar|заборонено|запрещено|ممنوع|禁止|নিষিদ্ধ|ممنوع|තහනම්|È vietato fumare.
+obbligatorio|compulsory|obligatoire|obligatorio|obrigatório|obligatoriu|i detyrueshëm|обов'язковий|обязательный|إلزامي|必须的|বাধ্যতামূলক|لازمی|අනිවාර්ය|La scuola è obbligatoria fino a 16 anni.
+rispetto|respect|respect|respeto|respeito|respect|respekt|повага|уважение|احترام|尊重|সম্মান|احترام|ගෞරවය|Il rispetto è importante.
+aiutare|to help|aider|ayudar|ajudar|a ajuta|ndihmoj|допомагати|помогать|يساعد|帮助|সাহায্য করা|مدد کرنا|උදව් කරනවා|Ti aiuto a portare lo zaino.
+dividere|to share / divide|partager / diviser|compartir / dividir|dividir|a împărți|ndaj|ділити|делить|يقسم|分享 / 分|ভাগ করা|بانٹنا|බෙදාගන්නවා / බෙදනවා|Dividiamo la merenda.
+pulire|to clean|nettoyer|limpiar|limpar|a curăța|pastroj|прибирати|убирать|ينظف|打扫|পরিষ্কার করা|صاف کرنا|පිරිසිදු කරනවා|Puliamo la classe alla fine.
+raccolta differenziata|recycling (separate collection)|tri sélectif|reciclaje|coleta seletiva|colectare selectivă|grumbullim i diferencuar|сортування сміття|раздельный сбор мусора|فرز النفايات|垃圾分类|বর্জ্য পৃথকীকরণ|کچرے کی علیحدگی|කසළ වෙන් කර එකතු කිරීම|La plastica va nella raccolta differenziata.
+rumore|noise|bruit|ruido|barulho|zgomot|zhurmë|шум|шум|ضجيج|噪音|শব্দ / গোলমাল|شور|ශබ්දය / ඝෝෂාව|Non fate rumore dopo le dieci.
+puntuale|punctual|ponctuel|puntual|pontual|punctual|i përpiktë|пунктуальний|пунктуальный|دقيق في المواعيد|准时|সময়নিষ্ঠ|وقت کا پابند|නියමිත වේලාවට|Bisogna essere puntuali.
 ` },
     { id: 'b1-opinioni', level: 'B1', title: 'Opinioni e dibattito', icon: '💭', rows: `
-opinione|opinion|opinion|opinión|opinião|opinie|mendim|думка|мнение|رأي|意见|মতামত|رائے|Qual è la tua opinione?
-secondo me|in my opinion|selon moi|en mi opinión|na minha opinião|după părerea mea|sipas meje|на мою думку|по-моему|في رأيي|我认为|আমার মতে|میرے خیال میں|Secondo me hai ragione.
-avere ragione|to be right|avoir raison|tener razón|ter razão|a avea dreptate|kam të drejtë|мати рацію|быть правым|محق|有道理|ঠিক হওয়া|صحیح ہونا|Hai ragione tu.
-avere torto|to be wrong|avoir tort|no tener razón|não ter razão|a greși|e kam gabim|помилятися|быть неправым|مخطئ|错了|ভুল হওয়া|غلط ہونا|Forse ho torto.
-vantaggio|advantage|avantage|ventaja|vantagem|avantaj|avantazh|перевага|преимущество|ميزة|优点|সুবিধা|فائدہ|Il vantaggio della città sono i servizi.
-svantaggio|disadvantage|inconvénient|desventaja|desvantagem|dezavantaj|disavantazh|недолік|недостаток|عيب|缺点|অসুবিধা|نقصان|Lo svantaggio è il traffico.
-problema|problem|problème|problema|problema|problemă|problem|проблема|проблема|مشكلة|问题|সমস্যা|مسئلہ|Il problema è il prezzo.
-soluzione|solution|solution|solución|solução|soluție|zgjidhje|рішення|решение|حل|解决办法|সমাধান|حل|Abbiamo trovato una soluzione.
-convincere|to convince|convaincre|convencer|convencer|a convinge|bind|переконувати|убеждать|يقنع|说服|রাজি করানো|قائل کرنا|Mi hai convinto!
-dubbio|doubt|doute|duda|dúvida|îndoială|dyshim|сумнів|сомнение|شك|怀疑|সন্দেহ|شک|Ho un dubbio su questa risposta.
-esempio|example|exemple|ejemplo|exemplo|exemplu|shembull|приклад|пример|مثال|例子|উদাহরণ|مثال|Fammi un esempio.
+opinione|opinion|opinion|opinión|opinião|opinie|mendim|думка|мнение|رأي|意见|মতামত|رائے|අදහස|Qual è la tua opinione?
+secondo me|in my opinion|selon moi|en mi opinión|na minha opinião|după părerea mea|sipas meje|на мою думку|по-моему|في رأيي|我认为|আমার মতে|میرے خیال میں|මගේ අදහසේ හැටියට|Secondo me hai ragione.
+avere ragione|to be right|avoir raison|tener razón|ter razão|a avea dreptate|kam të drejtë|мати рацію|быть правым|محق|有道理|ঠিক হওয়া|صحیح ہونا|හරි වෙනවා (කියන දේ හරි)|Hai ragione tu.
+avere torto|to be wrong|avoir tort|no tener razón|não ter razão|a greși|e kam gabim|помилятися|быть неправым|مخطئ|错了|ভুল হওয়া|غلط ہونا|වැරදි වෙනවා (කියන දේ වැරදි)|Forse ho torto.
+vantaggio|advantage|avantage|ventaja|vantagem|avantaj|avantazh|перевага|преимущество|ميزة|优点|সুবিধা|فائدہ|වාසිය|Il vantaggio della città sono i servizi.
+svantaggio|disadvantage|inconvénient|desventaja|desvantagem|dezavantaj|disavantazh|недолік|недостаток|عيب|缺点|অসুবিধা|نقصان|අවාසිය|Lo svantaggio è il traffico.
+problema|problem|problème|problema|problema|problemă|problem|проблема|проблема|مشكلة|问题|সমস্যা|مسئلہ|ගැටලුව / ප්‍රශ්නය|Il problema è il prezzo.
+soluzione|solution|solution|solución|solução|soluție|zgjidhje|рішення|решение|حل|解决办法|সমাধান|حل|විසඳුම|Abbiamo trovato una soluzione.
+convincere|to convince|convaincre|convencer|convencer|a convinge|bind|переконувати|убеждать|يقنع|说服|রাজি করানো|قائل کرنا|ඒත්තු ගන්වනවා|Mi hai convinto!
+dubbio|doubt|doute|duda|dúvida|îndoială|dyshim|сумнів|сомнение|شك|怀疑|সন্দেহ|شک|සැකය|Ho un dubbio su questa risposta.
+esempio|example|exemple|ejemplo|exemplo|exemplu|shembull|приклад|пример|مثال|例子|উদাহরণ|مثال|උදාහරණය|Fammi un esempio.
 ` },
     { id: 'b1-ambiente', level: 'B1', title: 'Ambiente e natura', icon: '🌍', rows: `
-ambiente|environment|environnement|medio ambiente|meio ambiente|mediu|mjedis|довкілля|окружающая среда|بيئة|环境|পরিবেশ|ماحول|Dobbiamo proteggere l'ambiente.
-inquinamento|pollution|pollution|contaminación|poluição|poluare|ndotje|забруднення|загрязнение|تلوث|污染|দূষণ|آلودگی|L'inquinamento dell'aria è un problema.
-rifiuti|waste|déchets|residuos|lixo|deșeuri|mbeturina|відходи|отходы|نفايات|垃圾|বর্জ্য|کچرا|Riduciamo i rifiuti.
-riciclare|to recycle|recycler|reciclar|reciclar|a recicla|ricikloj|переробляти|перерабатывать|يعيد التدوير|回收|পুনর্ব্যবহার করা|ری سائیکل کرنا|Ricicliamo carta e vetro.
-energia|energy|énergie|energía|energia|energie|energji|енергія|энергия|طاقة|能源|শক্তি|توانائی|L'energia solare è pulita.
-clima|climate|climat|clima|clima|climă|klimë|клімат|климат|مناخ|气候|জলবায়ু|آب و ہوا|Il clima sta cambiando.
-risparmiare|to save|économiser|ahorrar|economizar|a economisi|kursej|заощаджувати|экономить|يوفر|节省|সঞ্চয় করা|بچانا|Risparmiamo acqua.
-albero|tree|arbre|árbol|árvore|copac|pemë|дерево|дерево|شجرة|树|গাছ|درخت|Abbiamo piantato un albero.
-fiume|river|fleuve / rivière|río|rio|râu|lumë|річка|река|نهر|河|নদী|دریا|Il Po è il fiume più lungo d'Italia.
-animale|animal|animal|animal|animal|animal|kafshë|тварина|животное|حيوان|动物|প্রাণী|جانور|Molti animali sono in pericolo.
-proteggere|to protect|protéger|proteger|proteger|a proteja|mbroj|захищати|защищать|يحمي|保护|রক্ষা করা|حفاظت کرنا|Proteggere la natura è un dovere.
+ambiente|environment|environnement|medio ambiente|meio ambiente|mediu|mjedis|довкілля|окружающая среда|بيئة|环境|পরিবেশ|ماحول|පරිසරය|Dobbiamo proteggere l'ambiente.
+inquinamento|pollution|pollution|contaminación|poluição|poluare|ndotje|забруднення|загрязнение|تلوث|污染|দূষণ|آلودگی|පරිසර දූෂණය|L'inquinamento dell'aria è un problema.
+rifiuti|waste|déchets|residuos|lixo|deșeuri|mbeturina|відходи|отходы|نفايات|垃圾|বর্জ্য|کچرا|කසළ / අපද්‍රව්‍ය|Riduciamo i rifiuti.
+riciclare|to recycle|recycler|reciclar|reciclar|a recicla|ricikloj|переробляти|перерабатывать|يعيد التدوير|回收|পুনর্ব্যবহার করা|ری سائیکل کرنا|ප්‍රතිචක්‍රීකරණය කරනවා|Ricicliamo carta e vetro.
+energia|energy|énergie|energía|energia|energie|energji|енергія|энергия|طاقة|能源|শক্তি|توانائی|ශක්තිය|L'energia solare è pulita.
+clima|climate|climat|clima|clima|climă|klimë|клімат|климат|مناخ|气候|জলবায়ু|آب و ہوا|දේශගුණය|Il clima sta cambiando.
+risparmiare|to save|économiser|ahorrar|economizar|a economisi|kursej|заощаджувати|экономить|يوفر|节省|সঞ্চয় করা|بچانا|ඉතිරි කරනවා|Risparmiamo acqua.
+albero|tree|arbre|árbol|árvore|copac|pemë|дерево|дерево|شجرة|树|গাছ|درخت|ගස|Abbiamo piantato un albero.
+fiume|river|fleuve / rivière|río|rio|râu|lumë|річка|река|نهر|河|নদী|دریا|ගඟ|Il Po è il fiume più lungo d'Italia.
+animale|animal|animal|animal|animal|animal|kafshë|тварина|животное|حيوان|动物|প্রাণী|جانور|සත්වයා|Molti animali sono in pericolo.
+proteggere|to protect|protéger|proteger|proteger|a proteja|mbroj|захищати|защищать|يحمي|保护|রক্ষা করা|حفاظت کرنا|ආරක්ෂා කරනවා|Proteggere la natura è un dovere.
 ` },
     { id: 'studio-matematica', level: 'A2', title: 'Lingua dello studio: matematica', icon: '➗', studio: true, rows: `
-numero|number|nombre|número|número|număr|numër|число|число|عدد|数字|সংখ্যা|عدد|Scrivi il numero in lettere.
-somma|sum / addition|somme|suma|soma|sumă|shumë|сума|сумма|مجموع|和|যোগফল|مجموعہ|La somma di 3 e 4 è 7.
-sottrazione|subtraction|soustraction|resta|subtração|scădere|zbritje|віднімання|вычитание|طرح|减法|বিয়োগ|تفریق|Fai la sottrazione: 10 meno 3.
-moltiplicazione|multiplication|multiplication|multiplicación|multiplicação|înmulțire|shumëzim|множення|умножение|ضرب|乘法|গুণ|ضرب|La moltiplicazione 6 per 7 fa 42.
-divisione|division|division|división|divisão|împărțire|pjesëtim|ділення|деление|قسمة|除法|ভাগ|تقسیم|12 diviso 3 fa 4.
-risultato|result|résultat|resultado|resultado|rezultat|rezultat|результат|результат|نتيجة|结果|ফলাফল|نتیجہ|Controlla il risultato.
-frazione|fraction|fraction|fracción|fração|fracție|thyesë|дріб|дробь|كسر|分数|ভগ্নাংশ|کسر|Un mezzo è una frazione.
-triangolo|triangle|triangle|triángulo|triângulo|triunghi|trekëndësh|трикутник|треугольник|مثلث|三角形|ত্রিভুজ|مثلث|Il triangolo ha tre lati.
-quadrato|square|carré|cuadrado|quadrado|pătrat|katror|квадрат|квадрат|مربع|正方形|বর্গ|مربع|Il quadrato ha quattro lati uguali.
-lato|side|côté|lado|lado|latură|brinjë|сторона|сторона|ضلع|边|বাহু|ضلع|Misura il lato del quadrato.
-area|area|aire|área|área|arie|sipërfaqe|площа|площадь|مساحة|面积|ক্ষেত্রফল|رقبہ|Calcola l'area del rettangolo.
-perimetro|perimeter|périmètre|perímetro|perímetro|perimetru|perimetër|периметр|периметр|محيط|周长|পরিসীমা|احاطہ|Il perimetro è la somma dei lati.
-uguale|equal|égal|igual|igual|egal|i barabartë|дорівнює|равно|يساوي|等于|সমান|برابر|Due più due è uguale a quattro.
-calcolare|to calculate|calculer|calcular|calcular|a calcula|llogarit|обчислювати|вычислять|يحسب|计算|হিসাব করা|حساب کرنا|Calcola il prezzo totale.
+numero|number|nombre|número|número|număr|numër|число|число|عدد|数字|সংখ্যা|عدد|අංකය / සංඛ්‍යාව|Scrivi il numero in lettere.
+somma|sum / addition|somme|suma|soma|sumă|shumë|сума|сумма|مجموع|和|যোগফল|مجموعہ|එකතුව|La somma di 3 e 4 è 7.
+sottrazione|subtraction|soustraction|resta|subtração|scădere|zbritje|віднімання|вычитание|طرح|减法|বিয়োগ|تفریق|අඩු කිරීම|Fai la sottrazione: 10 meno 3.
+moltiplicazione|multiplication|multiplication|multiplicación|multiplicação|înmulțire|shumëzim|множення|умножение|ضرب|乘法|গুণ|ضرب|ගුණ කිරීම|La moltiplicazione 6 per 7 fa 42.
+divisione|division|division|división|divisão|împărțire|pjesëtim|ділення|деление|قسمة|除法|ভাগ|تقسیم|බෙදීම|12 diviso 3 fa 4.
+risultato|result|résultat|resultado|resultado|rezultat|rezultat|результат|результат|نتيجة|结果|ফলাফল|نتیجہ|ප්‍රතිඵලය|Controlla il risultato.
+frazione|fraction|fraction|fracción|fração|fracție|thyesë|дріб|дробь|كسر|分数|ভগ্নাংশ|کسر|භාගය|Un mezzo è una frazione.
+triangolo|triangle|triangle|triángulo|triângulo|triunghi|trekëndësh|трикутник|треугольник|مثلث|三角形|ত্রিভুজ|مثلث|ත්‍රිකෝණය|Il triangolo ha tre lati.
+quadrato|square|carré|cuadrado|quadrado|pătrat|katror|квадрат|квадрат|مربع|正方形|বর্গ|مربع|සමචතුරස්‍රය|Il quadrato ha quattro lati uguali.
+lato|side|côté|lado|lado|latură|brinjë|сторона|сторона|ضلع|边|বাহু|ضلع|පැත්ත|Misura il lato del quadrato.
+area|area|aire|área|área|arie|sipërfaqe|площа|площадь|مساحة|面积|ক্ষেত্রফল|رقبہ|වර්ගඵලය|Calcola l'area del rettangolo.
+perimetro|perimeter|périmètre|perímetro|perímetro|perimetru|perimetër|периметр|периметр|محيط|周长|পরিসীমা|احاطہ|පරිමිතිය|Il perimetro è la somma dei lati.
+uguale|equal|égal|igual|igual|egal|i barabartë|дорівнює|равно|يساوي|等于|সমান|برابر|සමාන|Due più due è uguale a quattro.
+calcolare|to calculate|calculer|calcular|calcular|a calcula|llogarit|обчислювати|вычислять|يحسب|计算|হিসাব করা|حساب کرنا|ගණනය කරනවා|Calcola il prezzo totale.
 ` },
     { id: 'a2-vestiti', level: 'A2', title: 'Vestiti e colori', icon: '👕', rows: `
-maglietta|T-shirt|tee-shirt|camiseta|camiseta / t-shirt|tricou|bluzë me mëngë të shkurtra|футболка|футболка|تي شيرت|T恤|টি-শার্ট|ٹی شرٹ|Oggi metto la maglietta bianca.
-pantaloni|trousers / pants|pantalon|pantalones|calças|pantaloni|pantallona|штани|брюки|بنطال|裤子|প্যান্ট|پتلون|Questi pantaloni sono troppo lunghi.
-gonna|skirt|jupe|falda|saia|fustă|fund|спідниця|юбка|تنورة|裙子|স্কার্ট|اسکرٹ|Mia sorella ha una gonna a fiori.
-giacca|jacket|veste|chaqueta|casaco / jaqueta|jachetă / sacou|xhaketë|куртка / піджак|куртка / пиджак|سترة|夹克|জ্যাকেট|جیکٹ|Prendi la giacca, fa freddo.
-cappotto|coat|manteau|abrigo|casaco comprido / sobretudo|palton|pallto|пальто|пальто|معطف|大衣|কোট|کوٹ|D'inverno porto il cappotto.
-felpa|sweatshirt / hoodie|sweat|sudadera|moletom / camisola|hanorac|duks|світшот / худі|толстовка|سترة رياضية (هودي)|卫衣|সোয়েটশার্ট|سویٹ شرٹ|In palestra metto la felpa.
-scarpe|shoes|chaussures|zapatos|sapatos|pantofi|këpucë|взуття|обувь|أحذية|鞋|জুতা|جوتے|Le scarpe nuove mi fanno male.
-cappello|hat|chapeau|sombrero|chapéu|pălărie|kapelë|капелюх|шляпа|قبعة|帽子|টুপি|ٹوپی|Al mare porto il cappello.
-sciarpa|scarf|écharpe|bufanda|cachecol|fular|shall|шарф|шарф|وشاح|围巾|মাফলার|مفلر|La sciarpa di lana è calda.
-indossare|to wear|porter (un vêtement)|llevar puesto|vestir / usar|a purta|vesh|носити (одяг)|носить (одежду)|يرتدي|穿|পরা|پہننا|Oggi indosso la maglia della squadra.
-colore|colour|couleur|color|cor|culoare|ngjyrë|колір|цвет|لون|颜色|রঙ|رنگ|Qual è il tuo colore preferito?
-stretto|tight / narrow|serré / étroit|estrecho / ajustado|apertado|strâmt|i ngushtë|тісний|тесный|ضيق|紧|আঁটসাঁট|تنگ|La maglia è troppo stretta.
-largo|loose / wide|large|ancho / holgado|largo / folgado|larg|i gjerë|широкий|широкий|واسع|宽松|ঢিলা|کھلا|Mi piacciono i pantaloni larghi.
+maglietta|T-shirt|tee-shirt|camiseta|camiseta / t-shirt|tricou|bluzë me mëngë të shkurtra|футболка|футболка|تي شيرت|T恤|টি-শার্ট|ٹی شرٹ|ටී ෂර්ට් එක|Oggi metto la maglietta bianca.
+pantaloni|trousers / pants|pantalon|pantalones|calças|pantaloni|pantallona|штани|брюки|بنطال|裤子|প্যান্ট|پتلون|කලිසම|Questi pantaloni sono troppo lunghi.
+gonna|skirt|jupe|falda|saia|fustă|fund|спідниця|юбка|تنورة|裙子|স্কার্ট|اسکرٹ|සාය|Mia sorella ha una gonna a fiori.
+giacca|jacket|veste|chaqueta|casaco / jaqueta|jachetă / sacou|xhaketë|куртка / піджак|куртка / пиджак|سترة|夹克|জ্যাকেট|جیکٹ|ජැකට් එක|Prendi la giacca, fa freddo.
+cappotto|coat|manteau|abrigo|casaco comprido / sobretudo|palton|pallto|пальто|пальто|معطف|大衣|কোট|کوٹ|කබාය|D'inverno porto il cappotto.
+felpa|sweatshirt / hoodie|sweat|sudadera|moletom / camisola|hanorac|duks|світшот / худі|толстовка|سترة رياضية (هودي)|卫衣|সোয়েটশার্ট|سویٹ شرٹ|හුඩි / ස්වෙට් ෂර්ට්|In palestra metto la felpa.
+scarpe|shoes|chaussures|zapatos|sapatos|pantofi|këpucë|взуття|обувь|أحذية|鞋|জুতা|جوتے|සපත්තු|Le scarpe nuove mi fanno male.
+cappello|hat|chapeau|sombrero|chapéu|pălărie|kapelë|капелюх|шляпа|قبعة|帽子|টুপি|ٹوپی|තොප්පිය|Al mare porto il cappello.
+sciarpa|scarf|écharpe|bufanda|cachecol|fular|shall|шарф|шарф|وشاح|围巾|মাফলার|مفلر|ගෙල සළුව (ස්කාෆ්)|La sciarpa di lana è calda.
+indossare|to wear|porter (un vêtement)|llevar puesto|vestir / usar|a purta|vesh|носити (одяг)|носить (одежду)|يرتدي|穿|পরা|پہننا|අඳිනවා|Oggi indosso la maglia della squadra.
+colore|colour|couleur|color|cor|culoare|ngjyrë|колір|цвет|لون|颜色|রঙ|رنگ|පාට / වර්ණය|Qual è il tuo colore preferito?
+stretto|tight / narrow|serré / étroit|estrecho / ajustado|apertado|strâmt|i ngushtë|тісний|тесный|ضيق|紧|আঁটসাঁট|تنگ|තදයි / පටුයි|La maglia è troppo stretta.
+largo|loose / wide|large|ancho / holgado|largo / folgado|larg|i gjerë|широкий|широкий|واسع|宽松|ঢিলা|کھلا|බුරුල් / පළල්|Mi piacciono i pantaloni larghi.
 ` },
     { id: 'a2-cucina', level: 'A2', title: 'In cucina e a tavola', icon: '🍳', rows: `
-ricetta|recipe|recette|receta|receita|rețetă|recetë|рецепт|рецепт|وصفة|食谱|রেসিপি|ترکیب (ریسیپی)|Mi dai la ricetta del cuscus?
-cucinare|to cook|cuisiner|cocinar|cozinhar|a găti|gatuaj|готувати|готовить|يطبخ|做饭|রান্না করা|کھانا پکانا|Il sabato cucino con mio padre.
-tagliare|to cut|couper|cortar|cortar|a tăia|pres|різати|резать|يقطع|切|কাটা|کاٹنا|Taglia il pane, per favore.
-cuocere|to cook (with heat)|cuire|cocer|cozer|a fierbe / a coace|ziej / pjek|варити / пекти|варить / печь|يطهو|煮 / 烤|সেদ্ধ করা|پکانا|La pasta cuoce in dieci minuti.
-forno|oven|four|horno|forno|cuptor|furrë|духовка|духовка|فرن|烤箱|ওভেন|اوون|La torta è nel forno.
-pentola|pot|casserole|olla|panela|oală|tenxhere|каструля|кастрюля|قِدر|锅|হাঁড়ি|دیگچی|Metti l'acqua nella pentola.
-piatto|plate / dish|assiette / plat|plato|prato|farfurie / fel de mâncare|pjatë|тарілка / страва|тарелка / блюдо|طبق|盘子 / 菜|থালা / পদ|پلیٹ / ڈش|Il cuscus è il mio piatto preferito.
-bicchiere|glass|verre|vaso|copo|pahar|gotë|склянка|стакан|كوب|杯子|গ্লাস|گلاس|Vorrei un bicchiere d'acqua.
-forchetta|fork|fourchette|tenedor|garfo|furculiță|pirun|виделка|вилка|شوكة|叉子|কাঁটা চামচ|کانٹا|Mangio gli spaghetti con la forchetta.
-cucchiaio|spoon|cuillère|cuchara|colher|lingură|lugë|ложка|ложка|ملعقة|勺子|চামচ|چمچ|Aggiungi un cucchiaio di zucchero.
-coltello|knife|couteau|cuchillo|faca|cuțit|thikë|ніж|нож|سكين|刀|ছুরি|چھری|Attento, il coltello taglia!
-sale|salt|sel|sal|sal|sare|kripë|сіль|соль|ملح|盐|লবণ|نمک|Manca un po' di sale.
-olio|oil|huile|aceite|azeite / óleo|ulei|vaj|олія|растительное масло|زيت|油|তেল|تیل|Metti un filo d'olio sull'insalata.
-zucchero|sugar|sucre|azúcar|açúcar|zahăr|sheqer|цукор|сахар|سكر|糖|চিনি|چینی|Bevo il tè senza zucchero.
+ricetta|recipe|recette|receta|receita|rețetă|recetë|рецепт|рецепт|وصفة|食谱|রেসিপি|ترکیب (ریسیپی)|වට්ටෝරුව|Mi dai la ricetta del cuscus?
+cucinare|to cook|cuisiner|cocinar|cozinhar|a găti|gatuaj|готувати|готовить|يطبخ|做饭|রান্না করা|کھانا پکانا|උයනවා|Il sabato cucino con mio padre.
+tagliare|to cut|couper|cortar|cortar|a tăia|pres|різати|резать|يقطع|切|কাটা|کاٹنا|කපනවා|Taglia il pane, per favore.
+cuocere|to cook (with heat)|cuire|cocer|cozer|a fierbe / a coace|ziej / pjek|варити / пекти|варить / печь|يطهو|煮 / 烤|সেদ্ধ করা|پکانا|පිසිනවා|La pasta cuoce in dieci minuti.
+forno|oven|four|horno|forno|cuptor|furrë|духовка|духовка|فرن|烤箱|ওভেন|اوون|උඳුන|La torta è nel forno.
+pentola|pot|casserole|olla|panela|oală|tenxhere|каструля|кастрюля|قِدر|锅|হাঁড়ি|دیگچی|හට්ටිය|Metti l'acqua nella pentola.
+piatto|plate / dish|assiette / plat|plato|prato|farfurie / fel de mâncare|pjatë|тарілка / страва|тарелка / блюдо|طبق|盘子 / 菜|থালা / পদ|پلیٹ / ڈش|පිඟාන / කෑම වර්ගය|Il cuscus è il mio piatto preferito.
+bicchiere|glass|verre|vaso|copo|pahar|gotë|склянка|стакан|كوب|杯子|গ্লাস|گلاس|වීදුරුව|Vorrei un bicchiere d'acqua.
+forchetta|fork|fourchette|tenedor|garfo|furculiță|pirun|виделка|вилка|شوكة|叉子|কাঁটা চামচ|کانٹا|ගෑරුප්පුව|Mangio gli spaghetti con la forchetta.
+cucchiaio|spoon|cuillère|cuchara|colher|lingură|lugë|ложка|ложка|ملعقة|勺子|চামচ|چمچ|හැන්ද|Aggiungi un cucchiaio di zucchero.
+coltello|knife|couteau|cuchillo|faca|cuțit|thikë|ніж|нож|سكين|刀|ছুরি|چھری|පිහිය|Attento, il coltello taglia!
+sale|salt|sel|sal|sal|sare|kripë|сіль|соль|ملح|盐|লবণ|نمک|ලුණු|Manca un po' di sale.
+olio|oil|huile|aceite|azeite / óleo|ulei|vaj|олія|растительное масло|زيت|油|তেল|تیل|තෙල්|Metti un filo d'olio sull'insalata.
+zucchero|sugar|sucre|azúcar|açúcar|zahăr|sheqer|цукор|сахар|سكر|糖|চিনি|چینی|සීනි|Bevo il tè senza zucchero.
 ` },
     { id: 'a2-servizi', level: 'A2', title: 'Uffici e servizi', icon: '🏤', rows: `
-ufficio postale|post office|bureau de poste|oficina de correos|correios|oficiu poștal|zyrë postare|поштове відділення|почтовое отделение|مكتب البريد|邮局|ডাকঘর|ڈاک خانہ|L'ufficio postale apre alle otto e mezza.
-banca|bank|banque|banco|banco|bancă|bankë|банк|банк|بنك|银行|ব্যাংক|بینک|Mio padre va in banca.
-comune|town hall|mairie|ayuntamiento|câmara municipal / prefeitura|primărie|bashki|міська рада|мэрия|البلدية|市政厅|পৌরসভা|بلدیہ|Per la residenza bisogna andare in Comune.
-documento|document / ID|pièce d'identité / document|documento|documento|act de identitate / document|dokument|документ|документ|وثيقة / بطاقة هوية|证件|নথি / পরিচয়পত্র|دستاویز / شناختی کارڈ|Ha un documento, per favore?
-modulo|form|formulaire|formulario|formulário|formular|formular|бланк|бланк|استمارة|表格|ফর্ম|فارم|Compili questo modulo, per favore.
-compilare|to fill in|remplir|rellenar|preencher|a completa|plotësoj|заповнювати|заполнять|يملأ (استمارة)|填写|পূরণ করা|پُر کرنا|Ho compilato il modulo in stampatello.
-firmare|to sign|signer|firmar|assinar|a semna|nënshkruaj|підписувати|подписывать|يوقّع|签字|সই করা|دستخط کرنا|Firmi qui, per favore.
-sportello|counter / window|guichet|ventanilla|guichê / balcão|ghișeu|sportel|віконце / каса|окошко / касса|شبّاك الخدمة|窗口|কাউন্টার|کاؤنٹر|Vada allo sportello numero tre.
-fila|queue / line|file d'attente|cola / fila|fila|coadă|radhë|черга|очередь|طابور|队伍|লাইন|قطار|C'è una lunga fila in posta.
-appuntamento|appointment|rendez-vous|cita|marcação / consulta|programare|takim|запис / зустріч|запись / встреча|موعد|预约|অ্যাপয়েন্টমেন্ট|ملاقات کا وقت|Ho un appuntamento alle dieci.
-orario di apertura|opening hours|horaires d'ouverture|horario de apertura|horário de funcionamento|program de lucru|orari i hapjes|години роботи|часы работы|ساعات العمل|营业时间|খোলার সময়|اوقاتِ کار|L'orario di apertura è scritto sulla porta.
-permesso di soggiorno|residence permit|titre de séjour|permiso de residencia|autorização de residência|permis de ședere|leje qëndrimi|посвідка на проживання|вид на жительство|تصريح الإقامة|居留证|বসবাসের অনুমতিপত্র|رہائشی اجازت نامہ|Il permesso di soggiorno scade a marzo.
-codice fiscale|tax code (Italian ID number)|code fiscal|código fiscal|número de contribuinte|cod fiscal|kodi fiskal|податковий код|налоговый код|الرمز الضريبي|税号|কর কোড|ٹیکس کوڈ|Per iscriversi a scuola serve il codice fiscale.
+ufficio postale|post office|bureau de poste|oficina de correos|correios|oficiu poștal|zyrë postare|поштове відділення|почтовое отделение|مكتب البريد|邮局|ডাকঘর|ڈاک خانہ|තැපැල් කාර්යාලය|L'ufficio postale apre alle otto e mezza.
+banca|bank|banque|banco|banco|bancă|bankë|банк|банк|بنك|银行|ব্যাংক|بینک|බැංකුව|Mio padre va in banca.
+comune|town hall|mairie|ayuntamiento|câmara municipal / prefeitura|primărie|bashki|міська рада|мэрия|البلدية|市政厅|পৌরসভা|بلدیہ|නගර සභාව|Per la residenza bisogna andare in Comune.
+documento|document / ID|pièce d'identité / document|documento|documento|act de identitate / document|dokument|документ|документ|وثيقة / بطاقة هوية|证件|নথি / পরিচয়পত্র|دستاویز / شناختی کارڈ|ලේඛනය / හැඳුනුම්පත|Ha un documento, per favore?
+modulo|form|formulaire|formulario|formulário|formular|formular|бланк|бланк|استمارة|表格|ফর্ম|فارم|පෝරමය|Compili questo modulo, per favore.
+compilare|to fill in|remplir|rellenar|preencher|a completa|plotësoj|заповнювати|заполнять|يملأ (استمارة)|填写|পূরণ করা|پُر کرنا|පුරවනවා|Ho compilato il modulo in stampatello.
+firmare|to sign|signer|firmar|assinar|a semna|nënshkruaj|підписувати|подписывать|يوقّع|签字|সই করা|دستخط کرنا|අත්සන් කරනවා|Firmi qui, per favore.
+sportello|counter / window|guichet|ventanilla|guichê / balcão|ghișeu|sportel|віконце / каса|окошко / касса|شبّاك الخدمة|窗口|কাউন্টার|کاؤنٹر|කවුන්ටරය|Vada allo sportello numero tre.
+fila|queue / line|file d'attente|cola / fila|fila|coadă|radhë|черга|очередь|طابور|队伍|লাইন|قطار|පෝලිම|C'è una lunga fila in posta.
+appuntamento|appointment|rendez-vous|cita|marcação / consulta|programare|takim|запис / зустріч|запись / встреча|موعد|预约|অ্যাপয়েন্টমেন্ট|ملاقات کا وقت|නියමිත හමුව (වෙන් කළ වේලාව)|Ho un appuntamento alle dieci.
+orario di apertura|opening hours|horaires d'ouverture|horario de apertura|horário de funcionamento|program de lucru|orari i hapjes|години роботи|часы работы|ساعات العمل|营业时间|খোলার সময়|اوقاتِ کار|විවෘත වේලාවන්|L'orario di apertura è scritto sulla porta.
+permesso di soggiorno|residence permit|titre de séjour|permiso de residencia|autorização de residência|permis de ședere|leje qëndrimi|посвідка на проживання|вид на жительство|تصريح الإقامة|居留证|বসবাসের অনুমতিপত্র|رہائشی اجازت نامہ|පදිංචි බලපත්‍රය|Il permesso di soggiorno scade a marzo.
+codice fiscale|tax code (Italian ID number)|code fiscal|código fiscal|número de contribuinte|cod fiscal|kodi fiskal|податковий код|налоговый код|الرمز الضريبي|税号|কর কোড|ٹیکس کوڈ|බදු අංකය (ඉතාලි හැඳුනුම් අංකය)|Per iscriversi a scuola serve il codice fiscale.
 ` },
     { id: 'b1-salute', level: 'B1', title: 'Salute e benessere', icon: '🌿', rows: `
-benessere|well-being|bien-être|bienestar|bem-estar|stare de bine|mirëqenie|добре самопочуття|хорошее самочувствие|العافية|健康|সুস্থতা|تندرستی|Lo sport è importante per il benessere.
-sano|healthy|sain|sano|saudável|sănătos|i shëndetshëm|здоровий|здоровый|صحي|健康的|স্বাস্থ্যকর|صحت مند|Cerco di mangiare in modo sano.
-alimentazione|diet / nutrition|alimentation|alimentación|alimentação|alimentație|ushqyerje|харчування|питание|التغذية|饮食|খাদ্যাভ্যাস|خوراک|Una buona alimentazione aiuta a studiare.
-sintomo|symptom|symptôme|síntoma|sintoma|simptom|simptomë|симптом|симптом|عَرَض|症状|উপসর্গ|علامت|Quali sintomi ha?
-allergia|allergy|allergie|alergia|alergia|alergie|alergji|алергія|аллергия|حساسية|过敏|অ্যালার্জি|الرجی|Ho un'allergia alle arachidi.
-ferita|wound|blessure|herida|ferida|rană|plagë|рана|рана|جرح|伤口|ক্ষত|زخم|La ferita è piccola, non preoccuparti.
-pronto soccorso|emergency room / A&E|urgences|urgencias|pronto-socorro / urgências|urgențe|urgjencë|відділення невідкладної допомоги|приёмный покой скорой помощи|قسم الطوارئ|急诊室|জরুরি বিভাগ|ایمرجنسی|Dopo la caduta lo hanno portato al pronto soccorso.
-guarire|to get better / heal|guérir|curarse|curar-se / sarar|a se vindeca|shërohem|одужувати|выздоравливать|يُشفى|痊愈|সেরে ওঠা|صحت یاب ہونا|Spero che tu guarisca presto.
-sonno|sleep / sleepiness|sommeil|sueño|sono|somn|gjumë|сон|сон|نوم|睡眠 / 困|ঘুম|نیند|Ho sonno, vado a letto.
-riposarsi|to rest|se reposer|descansar|descansar|a se odihni|pushoj|відпочивати|отдыхать|يرتاح|休息|বিশ্রাম নেওয়া|آرام کرنا|Dopo la partita mi riposo un po'.
-stress|stress|stress|estrés|estresse / stress|stres|stres|стрес|стресс|ضغط نفسي|压力|মানসিক চাপ|ذہنی دباؤ|Prima degli esami c'è molto stress.
-visita|medical check-up|consultation|consulta|consulta|consultație|vizitë mjekësore|огляд у лікаря|осмотр у врача|فحص طبي|就诊|ডাক্তারি পরীক্ষা|طبی معائنہ|Domani ho la visita dal medico.
-prenotare|to book|réserver / prendre rendez-vous|reservar / pedir cita|reservar / marcar|a rezerva / a face o programare|rezervoj|записуватися / бронювати|записываться / бронировать|يحجز|预约|বুক করা|بک کرنا|Ho prenotato una visita per giovedì.
+benessere|well-being|bien-être|bienestar|bem-estar|stare de bine|mirëqenie|добре самопочуття|хорошее самочувствие|العافية|健康|সুস্থতা|تندرستی|යහපැවැත්ම|Lo sport è importante per il benessere.
+sano|healthy|sain|sano|saudável|sănătos|i shëndetshëm|здоровий|здоровый|صحي|健康的|স্বাস্থ্যকর|صحت مند|නිරෝගී|Cerco di mangiare in modo sano.
+alimentazione|diet / nutrition|alimentation|alimentación|alimentação|alimentație|ushqyerje|харчування|питание|التغذية|饮食|খাদ্যাভ্যাস|خوراک|ආහාර රටාව / පෝෂණය|Una buona alimentazione aiuta a studiare.
+sintomo|symptom|symptôme|síntoma|sintoma|simptom|simptomë|симптом|симптом|عَرَض|症状|উপসর্গ|علامت|රෝග ලක්ෂණය|Quali sintomi ha?
+allergia|allergy|allergie|alergia|alergia|alergie|alergji|алергія|аллергия|حساسية|过敏|অ্যালার্জি|الرجی|අසාත්මිකතාව|Ho un'allergia alle arachidi.
+ferita|wound|blessure|herida|ferida|rană|plagë|рана|рана|جرح|伤口|ক্ষত|زخم|තුවාලය|La ferita è piccola, non preoccuparti.
+pronto soccorso|emergency room / A&E|urgences|urgencias|pronto-socorro / urgências|urgențe|urgjencë|відділення невідкладної допомоги|приёмный покой скорой помощи|قسم الطوارئ|急诊室|জরুরি বিভাগ|ایمرجنسی|හදිසි ප්‍රතිකාර ඒකකය|Dopo la caduta lo hanno portato al pronto soccorso.
+guarire|to get better / heal|guérir|curarse|curar-se / sarar|a se vindeca|shërohem|одужувати|выздоравливать|يُشفى|痊愈|সেরে ওঠা|صحت یاب ہونا|සුව වෙනවා|Spero che tu guarisca presto.
+sonno|sleep / sleepiness|sommeil|sueño|sono|somn|gjumë|сон|сон|نوم|睡眠 / 困|ঘুম|نیند|නින්ද / නිදිමත|Ho sonno, vado a letto.
+riposarsi|to rest|se reposer|descansar|descansar|a se odihni|pushoj|відпочивати|отдыхать|يرتاح|休息|বিশ্রাম নেওয়া|آرام کرنا|විවේක ගන්නවා|Dopo la partita mi riposo un po'.
+stress|stress|stress|estrés|estresse / stress|stres|stres|стрес|стресс|ضغط نفسي|压力|মানসিক চাপ|ذہنی دباؤ|ආතතිය|Prima degli esami c'è molto stress.
+visita|medical check-up|consultation|consulta|consulta|consultație|vizitë mjekësore|огляд у лікаря|осмотр у врача|فحص طبي|就诊|ডাক্তারি পরীক্ষা|طبی معائنہ|වෛද්‍ය පරීක්ෂාව|Domani ho la visita dal medico.
+prenotare|to book|réserver / prendre rendez-vous|reservar / pedir cita|reservar / marcar|a rezerva / a face o programare|rezervoj|записуватися / бронювати|записываться / бронировать|يحجز|预约|বুক করা|بک کرنا|වෙන් කරවා ගන්නවා|Ho prenotato una visita per giovedì.
 ` },
     { id: 'b1-libri-film', level: 'B1', title: 'Libri, film e serie', icon: '🎬', rows: `
-trama|plot|intrigue|trama / argumento|enredo|acțiune / intrigă|subjekt|сюжет|сюжет|حبكة|情节|কাহিনি|کہانی کا پلاٹ|Racconta la trama senza dire il finale.
-personaggio|character|personnage|personaje|personagem|personaj|personazh|персонаж|персонаж|شخصية|人物|চরিত্র|کردار|Il mio personaggio preferito è la nonna.
-protagonista|main character|protagoniste / héros|protagonista|protagonista|protagonist|protagonist|головний герой|главный герой|البطل|主人公|প্রধান চরিত্র|مرکزی کردار|La protagonista ha quindici anni.
-romanzo|novel|roman|novela|romance|roman|roman|роман|роман|رواية|长篇小说|উপন্যাস|ناول|Sto leggendo un romanzo giallo.
-autore|author|auteur|autor|autor|autor|autor|автор|автор|مؤلف|作者|লেখক|مصنف|L'autore del libro è siciliano.
-regista|film director|réalisateur|director de cine|realizador / diretor|regizor|regjisor|режисер|режиссёр|مخرج|导演|পরিচালক|ہدایت کار|La regista ha vinto un premio.
-attore|actor|acteur|actor|ator|actor|aktor|актор|актёр|ممثل|演员|অভিনেতা|اداکار|Gli attori sono bravissimi.
-scena|scene|scène|escena|cena|scenă|skenë|сцена|сцена|مشهد|场景|দৃশ্য|منظر|La scena finale mi ha commosso.
-finale|ending|fin|final|final|final|fundi|кінцівка|концовка|النهاية|结局|সমাপ্তি|انجام|Non mi è piaciuto il finale.
-genere|genre|genre|género|gênero|gen|zhanër|жанр|жанр|نوع|类型|ধরন|صنف|Che genere di film ti piace?
-ambientato|set (in a place or time)|qui se déroule (à)|ambientado|ambientado|care se petrece (în)|që zhvillohet (në)|дія відбувається (в)|действие происходит (в)|تدور أحداثه في|以……为背景|পটভূমিতে|جس کی کہانی… میں ہے|Il film è ambientato a Roma.
-recensione|review|critique|reseña|resenha / crítica|recenzie|recension|рецензія|рецензия|مراجعة نقدية|评论|পর্যালোচনা|تبصرہ|Ho letto una recensione molto positiva.
-consigliare|to recommend|conseiller|recomendar|recomendar|a recomanda|rekomandoj|радити|советовать|ينصح|推荐|সুপারিশ করা|مشورہ دینا|Ti consiglio questa serie.
-riassunto|summary|résumé|resumen|resumo|rezumat|përmbledhje|короткий зміст|краткое изложение|ملخّص|摘要|সারাংশ|خلاصہ|Scrivi un riassunto di dieci righe.
+trama|plot|intrigue|trama / argumento|enredo|acțiune / intrigă|subjekt|сюжет|сюжет|حبكة|情节|কাহিনি|کہانی کا پلاٹ|කතා වස්තුව|Racconta la trama senza dire il finale.
+personaggio|character|personnage|personaje|personagem|personaj|personazh|персонаж|персонаж|شخصية|人物|চরিত্র|کردار|චරිතය|Il mio personaggio preferito è la nonna.
+protagonista|main character|protagoniste / héros|protagonista|protagonista|protagonist|protagonist|головний герой|главный герой|البطل|主人公|প্রধান চরিত্র|مرکزی کردار|ප්‍රධාන චරිතය|La protagonista ha quindici anni.
+romanzo|novel|roman|novela|romance|roman|roman|роман|роман|رواية|长篇小说|উপন্যাস|ناول|නවකතාව|Sto leggendo un romanzo giallo.
+autore|author|auteur|autor|autor|autor|autor|автор|автор|مؤلف|作者|লেখক|مصنف|කතුවරයා|L'autore del libro è siciliano.
+regista|film director|réalisateur|director de cine|realizador / diretor|regizor|regjisor|режисер|режиссёр|مخرج|导演|পরিচালক|ہدایت کار|චිත්‍රපට අධ්‍යක්ෂවරයා|La regista ha vinto un premio.
+attore|actor|acteur|actor|ator|actor|aktor|актор|актёр|ممثل|演员|অভিনেতা|اداکار|නළුවා|Gli attori sono bravissimi.
+scena|scene|scène|escena|cena|scenă|skenë|сцена|сцена|مشهد|场景|দৃশ্য|منظر|දර්ශනය|La scena finale mi ha commosso.
+finale|ending|fin|final|final|final|fundi|кінцівка|концовка|النهاية|结局|সমাপ্তি|انجام|අවසානය|Non mi è piaciuto il finale.
+genere|genre|genre|género|gênero|gen|zhanër|жанр|жанр|نوع|类型|ধরন|صنف|ප්‍රභේදය / වර්ගය|Che genere di film ti piace?
+ambientato|set (in a place or time)|qui se déroule (à)|ambientado|ambientado|care se petrece (în)|që zhvillohet (në)|дія відбувається (в)|действие происходит (в)|تدور أحداثه في|以……为背景|পটভূমিতে|جس کی کہانی… میں ہے|සිදුවන (ස්ථානයක හෝ කාලයක)|Il film è ambientato a Roma.
+recensione|review|critique|reseña|resenha / crítica|recenzie|recension|рецензія|рецензия|مراجعة نقدية|评论|পর্যালোচনা|تبصرہ|විචාරය|Ho letto una recensione molto positiva.
+consigliare|to recommend|conseiller|recomendar|recomendar|a recomanda|rekomandoj|радити|советовать|ينصح|推荐|সুপারিশ করা|مشورہ دینا|නිර්දේශ කරනවා|Ti consiglio questa serie.
+riassunto|summary|résumé|resumen|resumo|rezumat|përmbledhje|короткий зміст|краткое изложение|ملخّص|摘要|সারাংশ|خلاصہ|සාරාංශය|Scrivi un riassunto di dieci righe.
 ` },
     { id: 'b1-lavoro', level: 'B1', title: 'Il mondo del lavoro', icon: '💼', rows: `
-annuncio|advert / job ad|annonce|anuncio|anúncio|anunț|njoftim|оголошення|объявление|إعلان|广告 / 启事|বিজ্ঞাপন|اشتہار|Ho visto un annuncio in vetrina: cercano un commesso.
-curriculum|CV / résumé|CV|currículum|currículo|CV|CV|резюме|резюме|السيرة الذاتية|简历|জীবনবৃত্তান্ত|سی وی|Ho mandato il curriculum a tre negozi.
-candidarsi|to apply|postuler|presentar la candidatura|candidatar-se|a candida|aplikoj|подавати кандидатуру|подавать заявку|يتقدّم بطلب|应聘|আবেদন করা|درخواست دینا|Vorrei candidarmi per questo posto.
-esperienza|experience|expérience|experiencia|experiência|experiență|përvojë|досвід|опыт|خبرة|经验|অভিজ্ঞতা|تجربہ|Ho un po' di esperienza come cameriere.
-tirocinio|internship|stage|prácticas|estágio|stagiu de practică|praktikë|стажування|стажировка|تدريب عملي|实习|ইন্টার্নশিপ|انٹرن شپ|Faccio il tirocinio in un'officina.
-competenza|skill|compétence|competencia|competência|competență|aftësi|навичка|навык|مهارة|能力|দক্ষতা|مہارت|Le lingue sono una competenza importante.
-contratto|contract|contrat|contrato|contrato|contract|kontratë|договір|договор|عقد|合同|চুক্তি|معاہدہ|Ho firmato il contratto ieri.
-datore di lavoro|employer|employeur|empleador|empregador|angajator|punëdhënës|роботодавець|работодатель|صاحب العمل|雇主|নিয়োগকর্তা|آجر|Il mio datore di lavoro è molto disponibile.
-collega|colleague|collègue|compañero de trabajo|colega|coleg|koleg|колега|коллега|زميل|同事|সহকর্মী|ساتھی کارکن|I miei colleghi mi aiutano molto.
-assumere|to hire|embaucher|contratar|contratar|a angaja|punësoj|наймати|нанимать|يوظّف|雇用|নিয়োগ দেওয়া|ملازم رکھنا|Il ristorante assume due camerieri.
-turno|shift|service / poste|turno|turno|tură|turn|зміна|смена|نوبة عمل|班|শিফট|شفٹ|Questa settimana faccio il turno di sera.
-part time|part-time|à temps partiel|a tiempo parcial|a tempo parcial|cu jumătate de normă|me kohë të pjesshme|неповний робочий день|неполный рабочий день|دوام جزئي|兼职|খণ্ডকালীন|جز وقتی|Lavoro part time il sabato e la domenica.
-volontariato|volunteering|bénévolat|voluntariado|voluntariado|voluntariat|vullnetarizëm|волонтерство|волонтёрство|العمل التطوعي|志愿服务|স্বেচ্ছাসেবা|رضاکارانہ کام|Il volontariato è un'esperienza utile anche per il curriculum.
+annuncio|advert / job ad|annonce|anuncio|anúncio|anunț|njoftim|оголошення|объявление|إعلان|广告 / 启事|বিজ্ঞাপন|اشتہار|දැන්වීම / රැකියා දැන්වීම|Ho visto un annuncio in vetrina: cercano un commesso.
+curriculum|CV / résumé|CV|currículum|currículo|CV|CV|резюме|резюме|السيرة الذاتية|简历|জীবনবৃত্তান্ত|سی وی|ජීව දත්ත පත්‍රිකාව (CV)|Ho mandato il curriculum a tre negozi.
+candidarsi|to apply|postuler|presentar la candidatura|candidatar-se|a candida|aplikoj|подавати кандидатуру|подавать заявку|يتقدّم بطلب|应聘|আবেদন করা|درخواست دینا|අයදුම් කරනවා|Vorrei candidarmi per questo posto.
+esperienza|experience|expérience|experiencia|experiência|experiență|përvojë|досвід|опыт|خبرة|经验|অভিজ্ঞতা|تجربہ|අත්දැකීම / පළපුරුද්ද|Ho un po' di esperienza come cameriere.
+tirocinio|internship|stage|prácticas|estágio|stagiu de practică|praktikë|стажування|стажировка|تدريب عملي|实习|ইন্টার্নশিপ|انٹرن شپ|සීමාවාසික පුහුණුව|Faccio il tirocinio in un'officina.
+competenza|skill|compétence|competencia|competência|competență|aftësi|навичка|навык|مهارة|能力|দক্ষতা|مہارت|කුසලතාව|Le lingue sono una competenza importante.
+contratto|contract|contrat|contrato|contrato|contract|kontratë|договір|договор|عقد|合同|চুক্তি|معاہدہ|ගිවිසුම|Ho firmato il contratto ieri.
+datore di lavoro|employer|employeur|empleador|empregador|angajator|punëdhënës|роботодавець|работодатель|صاحب العمل|雇主|নিয়োগকর্তা|آجر|සේවා යෝජකයා|Il mio datore di lavoro è molto disponibile.
+collega|colleague|collègue|compañero de trabajo|colega|coleg|koleg|колега|коллега|زميل|同事|সহকর্মী|ساتھی کارکن|සහසේවකයා|I miei colleghi mi aiutano molto.
+assumere|to hire|embaucher|contratar|contratar|a angaja|punësoj|наймати|нанимать|يوظّف|雇用|নিয়োগ দেওয়া|ملازم رکھنا|සේවයට බඳවා ගන්නවා|Il ristorante assume due camerieri.
+turno|shift|service / poste|turno|turno|tură|turn|зміна|смена|نوبة عمل|班|শিফট|شفٹ|වැඩ මුරය|Questa settimana faccio il turno di sera.
+part time|part-time|à temps partiel|a tiempo parcial|a tempo parcial|cu jumătate de normă|me kohë të pjesshme|неповний робочий день|неполный рабочий день|دوام جزئي|兼职|খণ্ডকালীন|جز وقتی|අර්ධකාලීන|Lavoro part time il sabato e la domenica.
+volontariato|volunteering|bénévolat|voluntariado|voluntariado|voluntariat|vullnetarizëm|волонтерство|волонтёрство|العمل التطوعي|志愿服务|স্বেচ্ছাসেবা|رضاکارانہ کام|ස්වේච්ඡා සේවය|Il volontariato è un'esperienza utile anche per il curriculum.
 ` }
   );
 })();
@@ -3942,7 +3955,7 @@ cadere dalle nuvole|essere molto sorpreso, non sapere nulla|to be taken aback|Qu
 /*
  * Materie scolastiche (facoltative): lessico fondamentale di scienze, storia e geografia per ogni livello.
  * Conta il lessico della disciplina, non le nozioni: gli esempi sono frasi semplici del linguaggio di classe.
- * A1–B1: stesso formato di vocab-a1.js (glosse nelle 12 lingue d'origine).
+ * A1–B1: stesso formato di vocab-a1.js (glosse nelle 13 lingue d'origine).
  * B2–C1: stesso formato di vocab-b2c1.js (definizione in italiano | inglese | esempio).
  */
 (function () {
@@ -3956,48 +3969,48 @@ cadere dalle nuvole|essere molto sorpreso, non sapere nulla|to be taken aback|Qu
   C.vocabRaw.push(
     // ---------------- SCIENZE ----------------
     { id: 'mat-scienze-a1', level: 'A1', materia: 'scienze', title: 'Scienze: la natura', icon: '🌱', studio: true, rows: `
-animale|animal|animal|animal|animal|animal|kafshë|тварина|животное|حيوان|动物|প্রাণী|جانور|Il cane è un animale.
-pianta|plant|plante|planta|planta|plantă|bimë|рослина|растение|نبات|植物|উদ্ভিদ|پودا|La pianta è sulla finestra.
-albero|tree|arbre|árbol|árvore|copac|pemë|дерево|дерево|شجرة|树|গাছ|درخت|L'albero è alto.
-fiore|flower|fleur|flor|flor|floare|lule|квітка|цветок|زهرة|花|ফুল|پھول|Il fiore è rosso.
-seme|seed|graine|semilla|semente|sămânță|farë|насіння|семя|بذرة|种子|বীজ|بیج|Metto il seme nella terra.
-terra|soil / earth|terre|tierra|terra|pământ|dhé|земля / ґрунт|земля / почва|تربة|土|মাটি|مٹی|La pianta cresce nella terra.
-acqua|water|eau|agua|água|apă|ujë|вода|вода|ماء|水|পানি|پانی|Le piante bevono acqua.
-aria|air|air|aire|ar|aer|ajër|повітря|воздух|هواء|空气|বাতাস|ہوا|Respiriamo l'aria.
-luce|light|lumière|luz|luz|lumină|dritë|світло|свет|ضوء|光|আলো|روشنی|La pianta ha bisogno di luce.
-fuoco|fire|feu|fuego|fogo|foc|zjarr|вогонь|огонь|نار|火|আগুন|آگ|Il fuoco è caldo.
-peso|weight|poids|peso|peso|greutate|peshë|вага|вес|وزن|重量|ওজন|وزن|Qual è il peso del libro?
-misurare|to measure|mesurer|medir|medir|a măsura|mat|вимірювати|измерять|يقيس|测量|মাপা|ناپنا|Misuro il banco con il righello.
+animale|animal|animal|animal|animal|animal|kafshë|тварина|животное|حيوان|动物|প্রাণী|جانور|සත්වයා|Il cane è un animale.
+pianta|plant|plante|planta|planta|plantă|bimë|рослина|растение|نبات|植物|উদ্ভিদ|پودا|ශාකය / පැළය|La pianta è sulla finestra.
+albero|tree|arbre|árbol|árvore|copac|pemë|дерево|дерево|شجرة|树|গাছ|درخت|ගස|L'albero è alto.
+fiore|flower|fleur|flor|flor|floare|lule|квітка|цветок|زهرة|花|ফুল|پھول|මල|Il fiore è rosso.
+seme|seed|graine|semilla|semente|sămânță|farë|насіння|семя|بذرة|种子|বীজ|بیج|බීජය|Metto il seme nella terra.
+terra|soil / earth|terre|tierra|terra|pământ|dhé|земля / ґрунт|земля / почва|تربة|土|মাটি|مٹی|පස / පොළොව|La pianta cresce nella terra.
+acqua|water|eau|agua|água|apă|ujë|вода|вода|ماء|水|পানি|پانی|වතුර|Le piante bevono acqua.
+aria|air|air|aire|ar|aer|ajër|повітря|воздух|هواء|空气|বাতাস|ہوا|වාතය|Respiriamo l'aria.
+luce|light|lumière|luz|luz|lumină|dritë|світло|свет|ضوء|光|আলো|روشنی|ආලෝකය|La pianta ha bisogno di luce.
+fuoco|fire|feu|fuego|fogo|foc|zjarr|вогонь|огонь|نار|火|আগুন|آگ|ගින්න|Il fuoco è caldo.
+peso|weight|poids|peso|peso|greutate|peshë|вага|вес|وزن|重量|ওজন|وزن|බර|Qual è il peso del libro?
+misurare|to measure|mesurer|medir|medir|a măsura|mat|вимірювати|измерять|يقيس|测量|মাপা|ناپنا|මනිනවා|Misuro il banco con il righello.
 ` },
     { id: 'mat-scienze-a2', level: 'A2', materia: 'scienze', title: 'Scienze: corpo, animali e acqua', icon: '🦴', studio: true, rows: `
-corpo|body|corps|cuerpo|corpo|corp|trup|тіло|тело|جسم|身体|শরীর|جسم|Il corpo umano ha molte ossa.
-osso|bone|os|hueso|osso|os|kockë|кістка|кость|عظم|骨头|হাড়|ہڈی|Il femore è un osso lungo.
-muscolo|muscle|muscle|músculo|músculo|mușchi|muskul|м'яз|мышца|عضلة|肌肉|পেশি|پٹھا|I muscoli muovono le ossa.
-cervello|brain|cerveau|cerebro|cérebro|creier|tru|мозок|мозг|دماغ|大脑|মস্তিষ্ক|دماغ|Il cervello è nella testa.
-polmoni|lungs|poumons|pulmones|pulmões|plămâni|mushkëri|легені|лёгкие|رئتان|肺|ফুসফুস|پھیپھڑے|Respiriamo con i polmoni.
-stomaco|stomach|estomac|estómago|estômago|stomac|stomak|шлунок|желудок|معدة|胃|পাকস্থলী|معدہ|Il cibo arriva nello stomaco.
-mammifero|mammal|mammifère|mamífero|mamífero|mamifer|gjitar|ссавець|млекопитающее|ثديي|哺乳动物|স্তন্যপায়ী|ممالیہ|La balena è un mammifero.
-uccello|bird|oiseau|pájaro / ave|pássaro / ave|pasăre|zog|птах|птица|طائر|鸟|পাখি|پرندہ|L'uccello ha le ali.
-insetto|insect|insecte|insecto|inseto|insectă|insekt|комаха|насекомое|حشرة|昆虫|পোকা|کیڑا|La formica è un insetto.
-ghiaccio|ice|glace|hielo|gelo|gheață|akull|лід|лёд|جليد|冰|বরফ|برف|L'acqua diventa ghiaccio a zero gradi.
-vapore|steam / vapour|vapeur|vapor|vapor|abur|avull|пара|пар|بخار|水蒸气|বাষ্প|بھاپ|L'acqua calda diventa vapore.
-bollire|to boil|bouillir|hervir|ferver|a fierbe|ziej|кипіти|кипеть|يغلي|沸腾|ফোটা|ابلنا|L'acqua bolle a cento gradi.
+corpo|body|corps|cuerpo|corpo|corp|trup|тіло|тело|جسم|身体|শরীর|جسم|ශරීරය|Il corpo umano ha molte ossa.
+osso|bone|os|hueso|osso|os|kockë|кістка|кость|عظم|骨头|হাড়|ہڈی|ඇටය / අස්ථිය|Il femore è un osso lungo.
+muscolo|muscle|muscle|músculo|músculo|mușchi|muskul|м'яз|мышца|عضلة|肌肉|পেশি|پٹھا|පේශිය|I muscoli muovono le ossa.
+cervello|brain|cerveau|cerebro|cérebro|creier|tru|мозок|мозг|دماغ|大脑|মস্তিষ্ক|دماغ|මොළය|Il cervello è nella testa.
+polmoni|lungs|poumons|pulmones|pulmões|plămâni|mushkëri|легені|лёгкие|رئتان|肺|ফুসফুস|پھیپھڑے|පෙනහළු|Respiriamo con i polmoni.
+stomaco|stomach|estomac|estómago|estômago|stomac|stomak|шлунок|желудок|معدة|胃|পাকস্থলী|معدہ|ආමාශය|Il cibo arriva nello stomaco.
+mammifero|mammal|mammifère|mamífero|mamífero|mamifer|gjitar|ссавець|млекопитающее|ثديي|哺乳动物|স্তন্যপায়ী|ممالیہ|ක්ෂීරපායියා|La balena è un mammifero.
+uccello|bird|oiseau|pájaro / ave|pássaro / ave|pasăre|zog|птах|птица|طائر|鸟|পাখি|پرندہ|කුරුල්ලා|L'uccello ha le ali.
+insetto|insect|insecte|insecto|inseto|insectă|insekt|комаха|насекомое|حشرة|昆虫|পোকা|کیڑا|කෘමියා|La formica è un insetto.
+ghiaccio|ice|glace|hielo|gelo|gheață|akull|лід|лёд|جليد|冰|বরফ|برف|අයිස්|L'acqua diventa ghiaccio a zero gradi.
+vapore|steam / vapour|vapeur|vapor|vapor|abur|avull|пара|пар|بخار|水蒸气|বাষ্প|بھاپ|වාෂ්ප|L'acqua calda diventa vapore.
+bollire|to boil|bouillir|hervir|ferver|a fierbe|ziej|кипіти|кипеть|يغلي|沸腾|ফোটা|ابلنا|උතුරනවා|L'acqua bolle a cento gradi.
 ` },
     { id: 'studio-scienze', level: 'B1', materia: 'scienze', title: 'Scienze: viventi e materia', icon: '🔬', studio: true, rows: `
-cellula|cell|cellule|célula|célula|celulă|qelizë|клітина|клетка|خلية|细胞|কোষ|خلیہ|La cellula è l'unità della vita.
-radice|root|racine|raíz|raiz|rădăcină|rrënjë|корінь|корень|جذر|根|শিকড়|جڑ|Le radici assorbono l'acqua.
-foglia|leaf|feuille|hoja|folha|frunză|gjethe|листок|лист|ورقة|叶子|পাতা|پتا|Le foglie sono verdi.
-respirare|to breathe|respirer|respirar|respirar|a respira|marr frymë|дихати|дышать|يتنفس|呼吸|শ্বাস নেওয়া|سانس لینا|Respiriamo con i polmoni.
-cuore|heart|cœur|corazón|coração|inimă|zemër|серце|сердце|قلب|心脏|হৃৎপিণ্ড|دل|Il cuore pompa il sangue.
-sangue|blood|sang|sangre|sangue|sânge|gjak|кров|кровь|دم|血液|রক্ত|خون|Il sangue porta l'ossigeno.
-ossigeno|oxygen|oxygène|oxígeno|oxigênio|oxigen|oksigjen|кисень|кислород|أكسجين|氧气|অক্সিজেন|آکسیجن|Le piante producono ossigeno.
-temperatura|temperature|température|temperatura|temperatura|temperatură|temperaturë|температура|температура|درجة الحرارة|温度|তাপমাত্রা|درجہ حرارت|Misuriamo la temperatura dell'acqua.
-esperimento|experiment|expérience|experimento|experimento|experiment|eksperiment|експеримент|эксперимент|تجربة|实验|পরীক্ষা (বৈজ্ঞানিক)|تجربہ|Facciamo un esperimento in laboratorio.
-ipotesi|hypothesis|hypothèse|hipótesis|hipótese|ipoteză|hipotezë|гіпотеза|гипотеза|فرضية|假设|অনুমান|مفروضہ|Prima formuliamo un'ipotesi.
-osservare|to observe|observer|observar|observar|a observa|vëzhgoj|спостерігати|наблюдать|يلاحظ|观察|পর্যবেক্ষণ করা|مشاہدہ کرنا|Osserva al microscopio.
-solido|solid|solide|sólido|sólido|solid|i ngurtë|твердий|твёрдый|صلب|固体|কঠিন|ٹھوس|Il ghiaccio è un solido.
-liquido|liquid|liquide|líquido|líquido|lichid|i lëngshëm|рідкий|жидкий|سائل|液体|তরল|مائع|L'acqua è un liquido.
-gas|gas|gaz|gas|gás|gaz|gaz|газ|газ|غاز|气体|গ্যাস|گیس|Il vapore è un gas.
+cellula|cell|cellule|célula|célula|celulă|qelizë|клітина|клетка|خلية|细胞|কোষ|خلیہ|සෛලය|La cellula è l'unità della vita.
+radice|root|racine|raíz|raiz|rădăcină|rrënjë|корінь|корень|جذر|根|শিকড়|جڑ|මුල|Le radici assorbono l'acqua.
+foglia|leaf|feuille|hoja|folha|frunză|gjethe|листок|лист|ورقة|叶子|পাতা|پتا|කොළය|Le foglie sono verdi.
+respirare|to breathe|respirer|respirar|respirar|a respira|marr frymë|дихати|дышать|يتنفس|呼吸|শ্বাস নেওয়া|سانس لینا|හුස්ම ගන්නවා|Respiriamo con i polmoni.
+cuore|heart|cœur|corazón|coração|inimă|zemër|серце|сердце|قلب|心脏|হৃৎপিণ্ড|دل|හදවත|Il cuore pompa il sangue.
+sangue|blood|sang|sangre|sangue|sânge|gjak|кров|кровь|دم|血液|রক্ত|خون|ලේ / රුධිරය|Il sangue porta l'ossigeno.
+ossigeno|oxygen|oxygène|oxígeno|oxigênio|oxigen|oksigjen|кисень|кислород|أكسجين|氧气|অক্সিজেন|آکسیجن|ඔක්සිජන්|Le piante producono ossigeno.
+temperatura|temperature|température|temperatura|temperatura|temperatură|temperaturë|температура|температура|درجة الحرارة|温度|তাপমাত্রা|درجہ حرارت|උෂ්ණත්වය|Misuriamo la temperatura dell'acqua.
+esperimento|experiment|expérience|experimento|experimento|experiment|eksperiment|експеримент|эксперимент|تجربة|实验|পরীক্ষা (বৈজ্ঞানিক)|تجربہ|පරීක්ෂණය|Facciamo un esperimento in laboratorio.
+ipotesi|hypothesis|hypothèse|hipótesis|hipótese|ipoteză|hipotezë|гіпотеза|гипотеза|فرضية|假设|অনুমান|مفروضہ|කල්පිතය|Prima formuliamo un'ipotesi.
+osservare|to observe|observer|observar|observar|a observa|vëzhgoj|спостерігати|наблюдать|يلاحظ|观察|পর্যবেক্ষণ করা|مشاہدہ کرنا|නිරීක්ෂණය කරනවා|Osserva al microscopio.
+solido|solid|solide|sólido|sólido|solid|i ngurtë|твердий|твёрдый|صلب|固体|কঠিন|ٹھوس|ඝන|Il ghiaccio è un solido.
+liquido|liquid|liquide|líquido|líquido|lichid|i lëngshëm|рідкий|жидкий|سائل|液体|তরল|مائع|ද්‍රව|L'acqua è un liquido.
+gas|gas|gaz|gas|gás|gaz|gaz|газ|газ|غاز|气体|গ্যাস|گیس|වායුව|Il vapore è un gas.
 ` },
     { id: 'mat-scienze-b2', level: 'B2', materia: 'scienze', title: 'Scienze: concetti chiave', icon: '🧬', studio: true, mono: true, rows: `
 organismo|essere vivente, animale o vegetale, considerato nel suo insieme|organism|Ogni organismo è formato da cellule.
@@ -4030,46 +4043,46 @@ catalizzatore|sostanza che accelera una reazione senza consumarsi|catalyst|Gli e
 
     // ---------------- STORIA ----------------
     { id: 'mat-storia-a1', level: 'A1', materia: 'storia', title: 'Storia: le parole del tempo', icon: '⏳', studio: true, rows: `
-storia|history|histoire|historia|história|istorie|histori|історія|история|تاريخ|历史|ইতিহাস|تاریخ|Oggi studiamo storia.
-passato|past|passé|pasado|passado|trecut|e kaluar|минуле|прошлое|ماضي|过去|অতীত|ماضی|Nel passato non c'era la luce elettrica.
-presente|present|présent|presente|presente|prezent|e tashme|теперішнє|настоящее|حاضر|现在|বর্তমান|حال|Nel presente usiamo il telefono.
-futuro|future|futur|futuro|futuro|viitor|e ardhme|майбутнє|будущее|مستقبل|未来|ভবিষ্যৎ|مستقبل|Nel futuro ci saranno nuove scoperte.
-prima|before|avant|antes|antes|înainte|para|раніше / спочатку|раньше / сначала|قبل|以前 / 先|আগে|پہلے|Prima c'erano i cavalli, poi le auto.
-poi|then|puis|luego / después|depois|apoi|pastaj|потім|потом|ثم|然后|তারপর|پھر|Prima leggo, poi rispondo.
-dopo|after|après|después|depois|după|pas|після|после|بعد|以后|পরে|بعد میں|Dopo la guerra è arrivata la pace.
-antico|ancient|ancien / antique|antiguo|antigo|antic|i lashtë|давній|древний|قديم|古代的|প্রাচীন|قدیم|Roma è una città antica.
-moderno|modern|moderne|moderno|moderno|modern|modern|сучасний|современный|حديث|现代的|আধুনিক|جدید|Questo palazzo è moderno.
-data|date|date|fecha|data|dată|datë|дата|дата|تاريخ (يوم)|日期|তারিখ|تاریخ (دن)|Scrivi la data sul quaderno.
-inventare|to invent|inventer|inventar|inventar|a inventa|shpik|винаходити|изобретать|يخترع|发明|আবিষ্কার করা|ایجاد کرنا|Chi ha inventato la radio?
-linea del tempo|timeline|frise chronologique|línea del tiempo|linha do tempo|axa timpului|vija kohore|стрічка часу|лента времени|خط زمني|时间轴|সময়রেখা|ٹائم لائن|Metti le date sulla linea del tempo.
+storia|history|histoire|historia|história|istorie|histori|історія|история|تاريخ|历史|ইতিহাস|تاریخ|ඉතිහාසය|Oggi studiamo storia.
+passato|past|passé|pasado|passado|trecut|e kaluar|минуле|прошлое|ماضي|过去|অতীত|ماضی|අතීතය|Nel passato non c'era la luce elettrica.
+presente|present|présent|presente|presente|prezent|e tashme|теперішнє|настоящее|حاضر|现在|বর্তমান|حال|වර්තමානය|Nel presente usiamo il telefono.
+futuro|future|futur|futuro|futuro|viitor|e ardhme|майбутнє|будущее|مستقبل|未来|ভবিষ্যৎ|مستقبل|අනාගතය|Nel futuro ci saranno nuove scoperte.
+prima|before|avant|antes|antes|înainte|para|раніше / спочатку|раньше / сначала|قبل|以前 / 先|আগে|پہلے|කලින් / පෙර|Prima c'erano i cavalli, poi le auto.
+poi|then|puis|luego / después|depois|apoi|pastaj|потім|потом|ثم|然后|তারপর|پھر|ඊට පස්සේ|Prima leggo, poi rispondo.
+dopo|after|après|después|depois|după|pas|після|после|بعد|以后|পরে|بعد میں|පසුව|Dopo la guerra è arrivata la pace.
+antico|ancient|ancien / antique|antiguo|antigo|antic|i lashtë|давній|древний|قديم|古代的|প্রাচীন|قدیم|පුරාණ|Roma è una città antica.
+moderno|modern|moderne|moderno|moderno|modern|modern|сучасний|современный|حديث|现代的|আধুনিক|جدید|නූතන|Questo palazzo è moderno.
+data|date|date|fecha|data|dată|datë|дата|дата|تاريخ (يوم)|日期|তারিখ|تاریخ (دن)|දිනය|Scrivi la data sul quaderno.
+inventare|to invent|inventer|inventar|inventar|a inventa|shpik|винаходити|изобретать|يخترع|发明|আবিষ্কার করা|ایجاد کرنا|නිපදවනවා|Chi ha inventato la radio?
+linea del tempo|timeline|frise chronologique|línea del tiempo|linha do tempo|axa timpului|vija kohore|стрічка часу|лента времени|خط زمني|时间轴|সময়রেখা|ٹائم لائن|කාල රේඛාව|Metti le date sulla linea del tempo.
 ` },
     { id: 'mat-storia-a2', level: 'A2', materia: 'storia', title: 'Storia: le prime civiltà', icon: '🏛️', studio: true, rows: `
-preistoria|prehistory|préhistoire|prehistoria|pré-história|preistorie|parahistori|первісна історія|первобытная история|ما قبل التاريخ|史前|প্রাগৈতিহাসিক কাল|قبل از تاریخ|Nella preistoria non c'era la scrittura.
-epoca|era / period|époque|época|época|epocă|epokë|епоха|эпоха|عصر|时代|যুগ|دور|In quell'epoca la gente viveva nei villaggi.
-civiltà|civilization|civilisation|civilización|civilização|civilizație|qytetërim|цивілізація|цивилизация|حضارة|文明|সভ্যতা|تہذیب|Gli Egizi erano una grande civiltà.
-cacciare|to hunt|chasser|cazar|caçar|a vâna|gjuaj|полювати|охотиться|يصطاد|打猎|শিকার করা|شکار کرنا|Gli uomini primitivi cacciavano gli animali.
-coltivare|to grow / farm|cultiver|cultivar|cultivar|a cultiva|kultivoj|вирощувати|выращивать|يزرع|种植|চাষ করা|کاشت کرنا|Gli uomini cominciano a coltivare il grano.
-agricoltura|agriculture|agriculture|agricultura|agricultura|agricultură|bujqësi|сільське господарство|сельское хозяйство|زراعة|农业|কৃষি|زراعت|Con l'agricoltura nascono i villaggi.
-scrittura|writing|écriture|escritura|escrita|scriere|shkrim|писемність|письменность|كتابة|文字|লিপি|تحریر|La scrittura nasce in Mesopotamia.
-tempio|temple|temple|templo|templo|templu|tempull|храм|храм|معبد|神庙|মন্দির|مندر / عبادت گاہ|I Greci costruivano templi per gli dei.
-castello|castle|château|castillo|castelo|castel|kështjellë|замок|замок|قلعة|城堡|দুর্গ|قلعہ|Nel Medioevo i signori vivevano nei castelli.
-cavaliere|knight|chevalier|caballero|cavaleiro|cavaler|kalorës|лицар|рыцарь|فارس|骑士|নাইট (অশ্বারোহী যোদ্ধা)|سوار جنگجو|Il cavaliere combatte a cavallo.
-esploratore|explorer|explorateur|explorador|explorador|explorator|eksplorues|дослідник|исследователь|مستكشف|探险家|অভিযাত্রী|مہم جو|Marco Polo era un esploratore.
-inventore|inventor|inventeur|inventor|inventor|inventator|shpikës|винахідник|изобретатель|مخترع|发明家|উদ্ভাবক|موجد|Leonardo da Vinci era anche un inventore.
+preistoria|prehistory|préhistoire|prehistoria|pré-história|preistorie|parahistori|первісна історія|первобытная история|ما قبل التاريخ|史前|প্রাগৈতিহাসিক কাল|قبل از تاریخ|ප්‍රාග් ඉතිහාසය|Nella preistoria non c'era la scrittura.
+epoca|era / period|époque|época|época|epocă|epokë|епоха|эпоха|عصر|时代|যুগ|دور|යුගය|In quell'epoca la gente viveva nei villaggi.
+civiltà|civilization|civilisation|civilización|civilização|civilizație|qytetërim|цивілізація|цивилизация|حضارة|文明|সভ্যতা|تہذیب|ශිෂ්ටාචාරය|Gli Egizi erano una grande civiltà.
+cacciare|to hunt|chasser|cazar|caçar|a vâna|gjuaj|полювати|охотиться|يصطاد|打猎|শিকার করা|شکار کرنا|දඩයම් කරනවා|Gli uomini primitivi cacciavano gli animali.
+coltivare|to grow / farm|cultiver|cultivar|cultivar|a cultiva|kultivoj|вирощувати|выращивать|يزرع|种植|চাষ করা|کاشت کرنا|වගා කරනවා|Gli uomini cominciano a coltivare il grano.
+agricoltura|agriculture|agriculture|agricultura|agricultura|agricultură|bujqësi|сільське господарство|сельское хозяйство|زراعة|农业|কৃষি|زراعت|කෘෂිකර්මය|Con l'agricoltura nascono i villaggi.
+scrittura|writing|écriture|escritura|escrita|scriere|shkrim|писемність|письменность|كتابة|文字|লিপি|تحریر|ලේඛන ක්‍රමය / ලිවීම|La scrittura nasce in Mesopotamia.
+tempio|temple|temple|templo|templo|templu|tempull|храм|храм|معبد|神庙|মন্দির|مندر / عبادت گاہ|දේවාලය / පන්සල|I Greci costruivano templi per gli dei.
+castello|castle|château|castillo|castelo|castel|kështjellë|замок|замок|قلعة|城堡|দুর্গ|قلعہ|බලකොටුව / මාලිගාව|Nel Medioevo i signori vivevano nei castelli.
+cavaliere|knight|chevalier|caballero|cavaleiro|cavaler|kalorës|лицар|рыцарь|فارس|骑士|নাইট (অশ্বারোহী যোদ্ধা)|سوار جنگجو|අශ්වාරෝහක රණශූරයා|Il cavaliere combatte a cavallo.
+esploratore|explorer|explorateur|explorador|explorador|explorator|eksplorues|дослідник|исследователь|مستكشف|探险家|অভিযাত্রী|مہم جو|ගවේෂකයා|Marco Polo era un esploratore.
+inventore|inventor|inventeur|inventor|inventor|inventator|shpikës|винахідник|изобретатель|مخترع|发明家|উদ্ভাবক|موجد|නිපැයුම්කරු|Leonardo da Vinci era anche un inventore.
 ` },
     { id: 'mat-storia-b1', level: 'B1', materia: 'storia', title: 'Storia: Stati, guerre e diritti', icon: '📜', studio: true, rows: `
-secolo|century|siècle|siglo|século|secol|shekull|століття|век|قرن|世纪|শতাব্দী|صدی|Nel Novecento ci sono state due guerre mondiali.
-guerra|war|guerre|guerra|guerra|război|luftë|війна|война|حرب|战争|যুদ্ধ|جنگ|La guerra è finita nel 1945.
-pace|peace|paix|paz|paz|pace|paqe|мир|мир|سلام|和平|শান্তি|امن|Tutti vogliono la pace.
-impero|empire|empire|imperio|império|imperiu|perandori|імперія|империя|إمبراطورية|帝国|সাম্রাজ্য|سلطنت|L'Impero romano era molto grande.
-re|king|roi|rey|rei|rege|mbret|король|король|ملك|国王|রাজা|بادشاہ|Il re governava il paese.
-popolo|people (nation)|peuple|pueblo|povo|popor|popull|народ|народ|شعب|人民|জনগণ|عوام|Il popolo ha votato.
-repubblica|republic|république|república|república|republică|republikë|республіка|республика|جمهورية|共和国|প্রজাতন্ত্র|جمہوریہ|L'Italia è una repubblica dal 1946.
-costituzione|constitution|constitution|constitución|constituição|constituție|kushtetutë|конституція|конституция|دستور|宪法|সংবিধান|آئین|La Costituzione italiana è del 1948.
-battaglia|battle|bataille|batalla|batalha|bătălie|betejë|битва|битва|معركة|战役|যুদ্ধ (লড়াই)|معرکہ|La battaglia è durata tre giorni.
-esercito|army|armée|ejército|exército|armată|ushtri|армія|армия|جيش|军队|সেনাবাহিনী|فوج|L'esercito romano era molto forte.
-rivoluzione|revolution|révolution|revolución|revolução|revoluție|revolucion|революція|революция|ثورة|革命|বিপ্লব|انقلاب|La Rivoluzione francese inizia nel 1789.
-conquistare|to conquer|conquérir|conquistar|conquistar|a cuceri|pushtoj|завойовувати|завоёвывать|يغزو|征服|জয় করা|فتح کرنا|I Romani conquistarono molti territori.
+secolo|century|siècle|siglo|século|secol|shekull|століття|век|قرن|世纪|শতাব্দী|صدی|සියවස|Nel Novecento ci sono state due guerre mondiali.
+guerra|war|guerre|guerra|guerra|război|luftë|війна|война|حرب|战争|যুদ্ধ|جنگ|යුද්ධය|La guerra è finita nel 1945.
+pace|peace|paix|paz|paz|pace|paqe|мир|мир|سلام|和平|শান্তি|امن|සාමය|Tutti vogliono la pace.
+impero|empire|empire|imperio|império|imperiu|perandori|імперія|империя|إمبراطورية|帝国|সাম্রাজ্য|سلطنت|අධිරාජ්‍යය|L'Impero romano era molto grande.
+re|king|roi|rey|rei|rege|mbret|король|король|ملك|国王|রাজা|بادشاہ|රජු|Il re governava il paese.
+popolo|people (nation)|peuple|pueblo|povo|popor|popull|народ|народ|شعب|人民|জনগণ|عوام|ජනතාව|Il popolo ha votato.
+repubblica|republic|république|república|república|republică|republikë|республіка|республика|جمهورية|共和国|প্রজাতন্ত্র|جمہوریہ|ජනරජය|L'Italia è una repubblica dal 1946.
+costituzione|constitution|constitution|constitución|constituição|constituție|kushtetutë|конституція|конституция|دستور|宪法|সংবিধান|آئین|ආණ්ඩුක්‍රම ව්‍යවස්ථාව|La Costituzione italiana è del 1948.
+battaglia|battle|bataille|batalla|batalha|bătălie|betejë|битва|битва|معركة|战役|যুদ্ধ (লড়াই)|معرکہ|සටන|La battaglia è durata tre giorni.
+esercito|army|armée|ejército|exército|armată|ushtri|армія|армия|جيش|军队|সেনাবাহিনী|فوج|හමුදාව|L'esercito romano era molto forte.
+rivoluzione|revolution|révolution|revolución|revolução|revoluție|revolucion|революція|революция|ثورة|革命|বিপ্লব|انقلاب|විප්ලවය|La Rivoluzione francese inizia nel 1789.
+conquistare|to conquer|conquérir|conquistar|conquistar|a cuceri|pushtoj|завойовувати|завоёвывать|يغزو|征服|জয় করা|فتح کرنا|යටත් කරගන්නවා|I Romani conquistarono molti territori.
 ` },
     { id: 'mat-storia-b2', level: 'B2', materia: 'storia', title: 'Storia: capire i fatti', icon: '🗞️', studio: true, mono: true, rows: `
 fonte storica|documento o oggetto da cui si ricavano informazioni sul passato|historical source|Una lettera antica è una fonte storica.
@@ -4102,46 +4115,46 @@ crisi|periodo di grave difficoltà politica o economica|crisis|La crisi del 1929
 
     // ---------------- GEOGRAFIA ----------------
     { id: 'mat-geografia-a1', level: 'A1', materia: 'geografia', title: 'Geografia: il mondo intorno a noi', icon: '🧭', studio: true, rows: `
-mondo|world|monde|mundo|mundo|lume|botë|світ|мир|عالم|世界|পৃথিবী / বিশ্ব|دنیا|Il mondo è molto grande.
-continente|continent|continent|continente|continente|continent|kontinent|континент|континент|قارة|大洲|মহাদেশ|براعظم|L'Africa è un continente.
-nord|north|nord|norte|norte|nord|veri|північ|север|شمال|北|উত্তর|شمال|Milano è al nord.
-sud|south|sud|sur|sul|sud|jug|південь|юг|جنوب|南|দক্ষিণ|جنوب|Napoli è al sud.
-est|east|est|este|leste|est|lindje|схід|восток|شرق|东|পূর্ব|مشرق|Il sole sorge a est.
-ovest|west|ouest|oeste|oeste|vest|perëndim|захід|запад|غرب|西|পশ্চিম|مغرب|Il sole tramonta a ovest.
-lago|lake|lac|lago|lago|lac|liqen|озеро|озеро|بحيرة|湖|হ্রদ|جھیل|Il lago di Garda è grande.
-isola|island|île|isla|ilha|insulă|ishull|острів|остров|جزيرة|岛|দ্বীপ|جزیرہ|La Sicilia è un'isola.
-bosco|wood / forest|bois / forêt|bosque|bosque|pădure|pyll|ліс|лес|غابة|树林|বন|جنگل|Nel bosco ci sono molti alberi.
-deserto|desert|désert|desierto|deserto|deșert|shkretëtirë|пустеля|пустыня|صحراء|沙漠|মরুভূমি|صحرا|Nel deserto piove poco.
-oceano|ocean|océan|océano|oceano|ocean|oqean|океан|океан|محيط|海洋|মহাসাগর|سمندر (بحر)|L'oceano Atlantico è tra l'Europa e l'America.
-cielo|sky|ciel|cielo|céu|cer|qiell|небо|небо|سماء|天空|আকাশ|آسمان|Il cielo è azzurro.
+mondo|world|monde|mundo|mundo|lume|botë|світ|мир|عالم|世界|পৃথিবী / বিশ্ব|دنیا|ලෝකය|Il mondo è molto grande.
+continente|continent|continent|continente|continente|continent|kontinent|континент|континент|قارة|大洲|মহাদেশ|براعظم|මහාද්වීපය|L'Africa è un continente.
+nord|north|nord|norte|norte|nord|veri|північ|север|شمال|北|উত্তর|شمال|උතුර|Milano è al nord.
+sud|south|sud|sur|sul|sud|jug|південь|юг|جنوب|南|দক্ষিণ|جنوب|දකුණ|Napoli è al sud.
+est|east|est|este|leste|est|lindje|схід|восток|شرق|东|পূর্ব|مشرق|නැගෙනහිර|Il sole sorge a est.
+ovest|west|ouest|oeste|oeste|vest|perëndim|захід|запад|غرب|西|পশ্চিম|مغرب|බටහිර|Il sole tramonta a ovest.
+lago|lake|lac|lago|lago|lac|liqen|озеро|озеро|بحيرة|湖|হ্রদ|جھیل|විල / වැව|Il lago di Garda è grande.
+isola|island|île|isla|ilha|insulă|ishull|острів|остров|جزيرة|岛|দ্বীপ|جزیرہ|දූපත|La Sicilia è un'isola.
+bosco|wood / forest|bois / forêt|bosque|bosque|pădure|pyll|ліс|лес|غابة|树林|বন|جنگل|කැලය / වනාන්තරය|Nel bosco ci sono molti alberi.
+deserto|desert|désert|desierto|deserto|deșert|shkretëtirë|пустеля|пустыня|صحراء|沙漠|মরুভূমি|صحرا|කාන්තාරය|Nel deserto piove poco.
+oceano|ocean|océan|océano|oceano|ocean|oqean|океан|океан|محيط|海洋|মহাসাগর|سمندر (بحر)|සාගරය|L'oceano Atlantico è tra l'Europa e l'America.
+cielo|sky|ciel|cielo|céu|cer|qiell|небо|небо|سماء|天空|আকাশ|آسمان|අහස|Il cielo è azzurro.
 ` },
     { id: 'mat-geografia-a2', level: 'A2', materia: 'geografia', title: 'Geografia: leggere una carta', icon: '🗺️', studio: true, rows: `
-capitale|capital (city)|capitale|capital|capital|capitală|kryeqytet|столиця|столица|عاصمة|首都|রাজধানী|دارالحکومت|Roma è la capitale d'Italia.
-paesaggio|landscape|paysage|paisaje|paisagem|peisaj|peizazh|краєвид / ландшафт|пейзаж / ландшафт|منظر طبيعي|风景|প্রাকৃতিক দৃশ্য|منظر|Il paesaggio di montagna è bellissimo.
-valle|valley|vallée|valle|vale|vale|luginë|долина|долина|وادي|山谷|উপত্যকা|وادی|Il fiume scorre nella valle.
-spiaggia|beach|plage|playa|praia|plajă|plazh|пляж|пляж|شاطئ|海滩|সৈকত|ساحل (ریتلا)|D'estate andiamo in spiaggia.
-pianeta|planet|planète|planeta|planeta|planetă|planet|планета|планета|كوكب|行星|গ্রহ|سیارہ|La Terra è un pianeta.
-equatore|equator|équateur|ecuador|equador|ecuator|ekuator|екватор|экватор|خط الاستواء|赤道|নিরক্ষরেখা|خط استوا|All'equatore fa sempre caldo.
-polo|pole|pôle|polo|polo|pol|pol|полюс|полюс|قطب|极地|মেরু|قطب|Al Polo Nord c'è il ghiaccio.
-punti cardinali|cardinal points|points cardinaux|puntos cardinales|pontos cardeais|puncte cardinale|pikat kardinale|сторони світу|стороны света|الاتجاهات الأربعة|方位|প্রধান দিক|سمتیں|I punti cardinali sono nord, sud, est e ovest.
-bussola|compass|boussole|brújula|bússola|busolă|busull|компас|компас|بوصلة|指南针|কম্পাস|قطب نما|La bussola indica il nord.
-legenda|legend (of a map)|légende|leyenda|legenda|legendă|legjendë|легенда (умовні позначення)|легенда (условные обозначения)|مفتاح الخريطة|图例|মানচিত্রের সংকেত|نقشے کی علامات|Guarda la legenda per capire i simboli.
-scala|scale (of a map)|échelle|escala|escala|scară|shkallë|масштаб|масштаб|مقياس الرسم|比例尺|স্কেল (মানচিত্র)|پیمانہ|La scala della carta è 1 a 100.000.
-orientarsi|to find one's way|s'orienter|orientarse|orientar-se|a se orienta|orientohem|орієнтуватися|ориентироваться|يحدد الاتجاه|辨别方向|দিক নির্ণয় করা|سمت معلوم کرنا|Con la carta ci orientiamo meglio.
+capitale|capital (city)|capitale|capital|capital|capitală|kryeqytet|столиця|столица|عاصمة|首都|রাজধানী|دارالحکومت|අගනුවර|Roma è la capitale d'Italia.
+paesaggio|landscape|paysage|paisaje|paisagem|peisaj|peizazh|краєвид / ландшафт|пейзаж / ландшафт|منظر طبيعي|风景|প্রাকৃতিক দৃশ্য|منظر|භූ දර්ශනය|Il paesaggio di montagna è bellissimo.
+valle|valley|vallée|valle|vale|vale|luginë|долина|долина|وادي|山谷|উপত্যকা|وادی|නිම්නය|Il fiume scorre nella valle.
+spiaggia|beach|plage|playa|praia|plajă|plazh|пляж|пляж|شاطئ|海滩|সৈকত|ساحل (ریتلا)|වෙරළ|D'estate andiamo in spiaggia.
+pianeta|planet|planète|planeta|planeta|planetă|planet|планета|планета|كوكب|行星|গ্রহ|سیارہ|ග්‍රහලෝකය|La Terra è un pianeta.
+equatore|equator|équateur|ecuador|equador|ecuator|ekuator|екватор|экватор|خط الاستواء|赤道|নিরক্ষরেখা|خط استوا|සමකය|All'equatore fa sempre caldo.
+polo|pole|pôle|polo|polo|pol|pol|полюс|полюс|قطب|极地|মেরু|قطب|ධ්‍රැවය|Al Polo Nord c'è il ghiaccio.
+punti cardinali|cardinal points|points cardinaux|puntos cardinales|pontos cardeais|puncte cardinale|pikat kardinale|сторони світу|стороны света|الاتجاهات الأربعة|方位|প্রধান দিক|سمتیں|ප්‍රධාන දිශා|I punti cardinali sono nord, sud, est e ovest.
+bussola|compass|boussole|brújula|bússola|busolă|busull|компас|компас|بوصلة|指南针|কম্পাস|قطب نما|මාලිමාව|La bussola indica il nord.
+legenda|legend (of a map)|légende|leyenda|legenda|legendă|legjendë|легенда (умовні позначення)|легенда (условные обозначения)|مفتاح الخريطة|图例|মানচিত্রের সংকেত|نقشے کی علامات|සිතියමේ සංකේත විස්තරය|Guarda la legenda per capire i simboli.
+scala|scale (of a map)|échelle|escala|escala|scară|shkallë|масштаб|масштаб|مقياس الرسم|比例尺|স্কেল (মানচিত্র)|پیمانہ|සිතියමේ පරිමාණය|La scala della carta è 1 a 100.000.
+orientarsi|to find one's way|s'orienter|orientarse|orientar-se|a se orienta|orientohem|орієнтуватися|ориентироваться|يحدد الاتجاه|辨别方向|দিক নির্ণয় করা|سمت معلوم کرنا|දිශාව සොයාගන්නවා|Con la carta ci orientiamo meglio.
 ` },
     { id: 'mat-geografia-b1', level: 'B1', materia: 'geografia', title: 'Geografia: l\'Italia e il territorio', icon: '🇮🇹', studio: true, rows: `
-regione|region|région|región|região|regiune|rajon|регіон / область|регион|منطقة|大区 / 地区|অঞ্চল|علاقہ|L'Italia ha venti regioni.
-capoluogo|regional/provincial capital|chef-lieu|capital (de región)|capital (regional)|reședință|qendër rajoni|обласний центр|административный центр|مركز إداري|首府|প্রশাসনিক কেন্দ্র|صدر مقام|Firenze è il capoluogo della Toscana.
-confine|border|frontière|frontera|fronteira|graniță|kufi|кордон|граница|حدود|边界|সীমান্ত|سرحد|Il confine con la Francia è sulle Alpi.
-Stato|state / country|État|Estado|Estado|stat|shtet|держава|государство|دولة|国家|রাষ্ট্র|ریاست|San Marino è uno Stato piccolissimo.
-territorio|territory / land|territoire|territorio|território|teritoriu|territor|територія|территория|إقليم|领土|অঞ্চল (ভূখণ্ড)|علاقہ (خطہ)|Il territorio italiano è in gran parte montuoso.
-penisola|peninsula|péninsule|península|península|peninsulă|gadishull|півострів|полуостров|شبه جزيرة|半岛|উপদ্বীপ|جزیرہ نما|L'Italia è una penisola.
-costa|coast|côte|costa|costa|coastă|bregdet|узбережжя|побережье|ساحل|海岸|উপকূল|ساحل|La costa ligure è stretta.
-pianura|plain|plaine|llanura|planície|câmpie|fushë|рівнина|равнина|سهل|平原|সমভূমি|میدان|La Pianura Padana è molto fertile.
-collina|hill|colline|colina|colina|deal|kodër|пагорб|холм|تلة|丘陵|টিলা|پہاڑی|In Toscana ci sono molte colline.
-vulcano|volcano|volcan|volcán|vulcão|vulcan|vullkan|вулкан|вулкан|بركان|火山|আগ্নেয়গিরি|آتش فشاں|L'Etna è un vulcano attivo.
-cartina|map|carte|mapa|mapa|hartă|hartë|карта|карта|خريطة|地图|মানচিত্র|نقشہ|Cerca la città sulla cartina.
-abitanti|inhabitants|habitants|habitantes|habitantes|locuitori|banorë|мешканці|жители|سكان|居民|বাসিন্দা|باشندے|Roma ha quasi tre milioni di abitanti.
+regione|region|région|región|região|regiune|rajon|регіон / область|регион|منطقة|大区 / 地区|অঞ্চল|علاقہ|පළාත / කලාපය|L'Italia ha venti regioni.
+capoluogo|regional/provincial capital|chef-lieu|capital (de región)|capital (regional)|reședință|qendër rajoni|обласний центр|административный центр|مركز إداري|首府|প্রশাসনিক কেন্দ্র|صدر مقام|පළාත් අගනුවර|Firenze è il capoluogo della Toscana.
+confine|border|frontière|frontera|fronteira|graniță|kufi|кордон|граница|حدود|边界|সীমান্ত|سرحد|දේශ සීමාව|Il confine con la Francia è sulle Alpi.
+Stato|state / country|État|Estado|Estado|stat|shtet|держава|государство|دولة|国家|রাষ্ট্র|ریاست|රාජ්‍යය / රට|San Marino è uno Stato piccolissimo.
+territorio|territory / land|territoire|territorio|território|teritoriu|territor|територія|территория|إقليم|领土|অঞ্চল (ভূখণ্ড)|علاقہ (خطہ)|භූමිය / ප්‍රදේශය|Il territorio italiano è in gran parte montuoso.
+penisola|peninsula|péninsule|península|península|peninsulă|gadishull|півострів|полуостров|شبه جزيرة|半岛|উপদ্বীপ|جزیرہ نما|අර්ධද්වීපය|L'Italia è una penisola.
+costa|coast|côte|costa|costa|coastă|bregdet|узбережжя|побережье|ساحل|海岸|উপকূল|ساحل|වෙරළ තීරය|La costa ligure è stretta.
+pianura|plain|plaine|llanura|planície|câmpie|fushë|рівнина|равнина|سهل|平原|সমভূমি|میدان|තැනිතලාව|La Pianura Padana è molto fertile.
+collina|hill|colline|colina|colina|deal|kodër|пагорб|холм|تلة|丘陵|টিলা|پہاڑی|කඳු ගැටය|In Toscana ci sono molte colline.
+vulcano|volcano|volcan|volcán|vulcão|vulcan|vullkan|вулкан|вулкан|بركان|火山|আগ্নেয়গিরি|آتش فشاں|ගිනිකන්ද|L'Etna è un vulcano attivo.
+cartina|map|carte|mapa|mapa|hartă|hartë|карта|карта|خريطة|地图|মানচিত্র|نقشہ|සිතියම|Cerca la città sulla cartina.
+abitanti|inhabitants|habitants|habitantes|habitantes|locuitori|banorë|мешканці|жители|سكان|居民|বাসিন্দা|باشندے|වැසියන්|Roma ha quasi tre milioni di abitanti.
 ` },
     { id: 'mat-geografia-b2', level: 'B2', materia: 'geografia', title: 'Geografia: popolazione ed economia', icon: '🏙️', studio: true, mono: true, rows: `
 latitudine|distanza di un luogo dall'equatore, misurata in gradi|latitude|Roma si trova a circa 42 gradi di latitudine nord.
@@ -5325,7 +5338,7 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
     const words = theme.rows.trim().split('\n').map(line => line.split('|').map(s => s.trim())).filter(f => f[0]).map(f => {
       if (theme.mono) return { id: theme.id + ':' + f[0], it: f[0], def: f[1], gloss: { en: f[2] }, ex: f[3] || '' };
       const g = {}; window.IL2.l1.ORDER.forEach((c, i) => { if (f[i + 1]) g[c] = f[i + 1]; });
-      return { id: theme.id + ':' + f[0], it: f[0], gloss: g, ex: f[13] || '' };
+      return { id: theme.id + ':' + f[0], it: f[0], gloss: g, ex: f[window.IL2.l1.ORDER.length + 1] || '' };
     });
     return { id: theme.id, level: theme.level, title: theme.title, icon: theme.icon, mono: !!theme.mono, studio: !!theme.studio, materia: theme.materia || null, words };
   }).sort((a, b) => LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level));
