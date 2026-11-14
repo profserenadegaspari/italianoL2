@@ -718,6 +718,16 @@ ul.plain { list-style: none; padding: 0; margin: .6rem 0 0; } ul.plain li { marg
   .v-hero-ic { font-size: 2rem; }
   .v-gloss td:first-child { white-space: normal; }
 }
+.v-level-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; }
+.seg.v-seg button { font: inherit; border: 0; background: transparent; padding: 7px 14px; border-radius: 9px; color: var(--muted); font-weight: 600; font-size: .9rem; cursor: pointer; }
+.seg.v-seg button small { font-weight: 500; opacity: .8; }
+.seg.v-seg button.on { background: var(--surface); color: var(--primary-2, var(--primary)); box-shadow: var(--shadow); }
+.v-choose h2 { margin-top: 0; }
+.v-choose-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+.v-opt { font: inherit; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; border: 2px solid var(--line); background: var(--surface); color: var(--text); margin: 0; }
+.v-opt:hover { border-color: var(--lv, var(--primary)); box-shadow: var(--shadow); }
+.v-opt b { font-size: 1.15rem; } .v-opt small { color: var(--muted); }
+@media (max-width: 760px) { .nav a span { line-height: 1.1; } }
 
 </style>
 </head>
@@ -5212,6 +5222,9 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
  *   - un nuovo gruppo: C.verifiche.push({ id, title, icon, desc, characters?, quotes?, texts: [...] })
  *   - un nuovo testo in un gruppo: aggiungere un oggetto a texts (id unico, mai da cambiare: i progressi
  *     sono salvati con l'id).
+ * Lo studente sceglie la difficoltà (levels): di ogni episodio vede la versione di quel livello.
+ * Più versioni dello stesso episodio hanno lo stesso episode (o lo stesso id dopo il livello: ps-a2-bravi / ps-b1-bravi).
+ * draft: true = versione scritta da Claude, da rivedere dall'insegnante (lo vede solo lei, in Contenuti).
  * Ogni testo ha: level ('A2', 'B1'…; levelLabel facoltativo, es. 'A2+'), cap (da dove viene), title,
  * summary/before (facoltativi), text, glossary [parola mostrata, significato, parola da sottolineare nel testo ('' = non sottolineare)],
  * e tre parti: lessico, grammatica ({ theory, items }), comprensione. Gli esercizi usano i tipi già
@@ -5227,6 +5240,8 @@ Dal punto di vista geografico, l'Italia si divide in tre grandi parti. L'Italia 
 
   C.verifiche.push({
     id: 'promessi-sposi', title: 'Promessi sposi', icon: '📜',
+    // difficoltà fra cui sceglie lo studente; ogni episodio ha una versione per livello (stesso episode)
+    levels: [['A2', 'Base', 'Testi più semplici e brevi'], ['B1', 'Più difficile', 'Testi più lunghi, più vicini al romanzo']],
     desc: 'I primi capitoli del romanzo di Alessandro Manzoni: don Abbondio e i bravi, Perpetua, Renzo, fra Cristoforo.',
     what: ['il lessico dei testi', 'la grammatica che hai studiato', 'le domande di comprensione'],
     characters: [
@@ -5817,6 +5832,309 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
           { t: 'mc', q: 'Perché fra Cristoforo aiuta Renzo e Lucia?', o: ['Perché vuole ancora aiutare i deboli contro i prepotenti', 'Perché è loro parente', 'Perché don Rodrigo glielo chiede'], a: 0 }
         ],
         write: { title: 'Ti chiedo scusa', prompt: 'Scrivi una breve lettera (4-5 frasi) per chiedere scusa a una persona. Che cosa è successo?', min: 30, max: 80, use: ['mi dispiace', 'scusa', 'ti chiedo perdono'] }
+      },
+      // ============ VERSIONI B1 SCRITTE DA CLAUDE (draft: da rivedere dall'insegnante) ============
+      {
+        id: 'ps-b1-carattere', episode: 'carattere', draft: true, level: 'B1', cap: 'Capitolo 2', title: 'Il carattere di don Abbondio', icon: '🏺',
+        text: `Don Abbondio non era nato con un cuore di leone. Già da ragazzo si era accorto che, nella società in cui viveva, un uomo senza ricchezze, senza un nome nobile e senza armi era come un animale indifeso in mezzo a tante bestie feroci. Le leggi esistevano, ma non proteggevano i deboli: i potenti le ignoravano, e chi non aveva protettori finiva spesso per pagare colpe che non aveva.
+I suoi genitori, gente modesta, avevano capito presto che il figlio aveva bisogno di un riparo. Perciò lo avevano spinto a diventare prete. Non lo avevano fatto per una vera vocazione, ma per calcolo: l'abito religioso garantiva un certo rispetto e metteva al sicuro da molti pericoli. Don Abbondio aveva accettato questa scelta senza entusiasmo, quasi per obbedienza, e aveva preso i voti più per prudenza che per fede.
+Una volta diventato curato, aveva elaborato una regola di vita molto precisa: stare lontano da ogni contrasto. Se due persone litigavano, lui si schierava sempre con il più forte, oppure non si schierava affatto. Quando non poteva evitare di prendere posizione, cercava di non offendere nessuno, piuttosto che difendere chi aveva ragione. Con i prepotenti era gentile e sottomesso; con i deboli, invece, si sfogava talvolta con rimproveri e brontolii, perché almeno con loro non rischiava niente.
+Manzoni riassume questo carattere con un'immagine diventata celebre: don Abbondio era «come un vaso di terra cotta, costretto a viaggiare in compagnia di molti vasi di ferro». Il vaso di terracotta, fragile, non può permettersi nemmeno un piccolo urto: se si scontra con un vaso di ferro, va in pezzi. Perciò deve muoversi con attenzione, sempre in disparte.
+Con il passare degli anni, quella che all'inizio era stata solo una strategia era diventata la sua natura. Don Abbondio non si domandava più che cosa fosse giusto, ma soltanto che cosa fosse prudente. È per questo che, quando i bravi gli avevano ordinato di non celebrare il matrimonio di Renzo e Lucia, non aveva pensato neanche per un momento di ribellarsi.`,
+        glossary: [
+          ['indifeso', 'che non può difendersi'], ['riparo', 'luogo o mezzo che protegge da un pericolo'],
+          ['vocazione', 'forte desiderio interiore di seguire una strada di vita, spesso religiosa'], ['schierarsi', 'mettersi dalla parte di qualcuno', 'schierava'],
+          ['sottomesso', 'che obbedisce sempre, senza opporsi'], ['sfogarsi', 'liberarsi della rabbia scaricandola su qualcuno', 'sfogava'],
+          ['in disparte', 'lontano dagli altri, da una parte'], ['ribellarsi', 'opporsi a un ordine o a un potere']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['indifeso', 'che non può difendersi'], ['riparo', 'ciò che protegge da un pericolo'], ['schierarsi', 'mettersi dalla parte di qualcuno'], ['sottomesso', 'che obbedisce sempre, senza opporsi'], ['ribellarsi', 'opporsi a un ordine o a un potere']] },
+          { t: 'mc', q: '«Non era nato con un cuore di leone» vuol dire che…', o: ['non era coraggioso', 'era molto forte', 'amava gli animali'], a: 0 },
+          { t: 'mc', q: 'I genitori lo spinsero a diventare prete «per calcolo»: vuol dire…', o: ['per un vantaggio pratico, non per fede', 'perché era bravo in matematica', 'per caso, senza pensarci'], a: 0 },
+          { t: 'mc', q: '«Aveva preso i voti più per prudenza che per fede» vuol dire che…', o: ['era diventato prete soprattutto per sentirsi al sicuro', 'era diventato prete perché credeva molto in Dio', 'aveva votato alle elezioni'], a: 0 },
+          { t: 'mc', q: 'Con i deboli don Abbondio «si sfogava con rimproveri e brontolii». Brontolare vuol dire…', o: ['lamentarsi a bassa voce, di malumore', 'cantare allegramente', 'chiedere scusa'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «prudente» è…', o: ['imprudente, avventato', 'pauroso', 'gentile'], a: 0 },
+          { t: 'gap', q: 'prudente → nome: la ___', a: ['prudenza'] },
+          { t: 'gap', q: 'ribellarsi → nome: la ___', a: ['ribellione'] },
+          { t: 'gap', q: 'fragile → nome: la ___', a: ['fragilità'] },
+          { t: 'gap', q: 'potente → nome: il ___', hint: 'quello che hanno i potenti', a: ['potere'] },
+          { t: 'mc', q: 'Il vaso di terracotta «va in pezzi»: vuol dire che…', o: ['si rompe', 'diventa più forte', 'viene venduto'], a: 0 }
+        ],
+        grammatica: {
+          title: 'Il trapassato prossimo e i connettivi',
+          theory: `<p>Il <b>trapassato prossimo</b> racconta un fatto <b>avvenuto prima</b> di un altro fatto passato.</p>
+<p>Si forma con <b>avere o essere all'imperfetto + participio passato</b>: <i>aveva capito · era diventato · si era accorto</i>.</p>
+<p><i>Quando i bravi lo minacciarono, don Abbondio <b>aveva</b> già <b>deciso</b> da anni di evitare ogni scontro.</i> (prima la decisione, poi la minaccia)</p>
+<p>Con <b>essere</b> il participio si accorda: <i>la strategia <b>era diventata</b> la sua natura</i>.</p>
+<p><b>Connettivi</b> del testo: <b>perciò</b> (conseguenza) · <b>invece</b> (contrasto) · <b>piuttosto che</b> (preferenza) · <b>perché</b> (causa) · <b>oppure</b> (alternativa).</p>`,
+          items: [
+            { t: 'gap', q: 'Già da ragazzo don Abbondio (accorgersi) ___ che i deboli non erano protetti.', hint: 'trapassato prossimo', a: ['si era accorto'], topic: 'trapassato' },
+            { t: 'gap', q: 'I suoi genitori (capire) ___ presto che il figlio aveva bisogno di un riparo.', hint: 'trapassato prossimo', a: ['avevano capito'], topic: 'trapassato' },
+            { t: 'gap', q: 'Don Abbondio (accettare) ___ quella scelta senza entusiasmo.', hint: 'trapassato prossimo', a: ['aveva accettato'], topic: 'trapassato' },
+            { t: 'gap', q: 'Con gli anni, la strategia (diventare) ___ la sua natura.', hint: 'trapassato prossimo', a: ['era diventata'], topic: 'trapassato', exp: 'Diventare vuole essere; strategia è femminile: era diventata.' },
+            { t: 'gap', q: 'Quando Renzo arrivò, i bravi (passare) ___ già da don Abbondio il giorno prima.', hint: 'trapassato prossimo', a: ['erano passati'], topic: 'trapassato' },
+            { t: 'mc', q: 'Don Abbondio non dormì quella notte, perché il pomeriggio ___ i bravi.', o: ['aveva incontrato', 'incontrerà', 'incontra'], a: 0, topic: 'trapassato', exp: 'L\'incontro è avvenuto prima della notte: trapassato prossimo.' },
+            { t: 'mc', q: 'Era un uomo debole; ___ evitava ogni contrasto.', o: ['perciò', 'invece', 'oppure'], a: 0, topic: 'connettivi-base' },
+            { t: 'mc', q: 'Con i potenti era gentile; con i deboli, ___, brontolava.', o: ['invece', 'perciò', 'perché'], a: 0, topic: 'connettivi-base' },
+            { t: 'mc', q: 'Preferiva tacere ___ difendere chi aveva ragione.', o: ['piuttosto che', 'perché', 'quindi'], a: 0, topic: 'connettivi-base' },
+            { t: 'mc', q: 'Si schierava con il più forte, ___ non si schierava affatto.', o: ['oppure', 'perciò', 'invece'], a: 0, topic: 'connettivi-base' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Com\'era la società in cui viveva don Abbondio?', o: ['Le leggi c\'erano, ma i potenti le ignoravano e i deboli non erano protetti', 'Era una società giusta e tranquilla', 'I preti avevano tutto il potere'], a: 0 },
+          { t: 'mc', q: 'Perché i genitori lo spinsero a diventare prete?', o: ['Perché l\'abito religioso dava rispetto e protezione', 'Perché lui aveva una forte vocazione', 'Perché volevano che diventasse ricco'], a: 0 },
+          { t: 'tf', q: 'Don Abbondio scelse di diventare prete con grande entusiasmo.', a: false },
+          { t: 'mc', q: 'Qual era la sua regola di vita?', o: ['Stare lontano da ogni contrasto', 'Difendere sempre i deboli', 'Obbedire solo al vescovo'], a: 0 },
+          { t: 'mc', q: 'Come si comportava con i deboli?', o: ['A volte si sfogava con loro, perché con loro non rischiava niente', 'Li difendeva contro i prepotenti', 'Li ignorava completamente'], a: 0 },
+          { t: 'mc', q: 'Che cosa significa il paragone del vaso di terracotta?', o: ['Don Abbondio è fragile tra persone potenti e deve evitare ogni urto', 'Don Abbondio è duro e resistente', 'Don Abbondio viaggiava molto'], a: 0 },
+          { t: 'tf', q: 'Con il tempo, la sua strategia diventò parte del suo carattere.', a: true },
+          { t: 'mc', q: 'Che cosa si domandava don Abbondio in ogni situazione?', o: ['Che cosa fosse prudente', 'Che cosa fosse giusto', 'Che cosa pensasse il vescovo'], a: 0 },
+          { t: 'mc', q: 'Perché non si ribellò all\'ordine dei bravi?', o: ['Perché per lui contava solo stare al sicuro', 'Perché era d\'accordo con don Rodrigo', 'Perché non conosceva Renzo e Lucia'], a: 0 }
+        ],
+        write: { title: 'Sei d\'accordo con don Abbondio?', prompt: 'Secondo te, la «regola di vita» di don Abbondio è giusta? Scrivi la tua opinione (8-10 frasi) con almeno un esempio di oggi. Usa i connettivi.', min: 80, max: 160, use: ['secondo me', 'perciò', 'invece', 'anche se'] }
+      },
+      {
+        id: 'ps-b1-renzo', episode: 'renzo', draft: true, level: 'B1', cap: 'Capitolo 2', title: 'Renzo e don Abbondio', icon: '💍',
+        before: 'Renzo va da don Abbondio per sposarsi. Secondo te, come riuscirà a scoprire la verità?',
+        text: `La mattina dopo l'incontro con i bravi, Renzo si presentò a casa del curato di buon'ora, vestito a festa, con la gioia di chi sta per realizzare il sogno più grande della sua vita. Don Abbondio, invece, aveva passato la notte senza chiudere occhio, tormentato dalla paura e dai pensieri, e aveva già deciso che cosa fare: prendere tempo con qualche scusa.
+Appena Renzo entrò e chiese a che ora dovessero trovarsi in chiesa, il curato finse di non sentirsi bene e rispose che per quel giorno il matrimonio era impossibile, perché c'erano degli «impedimenti». Renzo, sorpreso, chiese di quali impedimenti si trattasse. Allora don Abbondio cominciò a elencare parole latine che il giovane non poteva capire, sperando di confonderlo. Alla fine gli chiese di avere pazienza per qualche giorno, una settimana al massimo.
+Renzo se ne andò poco convinto. Uscendo, incontrò Perpetua e provò a chiederle il motivo di quel rinvio. La governante non voleva tradire il suo padrone, ma lasciò scappare qualche frase: disse che la colpa non era del curato, ma dei prepotenti che comandano nel mondo. Renzo capì che c'era sotto qualcosa di grave e tornò indietro di corsa.
+Questa volta, chiusa la porta, affrontò il curato con decisione e pretese di sapere chi fosse il prepotente che non voleva il suo matrimonio. Don Abbondio, spaventato dal tono del giovane, che teneva la mano vicino al coltello, alla fine cedette e pronunciò un nome a bassa voce: don Rodrigo.
+Renzo rimase senza parole. Poi, pieno di rabbia, uscì dalla casa giurando che si sarebbe vendicato, mentre il povero curato, sconvolto, si mise a letto con la febbre.`,
+        glossary: [
+          ['di buon\'ora', 'presto, di mattina presto'], ['prendere tempo', 'rimandare una decisione per guadagnare tempo'],
+          ['fingere', 'fare finta, mostrare una cosa falsa', 'finse'], ['rinvio', 'lo spostare una cosa a un altro momento'],
+          ['tradire', 'non essere fedele, rivelare un segreto', 'tradire'], ['pretendere', 'chiedere con forza, come un diritto', 'pretese'],
+          ['cedere', 'smettere di resistere', 'cedette'], ['vendicarsi', 'fare del male a chi ci ha fatto del male', 'vendicato']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['di buon\'ora', 'presto, di mattina'], ['fingere', 'fare finta'], ['rinvio', 'lo spostare una cosa a un altro momento'], ['cedere', 'smettere di resistere'], ['vendicarsi', 'fare del male a chi ci ha fatto del male']] },
+          { t: 'mc', q: '«Aveva passato la notte senza chiudere occhio» vuol dire che…', o: ['non aveva dormito', 'aveva dormito molto', 'aveva male agli occhi'], a: 0 },
+          { t: 'mc', q: 'Don Abbondio vuole «prendere tempo»: vuol dire che…', o: ['vuole rimandare la decisione', 'vuole guardare l\'orologio', 'ha molta fretta'], a: 0 },
+          { t: 'mc', q: 'Perpetua «lasciò scappare qualche frase»: vuol dire che…', o: ['disse qualcosa senza volerlo', 'scappò di casa', 'non disse niente'], a: 0 },
+          { t: 'mc', q: 'Renzo «pretese di sapere» il nome: vuol dire che…', o: ['lo chiese con forza, come un diritto', 'fece finta di saperlo', 'lo chiese con gentilezza'], a: 0 },
+          { t: 'mc', q: 'Renzo era «vestito a festa»: vuol dire che…', o: ['aveva i vestiti più belli', 'era vestito da clown', 'aveva vestiti vecchi'], a: 0 },
+          { t: 'mc', q: 'Il curato era «sconvolto»: vuol dire…', o: ['molto turbato e agitato', 'molto felice', 'molto annoiato'], a: 0 },
+          { t: 'gap', q: 'rinviare → nome: il ___', a: ['rinvio'] },
+          { t: 'gap', q: 'vendicarsi → nome: la ___', a: ['vendetta'] },
+          { t: 'gap', q: 'tradire → nome: il ___', a: ['tradimento'] },
+          { t: 'gap', q: 'deciso → nome: la ___', hint: 'con ___ (come affrontò Renzo il curato)', a: ['decisione'] }
+        ],
+        grammatica: {
+          title: 'Passato remoto e imperfetto; la forma passiva',
+          theory: `<p>Nel racconto il <b>passato remoto</b> esprime le <b>azioni</b> che fanno andare avanti la storia (<i>si presentò, rispose, cedette</i>), l'<b>imperfetto</b> le <b>descrizioni</b> e le situazioni (<i>teneva la mano vicino al coltello, non voleva tradire</i>).</p>
+<p>Passati remoti irregolari del testo: <i>rispondere → rispose · rimanere → rimase · fingere → finse · pretendere → pretese · mettersi → si mise · chiedere → chiese</i>.</p>
+<p>La <b>forma passiva</b>: <b>essere + participio (+ da)</b>, in tutti i tempi. <i>I bravi minacciarono il curato → Il curato <b>fu minacciato</b> dai bravi. · Il curato <b>era stato minacciato</b>.</i></p>
+<p>Si può usare anche <b>venire</b> + participio (solo nei tempi semplici): <i>Il matrimonio <b>venne rinviato</b>.</i></p>`,
+          items: [
+            { t: 'gap', q: 'Renzo (presentarsi) ___ a casa del curato di buon\'ora.', hint: 'passato remoto', a: ['si presentò'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il curato (rispondere) ___ che il matrimonio era impossibile.', hint: 'passato remoto', a: ['rispose'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Renzo (rimanere) ___ senza parole.', hint: 'passato remoto', a: ['rimase'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Don Abbondio (fingere) ___ di non sentirsi bene.', hint: 'passato remoto', a: ['finse'], topic: 'passato-remoto' },
+            { t: 'mc', q: 'Perpetua non ___ tradire il suo padrone, ma lasciò scappare qualche frase.', o: ['voleva', 'volle', 'vorrà'], a: 0, topic: 'passato-remoto', exp: 'Descrive uno stato d\'animo, non un\'azione: imperfetto.' },
+            { t: 'mc', q: 'Mentre Renzo parlava, il curato ___ con terrore il coltello del giovane.', o: ['guardava', 'guarderà', 'ha guardato'], a: 0, topic: 'passato-remoto', exp: 'Azione in corso (mentre): imperfetto.' },
+            { t: 'gap', q: 'I bravi minacciarono il curato. → Il curato ___ dai bravi.', hint: 'passivo, passato remoto', a: ['fu minacciato', 'venne minacciato'], topic: 'passivo' },
+            { t: 'gap', q: 'Don Abbondio rinviò il matrimonio. → Il matrimonio ___ da don Abbondio.', hint: 'passivo, passato remoto', a: ['fu rinviato', 'venne rinviato'], topic: 'passivo' },
+            { t: 'gap', q: 'Renzo scoprì la verità. → La verità ___ da Renzo.', hint: 'passivo, passato remoto', a: ['fu scoperta', 'venne scoperta'], topic: 'passivo' },
+            { t: 'mc', q: 'Quando Renzo arrivò, il curato ___ già ___ dai bravi.', o: ['era … stato minacciato', 'è … minacciato', 'fu … minacciando'], a: 0, topic: 'passivo', exp: 'Fatto anteriore: passivo del trapassato, era stato minacciato.' },
+            { t: 'mc', q: 'Le nozze ___ celebrate quel giorno.', o: ['non furono', 'non fu', 'non era'], a: 0, topic: 'passivo' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Con che stato d\'animo arriva Renzo dal curato?', o: ['Pieno di gioia, vestito a festa', 'Arrabbiato e sospettoso', 'Stanco e preoccupato'], a: 0 },
+          { t: 'mc', q: 'Che cosa aveva deciso di fare don Abbondio durante la notte?', o: ['Prendere tempo con qualche scusa', 'Dire subito tutta la verità', 'Scappare dal paese'], a: 0 },
+          { t: 'mc', q: 'Perché il curato usa parole latine?', o: ['Per confondere Renzo, che non può capirle', 'Perché il matrimonio si celebra in latino', 'Per mostrare che è colto'], a: 0 },
+          { t: 'tf', q: 'Don Abbondio chiede a Renzo di aspettare circa una settimana.', a: true },
+          { t: 'mc', q: 'Come scopre Renzo che c\'è sotto qualcosa di grave?', o: ['Da alcune frasi che Perpetua lascia scappare', 'Da una lettera dei bravi', 'Da Lucia'], a: 0 },
+          { t: 'tf', q: 'Perpetua racconta a Renzo tutta la storia con precisione.', a: false, exp: 'Non vuole tradire il padrone: dice solo che la colpa è dei prepotenti.' },
+          { t: 'mc', q: 'Perché alla fine don Abbondio dice il nome?', o: ['Perché ha paura del tono deciso di Renzo', 'Perché Perpetua glielo ordina', 'Perché vuole aiutare Renzo contro don Rodrigo'], a: 0 },
+          { t: 'mc', q: 'Come reagisce Renzo quando sente il nome di don Rodrigo?', o: ['Resta senza parole, poi esce pieno di rabbia e giura di vendicarsi', 'Ride e va dal vescovo', 'Ringrazia il curato e torna a casa tranquillo'], a: 0 },
+          { t: 'tf', q: 'Alla fine don Abbondio si mette a letto con la febbre.', a: true }
+        ],
+        write: { title: 'Renzo racconta a Lucia', prompt: 'Immagina di essere Renzo: racconta a Lucia che cosa è successo dal curato (8-10 frasi). Usa il discorso indiretto (mi ha detto che…, gli ho chiesto se…).', min: 80, max: 160, use: ['mi ha detto che', 'gli ho chiesto', 'perciò', 'alla fine'] }
+      },
+      {
+        id: 'ps-b1-cristoforo', episode: 'cristoforo', draft: true, level: 'B1', cap: 'Capitolo 4 (parte 1)', title: 'Il cammino di fra Cristoforo', icon: '🙏',
+        summary: `Lucia racconta a Renzo e alla madre, Agnese, che don Rodrigo la importuna da tempo. Agnese consiglia a Renzo di andare a Lecco da un avvocato, il dottor Azzecca-garbugli, e di portargli in regalo quattro capponi. All'inizio l'avvocato crede che Renzo sia un bravo e vuole aiutarlo; ma quando sente il nome di don Rodrigo, si spaventa e lo caccia via. Intanto Lucia ha chiesto aiuto a un frate di cui si fida: fra Cristoforo.`,
+        before: 'Nel capitolo 4 entra in scena un nuovo personaggio. Che cosa ti aspetti da un frate che va ad aiutare Lucia?',
+        text: `Era una mattina di novembre e il sole non era ancora sorto del tutto, quando fra Cristoforo uscì dal convento di Pescarenico, vicino a Lecco, per salire verso la casa di Lucia. La giovane gli aveva mandato a chiedere aiuto, e lui si era messo in cammino senza perdere tempo.
+Il cielo era sereno e il paesaggio, tra il lago e le montagne, sarebbe stato bellissimo. Ma lo spettacolo che il frate incontrava lungo la strada era triste: era un anno di carestia. Nei campi i contadini seminavano poco e con fatica, perché il grano mancava anche per mangiare. Per le strade si vedevano mendicanti pallidi e magri, alcuni dei quali, fino a poco tempo prima, avevano avuto un lavoro e una casa. Una ragazzina, che guidava al pascolo una mucca magra come lei, si chinava ogni tanto a raccogliere qualche erba da portare a casa per la famiglia.
+Fra Cristoforo aveva circa sessant'anni. La testa era rasata, con una piccola corona di capelli, secondo l'uso dei cappuccini; la barba, bianca e lunga, gli copriva le guance e il mento. Il viso, magro per i lunghi digiuni, mostrava un'umiltà che si era guadagnato con fatica. Di solito teneva gli occhi bassi, ma talvolta questi si accendevano all'improvviso, come due cavalli focosi che il padrone riesce a trattenere a stento.
+Quegli occhi tradivano un carattere che il frate aveva imparato a dominare, ma che non era scomparso. Per capire da dove venisse quella forza nascosta, bisogna conoscere la sua storia, che era cominciata molti anni prima, quando ancora non portava il saio.`,
+        glossary: [
+          ['carestia', 'periodo in cui manca il cibo per tutti'], ['seminare', 'mettere i semi nella terra', 'seminavano'],
+          ['mendicante', 'persona povera che chiede l\'elemosina', 'mendicanti'], ['pascolo', 'prato dove mangiano gli animali'],
+          ['digiuno', 'il non mangiare per un periodo', 'digiuni'], ['focoso', 'pieno di energia, difficile da controllare', 'focosi'],
+          ['a stento', 'con grande difficoltà'], ['saio', 'l\'abito lungo dei frati']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['carestia', 'periodo in cui manca il cibo'], ['mendicante', 'persona povera che chiede l\'elemosina'], ['pascolo', 'prato dove mangiano gli animali'], ['digiuno', 'il non mangiare per un periodo'], ['saio', 'l\'abito lungo dei frati']] },
+          { t: 'mc', q: 'Il cielo era «sereno»: vuol dire…', o: ['senza nuvole', 'pieno di nuvole', 'molto scuro'], a: 0 },
+          { t: 'mc', q: '«Trattenere a stento» vuol dire trattenere…', o: ['con grande difficoltà', 'con facilità', 'con violenza'], a: 0 },
+          { t: 'mc', q: 'Gli occhi «tradivano» il suo carattere: qui tradire vuol dire…', o: ['lasciar vedere una cosa nascosta', 'non essere fedele', 'chiudersi'], a: 0 },
+          { t: 'mc', q: 'La ragazzina «si chinava»: vuol dire che…', o: ['si piegava verso terra', 'saltava', 'correva'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «umiltà» è…', o: ['superbia, orgoglio', 'povertà', 'tristezza'], a: 0 },
+          { t: 'gap', q: 'Se non mangi per un giorno, fai ___ .', a: ['digiuno', 'un digiuno'] },
+          { t: 'gap', q: 'seminare → nome: la ___', a: ['semina'] },
+          { t: 'gap', q: 'umile → nome: l\'___', a: ['umiltà'] },
+          { t: 'mc', q: '«Mettersi in cammino» vuol dire…', o: ['partire a piedi', 'fermarsi', 'costruire una strada'], a: 0 }
+        ],
+        grammatica: {
+          title: 'I pronomi relativi: che, cui, il quale',
+          theory: `<p>I <b>pronomi relativi</b> uniscono due frasi e sostituiscono un nome.</p>
+<p><b>che</b>: soggetto o oggetto. <i>Una ragazzina <b>che</b> guidava una mucca.</i> · <i>Lo spettacolo <b>che</b> il frate incontrava.</i></p>
+<p><b>cui</b>: dopo una preposizione. <i>Un frate <b>di cui</b> si fida · il convento <b>da cui</b> uscì · la casa <b>in cui</b> abita</i>.</p>
+<p><b>il quale, la quale, i quali, le quali</b>: al posto di <i>che</i> o di <i>preposizione + cui</i>, nella lingua scritta. Si accorda con il nome: <i>mendicanti, alcuni <b>dei quali</b> avevano avuto un lavoro</i>.</p>`,
+          items: [
+            { t: 'mc', q: 'Fra Cristoforo è il frate ___ Lucia chiede aiuto.', o: ['a cui', 'che', 'di cui'], a: 0, topic: 'relativi', exp: 'Chiedere aiuto a qualcuno: a cui.' },
+            { t: 'mc', q: 'Pescarenico è il paese ___ si trova il convento.', o: ['in cui', 'che', 'a cui'], a: 0, topic: 'relativi' },
+            { t: 'mc', q: 'La ragazzina ___ il frate vede è molto magra.', o: ['che', 'cui', 'di cui'], a: 0, topic: 'relativi' },
+            { t: 'mc', q: 'È un frate ___ tutti si fidano.', o: ['di cui', 'che', 'in cui'], a: 0, topic: 'relativi', exp: 'Fidarsi di qualcuno: di cui.' },
+            { t: 'mc', q: 'C\'erano molti mendicanti, alcuni ___ avevano avuto una casa.', o: ['dei quali', 'che', 'delle quali'], a: 0, topic: 'relativi', exp: 'Mendicanti è maschile plurale: dei quali.' },
+            { t: 'gap', q: 'Il convento da ___ uscì il frate era vicino a Lecco.', a: ['cui'], topic: 'relativi' },
+            { t: 'gap', q: 'I contadini, ___ seminavano con fatica, avevano fame.', a: ['che', 'i quali'], topic: 'relativi' },
+            { t: 'gap', q: 'La storia di fra Cristoforo, ___ leggerai nel prossimo testo, è molto interessante.', a: ['che'], topic: 'relativi' },
+            { t: 'mc', q: 'La mucca con ___ cammina la ragazzina è magra.', o: ['cui', 'che', 'la quale che'], a: 0, topic: 'relativi' },
+            { t: 'order', words: ['Lucia', 'chiede', 'aiuto', 'a', 'un', 'frate', 'di', 'cui', 'si', 'fida'], a: 'Lucia chiede aiuto a un frate di cui si fida', topic: 'relativi' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Capitolo 3: che cosa consiglia Agnese a Renzo?', o: ['Di andare a Lecco da un avvocato con quattro capponi', 'Di andare da don Rodrigo', 'Di scappare con Lucia'], a: 0 },
+          { t: 'mc', q: 'Capitolo 3: perché all\'inizio l\'avvocato vuole aiutare Renzo?', o: ['Perché crede che sia un bravo', 'Perché è amico di Lucia', 'Perché odia don Rodrigo'], a: 0 },
+          { t: 'tf', q: 'Capitolo 3: quando sente il nome di don Rodrigo, Azzecca-garbugli caccia via Renzo.', a: true },
+          { t: 'mc', q: 'Perché fra Cristoforo esce dal convento così presto?', o: ['Perché Lucia gli ha chiesto aiuto', 'Perché deve andare al mercato', 'Perché è stato chiamato dal vescovo'], a: 0 },
+          { t: 'mc', q: 'Perché il paesaggio, pur bello, è triste?', o: ['Perché è un anno di carestia e c\'è tanta povertà', 'Perché piove forte', 'Perché c\'è la guerra in paese'], a: 0 },
+          { t: 'tf', q: 'Alcuni mendicanti, poco tempo prima, avevano un lavoro e una casa.', a: true },
+          { t: 'mc', q: 'Che cosa fa la ragazzina con la mucca?', o: ['Raccoglie erbe da portare a casa per mangiare', 'Vende il latte al mercato', 'Chiede l\'elemosina al frate'], a: 0 },
+          { t: 'mc', q: 'Perché fra Cristoforo è magro?', o: ['Per i lunghi digiuni', 'Perché è malato', 'Perché lavora nei campi'], a: 0 },
+          { t: 'mc', q: 'Che cosa rivelano i suoi occhi?', o: ['Un carattere forte che ha imparato a dominare', 'Una grande tristezza', 'La paura di don Rodrigo'], a: 0 },
+          { t: 'mc', q: 'A che cosa sono paragonati i suoi occhi?', o: ['A due cavalli focosi trattenuti a stento', 'A due stelle nel cielo', 'A due vasi di ferro'], a: 0 }
+        ],
+        write: { title: 'Ritratto di una persona', prompt: 'Descrivi una persona che ammiri: com\'è fisicamente, che carattere ha e che cosa ha fatto nella sua vita (8-10 frasi). Usa almeno tre pronomi relativi (che, cui, il quale).', min: 80, max: 160, use: ['che', 'di cui', 'con cui', 'il quale'] }
+      },
+      {
+        id: 'ps-b1-lodovico', episode: 'lodovico', draft: true, level: 'B1', cap: 'Capitolo 4 (parte 2)', title: 'Lodovico e il duello', icon: '⚔️',
+        before: 'Fra Cristoforo non è sempre stato un frate. Che cosa può essere successo nella sua giovinezza per cambiargli la vita?',
+        text: `Fra Cristoforo non si era sempre chiamato così: da giovane il suo nome era Lodovico. Era figlio di un ricco mercante che, negli ultimi anni, si vergognava di aver fatto quel mestiere e voleva vivere come un nobile. Perciò aveva educato il figlio come un signore, tra servitori, cavalli ed eleganti abitudini.
+Ma i nobili veri non lo accettarono mai come uno di loro: lo trattavano con freddezza e gli facevano sentire, in mille modi, che non era alla loro altezza. Lodovico, che aveva un carattere orgoglioso e impetuoso, ne soffriva molto. Così cominciò a schierarsi dalla parte dei deboli e degli oppressi contro i prepotenti, anche per sfidare quei nobili che lo disprezzavano.
+Un giorno camminava per una strada stretta, accompagnato da Cristoforo, un vecchio servitore fedele, quando vide venire verso di sé un nobile arrogante, seguito dai suoi bravi. Secondo le regole di allora, chi aveva il diritto di passare vicino al muro dimostrava di essere più importante. Nessuno dei due voleva cedere il passo. «Fate luogo», disse il nobile. «La diritta è mia», rispose Lodovico. Dalle parole si passò agli insulti, e dagli insulti alle spade.
+Durante il duello, il nobile stava per colpire Lodovico, ma il vecchio Cristoforo si mise in mezzo per difendere il padrone e cadde ferito a morte. Accecato dalla rabbia e dal dolore, Lodovico trafisse il nobile con la spada e lo uccise.
+Ferito anche lui e circondato da una folla agitata, Lodovico fu portato in un convento di cappuccini vicino, dove, secondo l'usanza del tempo, chi aveva commesso un delitto non poteva essere arrestato. Lì, per la prima volta, si trovò a riflettere su quello che aveva fatto.`,
+        glossary: [
+          ['vergognarsi', 'sentirsi a disagio per una cosa che si considera brutta', 'vergognava'], ['impetuoso', 'che agisce con forza e senza riflettere'],
+          ['oppresso', 'chi subisce la violenza e l\'ingiustizia dei potenti', 'oppressi'], ['disprezzare', 'considerare una persona senza valore', 'disprezzavano'],
+          ['arrogante', 'che si comporta come se fosse superiore agli altri'], ['cedere il passo', 'lasciar passare un altro per primo'],
+          ['trafiggere', 'passare da una parte all\'altra con un\'arma', 'trafisse'], ['delitto', 'grave crimine']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['impetuoso', 'che agisce con forza e senza riflettere'], ['oppresso', 'chi subisce l\'ingiustizia dei potenti'], ['disprezzare', 'considerare una persona senza valore'], ['arrogante', 'che si crede superiore agli altri'], ['delitto', 'grave crimine']] },
+          { t: 'mc', q: 'I nobili gli facevano sentire che «non era alla loro altezza»: vuol dire…', o: ['che non era importante come loro', 'che era più basso di loro', 'che era più ricco di loro'], a: 0 },
+          { t: 'mc', q: '«Fate luogo» vuol dire…', o: ['spostatevi, lasciatemi passare', 'venite qui', 'fermatevi a parlare'], a: 0 },
+          { t: 'mc', q: '«Cedere il passo» vuol dire…', o: ['lasciar passare un altro per primo', 'camminare più veloce', 'fare un passo indietro per scappare'], a: 0 },
+          { t: 'mc', q: 'Lodovico era «accecato dalla rabbia»: vuol dire che…', o: ['la rabbia gli impediva di ragionare', 'era diventato cieco', 'non vedeva il nobile'], a: 0 },
+          { t: 'mc', q: 'Il servitore «cadde ferito a morte»: vuol dire che…', o: ['ebbe una ferita che lo fece morire', 'cadde ma non si fece niente', 'fece finta di essere morto'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «arrogante» è…', o: ['modesto, umile', 'coraggioso', 'ricco'], a: 0 },
+          { t: 'gap', q: 'disprezzare → nome: il ___', a: ['disprezzo'] },
+          { t: 'gap', q: 'vergognarsi → nome: la ___', a: ['vergogna'] },
+          { t: 'gap', q: 'orgoglioso → nome: l\'___', a: ['orgoglio'] }
+        ],
+        grammatica: {
+          title: 'Il passato remoto dei verbi irregolari',
+          theory: `<p>Molti verbi in <b>-ere</b> hanno il passato remoto <b>irregolare</b> alla 1ª e 3ª persona singolare e alla 3ª plurale:</p>
+<table><tr><th>infinito</th><th>lui / lei</th><th>loro</th></tr>
+<tr><td>prendere</td><td>pre<b>se</b></td><td>pre<b>sero</b></td></tr>
+<tr><td>uccidere</td><td>ucci<b>se</b></td><td>ucci<b>sero</b></td></tr>
+<tr><td>trafiggere</td><td>trafi<b>sse</b></td><td>trafi<b>ssero</b></td></tr>
+<tr><td>vedere</td><td>vi<b>de</b></td><td>vi<b>dero</b></td></tr>
+<tr><td>cadere</td><td>cadd<b>e</b></td><td>cadd<b>ero</b></td></tr>
+<tr><td>rispondere</td><td>rispo<b>se</b></td><td>rispo<b>sero</b></td></tr>
+<tr><td>mettersi</td><td>si mi<b>se</b></td><td>si mi<b>sero</b></td></tr></table>
+<p>Altri irregolari: <i>essere → fu · avere → ebbe · fare → fece · dire → disse · venire → venne · volere → volle</i>.</p>`,
+          items: [
+            { t: 'gap', q: 'Un giorno Lodovico (vedere) ___ venire verso di sé un nobile arrogante.', a: ['vide'], topic: 'passato-remoto' },
+            { t: 'gap', q: '«La diritta è mia», (rispondere) ___ Lodovico.', a: ['rispose'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il vecchio Cristoforo (mettersi) ___ in mezzo per difendere il padrone.', a: ['si mise'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Il servitore (cadere) ___ ferito a morte.', a: ['cadde'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Lodovico (uccidere) ___ il nobile.', a: ['uccise'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'I due uomini (prendere) ___ le spade.', a: ['presero'], topic: 'passato-remoto' },
+            { t: 'gap', q: '«Fate luogo», (dire) ___ il nobile.', a: ['disse'], topic: 'passato-remoto' },
+            { t: 'gap', q: 'Nessuno dei due (volere) ___ cedere il passo.', a: ['volle', 'voleva'], topic: 'passato-remoto' },
+            { t: 'match', prompt: 'Abbina il passato remoto all\'infinito', pairs: [['trafisse', 'trafiggere'], ['fece', 'fare'], ['venne', 'venire'], ['ebbe', 'avere'], ['fu', 'essere']], topic: 'passato-remoto' },
+            { t: 'mc', q: 'I nobili non lo ___ mai come uno di loro.', o: ['accettarono', 'accettrono', 'accettò'], a: 0, topic: 'passato-remoto' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Chi era il padre di Lodovico?', o: ['Un ricco mercante che voleva vivere come un nobile', 'Un nobile povero', 'Un frate cappuccino'], a: 0 },
+          { t: 'tf', q: 'I nobili accettarono Lodovico come uno di loro.', a: false },
+          { t: 'mc', q: 'Perché Lodovico si schierava con i deboli?', o: ['Per difenderli dai prepotenti e anche per sfidare i nobili che lo disprezzavano', 'Perché era povero anche lui', 'Perché glielo chiedeva il padre'], a: 0 },
+          { t: 'mc', q: 'Chi era Cristoforo?', o: ['Un vecchio servitore fedele di Lodovico', 'Il fratello del nobile', 'Un frate del convento'], a: 0 },
+          { t: 'mc', q: 'Perché era importante passare vicino al muro?', o: ['Perché dimostrava di essere più importante', 'Perché la strada era piena di fango', 'Perché c\'era ombra'], a: 0 },
+          { t: 'mc', q: 'Come muore il servitore Cristoforo?', o: ['Si mette in mezzo per difendere Lodovico e viene colpito', 'Viene ucciso da Lodovico per errore', 'Cade dal cavallo'], a: 0 },
+          { t: 'tf', q: 'Lodovico uccide il nobile con calma, dopo averci pensato a lungo.', a: false, exp: 'Lo uccide accecato dalla rabbia e dal dolore.' },
+          { t: 'mc', q: 'Perché Lodovico viene portato in un convento?', o: ['Perché lì, secondo l\'usanza, non poteva essere arrestato', 'Perché voleva diventare subito frate', 'Perché era l\'ospedale del paese'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa Lodovico per la prima volta nel convento?', o: ['Riflette su quello che ha fatto', 'Prepara la sua vendetta', 'Scrive una lettera al padre'], a: 0 }
+        ],
+        write: { title: 'Un conflitto evitato', prompt: 'Racconta una situazione in cui un piccolo litigio poteva diventare grave. Che cosa è successo? Come si poteva evitare? (8-10 frasi, al passato).', min: 80, max: 160, use: ['all\'improvviso', 'mentre', 'invece di', 'alla fine'] }
+      },
+      {
+        id: 'ps-b1-perdono', episode: 'perdono', draft: true, level: 'B1', cap: 'Capitolo 4 (parte 3)', title: 'Il pane del perdono', icon: '🍞',
+        text: `Nel convento, Lodovico passò giorni di profonda angoscia. Il pensiero dell'uomo che aveva ucciso e del servitore morto per lui non gli dava pace. Più rifletteva, più si convinceva che doveva cambiare completamente vita. Così chiese ai frati di essere accolto tra loro e, quando fu accettato, scelse di chiamarsi Cristoforo, in ricordo del servitore che si era sacrificato per salvarlo.
+Prima di vestire il saio, fece una cosa che sorprese molti: rinunciò a tutti i suoi beni e li donò alla vedova e ai figli di Cristoforo, perché non restassero in miseria.
+Poi decise di compiere un gesto ancora più difficile: andare a chiedere perdono alla famiglia del nobile ucciso. Il fratello del morto, un signore potente e orgoglioso, accettò di riceverlo, ma organizzò l'incontro in modo da umiliarlo: riunì nel suo palazzo parenti e amici, tutti pronti a godersi la scena.
+Quando fra Cristoforo entrò, a testa bassa, nel grande salone, ci fu un silenzio profondo. Il frate si inginocchiò davanti al fratello del nobile e disse con voce sincera: «Le chiedo perdono, per amor di Dio». Quelle parole e quell'umiltà commossero tutti i presenti, che si aspettavano un uomo arrogante. Il signore, turbato, lo fece rialzare, lo abbracciò e gli concesse il perdono.
+Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di pane, «come segno del perdono». Quel pane non lo mangiò: lo conservò per tutta la vita, per ricordarsi sempre del suo peccato e della misericordia ricevuta. Da quel giorno dedicò ogni sua energia ad aiutare i deboli: è per questo che ora corre in aiuto di Lucia e Renzo.`,
+        glossary: [
+          ['angoscia', 'forte sofferenza e paura'], ['accogliere', 'ricevere, far entrare tra di sé', 'accolto'],
+          ['sacrificarsi', 'rinunciare a sé stessi, perfino alla vita, per un altro', 'sacrificato'], ['vedova', 'donna a cui è morto il marito'],
+          ['umiliare', 'far sentire una persona piccola e senza valore', 'umiliarlo'], ['inginocchiarsi', 'mettersi in ginocchio', 'inginocchiò'],
+          ['commuovere', 'emozionare profondamente', 'commossero'], ['misericordia', 'compassione e perdono verso chi ha sbagliato']
+        ],
+        lessico: [
+          { t: 'match', prompt: 'Abbina la parola al significato', pairs: [['angoscia', 'forte sofferenza e paura'], ['vedova', 'donna a cui è morto il marito'], ['umiliare', 'far sentire una persona senza valore'], ['commuovere', 'emozionare profondamente'], ['misericordia', 'compassione e perdono']] },
+          { t: 'mc', q: 'Il pensiero del delitto «non gli dava pace»: vuol dire che…', o: ['lo tormentava continuamente', 'lo rendeva tranquillo', 'lo faceva ridere'], a: 0 },
+          { t: 'mc', q: '«Rinunciò a tutti i suoi beni»: i beni sono…', o: ['le cose che possiede: soldi, case, terre', 'le sue buone azioni', 'i suoi amici'], a: 0 },
+          { t: 'mc', q: 'I parenti erano pronti a «godersi la scena»: vuol dire…', o: ['guardare con piacere l\'umiliazione del frate', 'fare una festa', 'recitare a teatro'], a: 0 },
+          { t: 'mc', q: '«Restare in miseria» vuol dire…', o: ['essere molto poveri', 'essere molto tristi', 'essere soli'], a: 0 },
+          { t: 'mc', q: 'Il signore «gli concesse il perdono»: concedere vuol dire…', o: ['dare, permettere', 'rifiutare', 'chiedere'], a: 0 },
+          { t: 'mc', q: 'Il contrario di «orgoglioso» è…', o: ['umile', 'turbato', 'sincero'], a: 0 },
+          { t: 'gap', q: 'perdonare → nome: il ___', a: ['perdono'] },
+          { t: 'gap', q: 'umile → nome: l\'___', a: ['umiltà'] },
+          { t: 'gap', q: 'sincero → nome: la ___', a: ['sincerità'] },
+          { t: 'gap', q: 'umiliare → nome: l\'___', a: ['umiliazione'] }
+        ],
+        grammatica: {
+          title: 'La forma passiva nei vari tempi',
+          theory: `<p>La <b>forma passiva</b>: <b>essere + participio passato (+ da)</b>. Il tempo di <i>essere</i> è il tempo della frase attiva.</p>
+<table><tr><th>attiva</th><th>passiva</th></tr>
+<tr><td>Il fratello <b>perdona</b> il frate.</td><td>Il frate <b>è perdonato</b> dal fratello.</td></tr>
+<tr><td>Il fratello <b>perdonò</b> il frate.</td><td>Il frate <b>fu perdonato</b> dal fratello.</td></tr>
+<tr><td>Il fratello <b>ha perdonato</b> il frate.</td><td>Il frate <b>è stato perdonato</b> dal fratello.</td></tr>
+<tr><td>Il fratello <b>aveva perdonato</b> il frate.</td><td>Il frate <b>era stato perdonato</b> dal fratello.</td></tr></table>
+<p>Nei tempi semplici si può usare anche <b>venire</b>: <i>Il frate <b>venne perdonato</b>.</i> Il participio si accorda sempre con il soggetto.</p>`,
+          items: [
+            { t: 'gap', q: 'I frati accolsero Lodovico. → Lodovico ___ dai frati.', hint: 'passato remoto', a: ['fu accolto', 'venne accolto'], topic: 'passivo' },
+            { t: 'gap', q: 'Lodovico donò i beni alla vedova. → I beni ___ alla vedova da Lodovico.', hint: 'passato remoto', a: ['furono donati', 'vennero donati'], topic: 'passivo' },
+            { t: 'gap', q: 'Il fratello del nobile perdonò il frate. → Il frate ___ dal fratello del nobile.', hint: 'passato remoto', a: ['fu perdonato', 'venne perdonato'], topic: 'passivo' },
+            { t: 'gap', q: 'Le parole del frate hanno commosso i presenti. → I presenti ___ dalle parole del frate.', hint: 'passato prossimo', a: ['sono stati commossi'], topic: 'passivo' },
+            { t: 'gap', q: 'Il frate conserva il pane. → Il pane ___ dal frate.', hint: 'presente', a: ['è conservato', 'viene conservato'], topic: 'passivo' },
+            { t: 'gap', q: 'Il signore aveva organizzato l\'incontro. → L\'incontro ___ dal signore.', hint: 'trapassato prossimo', a: ['era stato organizzato'], topic: 'passivo' },
+            { t: 'mc', q: 'La vedova e i figli ___ da Lodovico.', o: ['furono aiutati', 'fu aiutata', 'furono aiutate'], a: 0, topic: 'passivo', exp: 'Soggetto maschile plurale (la vedova e i figli): aiutati.' },
+            { t: 'mc', q: 'Quale frase è passiva?', o: ['Il pane fu conservato per tutta la vita.', 'Il frate conservò il pane.', 'Il frate si inginocchiò.'], a: 0, topic: 'passivo' },
+            { t: 'mc', q: 'Con «venire» si può dire: «Il frate ___ perdonato».', o: ['venne', 'è venuto stato', 'era venuto'], a: 0, topic: 'passivo', exp: 'Venire si usa solo nei tempi semplici: venne perdonato.' }
+          ]
+        },
+        comprensione: [
+          { t: 'mc', q: 'Come si sente Lodovico nel convento?', o: ['Prova una profonda angoscia per quello che ha fatto', 'È tranquillo e soddisfatto', 'Ha paura di essere arrestato'], a: 0 },
+          { t: 'mc', q: 'Perché sceglie il nome Cristoforo?', o: ['In ricordo del servitore che si era sacrificato per lui', 'Perché era il nome di suo padre', 'Perché glielo impongono i frati'], a: 0 },
+          { t: 'mc', q: 'A chi dona i suoi beni?', o: ['Alla vedova e ai figli del servitore', 'Al convento', 'Alla famiglia del nobile ucciso'], a: 0 },
+          { t: 'tf', q: 'Il fratello del nobile organizza l\'incontro per umiliare il frate.', a: true },
+          { t: 'mc', q: 'Che cosa si aspettavano i presenti?', o: ['Un uomo arrogante', 'Un uomo malato', 'Un uomo armato'], a: 0 },
+          { t: 'mc', q: 'Che cosa fa fra Cristoforo nel salone?', o: ['Si inginocchia e chiede sinceramente perdono', 'Fa un lungo discorso sulla giustizia', 'Chiede di essere perdonato in cambio di soldi'], a: 0 },
+          { t: 'tf', q: 'Il fratello del nobile rifiuta il perdono.', a: false, exp: 'Lo fa rialzare, lo abbraccia e lo perdona.' },
+          { t: 'mc', q: 'Perché fra Cristoforo conserva il pezzo di pane?', o: ['Per ricordarsi del suo peccato e della misericordia ricevuta', 'Per mangiarlo nei giorni di carestia', 'Per regalarlo a Lucia'], a: 0 },
+          { t: 'mc', q: 'Che legame c\'è tra questa storia e Renzo e Lucia?', o: ['Da allora il frate aiuta i deboli, e ora aiuta loro contro don Rodrigo', 'Lucia è la figlia del nobile ucciso', 'Renzo è il figlio del servitore'], a: 0 }
+        ],
+        write: { title: 'Il valore del perdono', prompt: 'È facile perdonare? Racconta un\'esperienza tua o di una persona che conosci e dai la tua opinione sul perdono (8-10 frasi).', min: 80, max: 160, use: ['secondo me', 'anche se', 'infatti', 'per questo'] }
       }
     ]
   });
@@ -5828,6 +6146,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
   for (const g of C.verifiche) {
     for (const t of g.texts) {
       t.group = g.id;
+      t.episode = t.episode || t.id.replace(/^[a-z]+-[a-z0-9]+-/, '');
       C.verificaTextById[t.id] = t;
       const parts = { lessico: t.lessico || [], grammatica: (t.grammatica && t.grammatica.items) || [], comprensione: t.comprensione || [] };
       for (const [k, items] of Object.entries(parts)) {
@@ -7733,7 +8052,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
 
   // ---------- Struttura ----------
   const NAV = {
-    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['verifiche', 'clip', 'Verifiche'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
+    student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['verifiche', 'clip', 'Verso la verifica'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
     teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['impostazioni', 'gear', 'Impostazioni']]
   };
   function shell() {
@@ -8551,7 +8870,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
     const t = C.writingById[parts[0]]; if (!t) return IL2.go('scrivi');
     const vt = t.verifica && C.verificaTextById[t.verifica];
     const backTo = vt ? ['verifiche/' + vt.group + '/' + vt.id, vt.title] : ['scrivi', 'Scrivere'];
-    if (guard(view, t.level, backTo)) return;
+    if (!vt && guard(view, t.level, backTo)) return;
     const key = 'il2-draft-' + S().user.id + '-' + t.id;
     let draft = ''; try { draft = localStorage.getItem(key) || ''; } catch (e) { /* nulla */ }
     const started = Date.now();
@@ -8820,39 +9139,62 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
     }
     view.innerHTML = '<div class="page-head"><h1>Verso la verifica</h1><p class="muted">Il materiale per prepararti alle verifiche di classe. Per ogni argomento ripassi il lessico, la grammatica e la comprensione dei testi che hai studiato.</p></div>' +
       (groups.length ? '<div class="theme-grid v-groups">' + groups.map(g => {
-        const texts = g.texts.filter(t => open(t.level));
-        const n = texts.reduce((s, t) => s + C.VERIFICA_PARTS.length, 0), k = texts.reduce((s, t) => s + vPartsDone(t), 0);
-        return '<a class="card theme v-group" href="#/verifiche/' + g.id + '"><span class="th-icon" aria-hidden="true">' + g.icon + '</span><b>' + esc(g.title) + '</b><small>' + g.texts.length + ' testi · ' + Array.from(new Set(g.texts.map(t => t.levelLabel || t.level))).join(', ') + '</small>' +
-          (n ? meter(k, n) + '<small>' + k + ' esercizi fatti su ' + n + '</small>' : '<small>' + icon('lock') + ' Testi di un livello che non hai ancora raggiunto</small>') + '</a>';
+        const lv = vLevel(g), texts = lv ? vEpisodes(g).map(ep => vVersion(g, ep, lv)) : [];
+        const n = texts.length * C.VERIFICA_PARTS.length, k = texts.reduce((s, t) => s + vPartsDone(t), 0);
+        return '<a class="card theme v-group" href="#/verifiche/' + g.id + '"><span class="th-icon" aria-hidden="true">' + g.icon + '</span><b>' + esc(g.title) + '</b><small>' + vEpisodes(g).length + ' testi · ' + vLevels(g).map(x => x[1] + ' (' + x[0] + ')').join(' o ') + '</small>' +
+          (lv ? meter(k, n) + '<small>' + k + ' esercizi fatti su ' + n + '</small>' : '<small>Scegli tu la difficoltà</small>') + '</a>';
       }).join('') + '</div>' : '<div class="card empty-state"><p>Per ora non c\'è materiale. L\'insegnante lo aggiungerà prima delle prossime verifiche.</p></div>') +
       '<p class="small muted">Qui non ci sono voti: gli esercizi servono a capire che cosa sai già e che cosa devi ripassare. Gli errori vanno anche in «I miei errori».</p>';
   };
 
+  // Difficoltà scelta dallo studente per un gruppo (resta salvata nelle preferenze, si cambia quando si vuole).
+  function vLevels(g) { return g.levels || Array.from(new Set(g.texts.map(t => t.level))).map(l => [l, l, '']); }
+  function vLevel(g) {
+    const pr = P().prefs || {}; const ch = (pr.verificaLevel || {})[g.id];
+    return vLevels(g).some(x => x[0] === ch) ? ch : null;
+  }
+  function vSetLevel(g, lv) { const p = P(); p.prefs = p.prefs || {}; p.prefs.verificaLevel = Object.assign({}, p.prefs.verificaLevel, { [g.id]: lv }); IL2.save(); }
+  function vEpisodes(g) { const out = []; for (const t of g.texts) if (!out.includes(t.episode)) out.push(t.episode); return out; }
+  // la versione di un episodio per la difficoltà scelta (se manca, quella più vicina)
+  function vVersion(g, ep, lv) {
+    const vs = g.texts.filter(t => t.episode === ep);
+    return vs.find(t => t.level === lv) || vs.slice().sort((a, b) => Math.abs(E.LEVELS.indexOf(a.level) - E.LEVELS.indexOf(lv)) - Math.abs(E.LEVELS.indexOf(b.level) - E.LEVELS.indexOf(lv)))[0];
+  }
+  function vLevelSwitch(g, lv, cls) {
+    return '<div class="seg v-seg ' + (cls || '') + '" role="radiogroup" aria-label="Difficoltà">' + vLevels(g).map(([l, name]) => '<button type="button" role="radio" aria-checked="' + (l === lv) + '" class="' + (l === lv ? 'on' : '') + '" data-vlv="' + l + '">' + esc(name) + ' <small>' + l + '</small></button>').join('') + '</div>';
+  }
+
   function verificaGroup(view, g) {
-    const p = P(), cur = E.currentLevel(p), d = VD();
-    const openT = g.texts.filter(t => open(t.level));
-    const caps = []; for (const t of g.texts) if (!caps.includes(t.cap)) caps.push(t.cap);
-    const capKey = c => c.replace(/ \(.*\)$/, '').replace(/ in breve.*$/, '');
-    const heads = []; for (const c of caps) if (!heads.includes(capKey(c))) heads.push(capKey(c));
-    const total = openT.length * C.VERIFICA_PARTS.length, did = openT.reduce((s, t) => s + vPartsDone(t), 0);
+    const d = VD(), lv = vLevel(g);
     let h = '<a class="back" href="#/verifiche">' + icon('back') + 'Verso la verifica</a>' +
       '<div class="v-hero card"><span class="v-hero-ic" aria-hidden="true">' + g.icon + '</span><div><p class="eyebrow">Verso la verifica</p><h1>' + esc(g.title) + '</h1><p>' + esc(g.desc) + '</p>' +
       (g.what ? '<p class="small"><b>Nella verifica:</b> ' + g.what.map(esc).join(', ') + '.</p>' : '') + '</div></div>';
-    if (!openT.length) { view.innerHTML = h + lockedPanel(g.texts[0].level); return; }
-    h += '<section class="card v-all"><div class="v-all-body"><b>Ripasso di tutto</b><small>Esercizi misti da tutti i testi del tuo livello, con i personaggi e le loro frasi. Utile il giorno prima della verifica.</small>' + meter(did, total) + '<small>' + did + ' esercizi fatti su ' + total + (d[g.id + ':tutto'] ? ' · ripasso di tutto fatto il ' + fmtDate(d[g.id + ':tutto'].at) : '') + '</small></div>' +
+    // la prima volta si sceglie la difficoltà
+    if (!lv) {
+      view.innerHTML = h + '<section class="card v-choose"><h2>Come vuoi lavorare?</h2><p class="muted">Scegli la difficoltà dei testi e degli esercizi. Potrai cambiarla quando vuoi.</p><div class="v-choose-opts">' +
+        vLevels(g).map(([l, name, sub]) => '<button type="button" class="card v-opt lvl-' + l + '" data-vlv="' + l + '"><span class="lvl">' + l + '</span><b>' + esc(name) + '</b><small>' + esc(sub) + '</small></button>').join('') + '</div></section>';
+      view.querySelectorAll('[data-vlv]').forEach(b => b.addEventListener('click', () => { vSetLevel(g, b.dataset.vlv); verificaGroup(view, g); }));
+      return;
+    }
+    const eps = vEpisodes(g), texts = eps.map(ep => vVersion(g, ep, lv));
+    const capKey = c => c.replace(/ \(.*\)$/, '');
+    const heads = []; for (const t of texts) if (!heads.includes(capKey(t.cap))) heads.push(capKey(t.cap));
+    const total = texts.length * C.VERIFICA_PARTS.length, did = texts.reduce((s, t) => s + vPartsDone(t), 0);
+    h += '<div class="v-level-row"><span class="small muted">Difficoltà:</span>' + vLevelSwitch(g, lv) + '</div>';
+    h += '<section class="card v-all"><div class="v-all-body"><b>Ripasso di tutto</b><small>Esercizi misti da tutti i testi, con i personaggi e le loro frasi. Utile il giorno prima della verifica.</small>' + meter(did, total) + '<small>' + did + ' esercizi fatti su ' + total + (d[g.id + ':tutto'] ? ' · ripasso di tutto fatto il ' + fmtDate(d[g.id + ':tutto'].at) : '') + '</small></div>' +
       '<button class="btn primary" id="vall">' + icon('repeat') + ' Comincia</button></section><div id="vallbox"></div>';
     if (g.characters) h += '<details class="card v-chars"><summary><b>I personaggi</b> <small class="muted">(' + g.characters.length + ')</small></summary><ul class="v-char-list">' + g.characters.map(c => '<li><span aria-hidden="true">' + c[0] + '</span><span><b>' + esc(c[1]) + '</b><small>' + esc(c[2]) + '</small></span></li>').join('') + '</ul></details>';
-    h += heads.map(cap => '<h2 class="lv-h">' + esc(cap) + '</h2><div class="list">' + g.texts.filter(t => capKey(t.cap) === cap).map(t => {
-      if (!open(t.level)) return '<div class="card row-item locked"><span class="ri-ic">' + icon('lock') + '</span><span class="ri-body"><b>' + esc(t.title) + ' ' + lvLabel(t) + '</b><small>Si sblocca quando raggiungi il livello ' + t.level + '.</small></span></div>';
+    h += heads.map(cap => '<h2 class="lv-h">' + esc(cap) + '</h2><div class="list">' + texts.filter(t => capKey(t.cap) === cap).map(t => {
       const k = vPartsDone(t);
-      return '<a class="card row-item v-text' + (k === 3 ? ' done' : '') + '" href="#/verifiche/' + g.id + '/' + t.id + '"><span class="ri-ic v-emoji" aria-hidden="true">' + (k === 3 ? icon('check') : t.icon) + '</span><span class="ri-body"><b>' + esc(t.title) + ' ' + lvLabel(t) + (t.level === cur ? ' <span class="tag">il tuo livello</span>' : '') + '</b>' +
+      return '<a class="card row-item v-text' + (k === 3 ? ' done' : '') + '" href="#/verifiche/' + g.id + '/' + t.id + '"><span class="ri-ic v-emoji" aria-hidden="true">' + (k === 3 ? icon('check') : t.icon) + '</span><span class="ri-body"><b>' + esc(t.title) + ' ' + lvLabel(t) + '</b>' +
         '<span class="v-chips">' + C.VERIFICA_PARTS.map(([pk, pl]) => '<span class="v-chip' + (d[t.id + ':' + pk] ? ' on' : '') + '">' + (d[t.id + ':' + pk] ? icon('check') : '') + pl + '</span>').join('') + '</span></span>' + icon('chevron') + '</a>';
     }).join('') + '</div>').join('');
     view.innerHTML = h;
+    view.querySelectorAll('[data-vlv]').forEach(b => b.addEventListener('click', () => { vSetLevel(g, b.dataset.vlv); verificaGroup(view, g); }));
     view.querySelector('#vall').addEventListener('click', async () => {
-      // un po' di tutto: da ogni testo aperto 2 di lessico, 2 di grammatica, 1 di comprensione, più i personaggi
+      // un po' di tutto: da ogni testo 2 di lessico, 2 di grammatica, 1 di comprensione, più i personaggi
       let items = [];
-      for (const t of openT) items = items.concat(shuffle(vPartItems(t, 'lessico')).slice(0, 2), shuffle(vPartItems(t, 'grammatica')).slice(0, 2), shuffle(vPartItems(t, 'comprensione')).slice(0, 1));
+      for (const t of texts) items = items.concat(shuffle(vPartItems(t, 'lessico')).slice(0, 2), shuffle(vPartItems(t, 'grammatica')).slice(0, 2), shuffle(vPartItems(t, 'comprensione')).slice(0, 1));
       items = shuffle(items).slice(0, 24).concat(shuffle(g.extraItems || []).slice(0, 4));
       const box = view.querySelector('#vallbox'); view.querySelector('.v-all').hidden = true;
       await runVerifica(view, box, { title: 'Ripasso di tutto: ' + g.title, items, ref: g.id + ':tutto', skill: 'lettura', back: 'verifiche/' + g.id });
@@ -8876,8 +9218,8 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
 
   function verificaText(view, g, tid) {
     const t = g.texts.find(x => x.id === tid); if (!t) return IL2.go('verifiche/' + g.id);
-    if (guard(view, t.level, ['verifiche/' + g.id, g.title])) return;
     const d = VD();
+    const sibs = g.texts.filter(x => x.episode === t.episode);
     let text = esc(t.text);
     for (const [w, m, f] of t.glossary || []) {
       const find = f == null ? w : f; if (!find) continue;
@@ -8887,6 +9229,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
     const writing = t.write && C.writingById['w-' + t.id];
     view.innerHTML = '<a class="back" href="#/verifiche/' + g.id + '">' + icon('back') + esc(g.title) + '</a>' +
       '<p class="eyebrow">' + esc(t.levelLabel || t.level) + ' · ' + esc(t.cap) + '</p><h1>' + t.icon + ' ' + esc(t.title) + '</h1>' +
+      (sibs.length > 1 ? '<div class="v-level-row"><span class="small muted">Difficoltà:</span>' + vLevelSwitch(g, t.level) + '</div>' : '') +
       (t.summary ? '<div class="card v-summary"><b>Il capitolo 3 in breve</b><p lang="it">' + esc(t.summary) + '</p></div>' : '') +
       (t.before ? '<div class="note v-before">' + icon('bulb') + ' <span><b>Prima di leggere.</b> ' + esc(t.before) + '</span></div>' : '') +
       '<article class="card passage long" lang="it">' + text.replace(/\n/g, '<br><br>') + '</article>' +
@@ -8901,6 +9244,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
       (writing ? '<a class="card row-item" href="#/scrivi/' + writing.id + '"><span class="ri-ic">' + icon('pen') + '</span><span class="ri-body"><b>Scrivi (facoltativo): ' + esc(writing.title) + '</b><small>Il testo arriva all\'insegnante, che lo legge e ti scrive un commento.</small></span>' + icon('chevron') + '</a>' : '') +
       '<div id="vbox"></div>';
     view.querySelectorAll('.gl').forEach(b => b.addEventListener('click', () => toast(b.dataset.g)));
+    view.querySelectorAll('[data-vlv]').forEach(b => b.addEventListener('click', () => { const o = vVersion(g, t.episode, b.dataset.vlv); vSetLevel(g, b.dataset.vlv); IL2.speech.stop(); if (o && o.id !== t.id) IL2.go('verifiche/' + g.id + '/' + o.id); }));
     let reading = false;
     const rb = view.querySelector('#readall');
     rb.addEventListener('click', () => {
@@ -9944,7 +10288,7 @@ Prima Lodovico è ricco e orgoglioso. Ora fra Cristoforo è povero e umile. Ma v
     if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
     if (tab === 'letture') h += C.readings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.genre) + '</summary><p class="pre">' + esc(r.text) + '</p><ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'ascolti') h += C.listenings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.situation) + '</summary>' + r.script.map(([v, t]) => '<p><b>' + v + ':</b> ' + esc(t) + '</p>').join('') + '<ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
-    if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Segue i livelli: ognuno vede i testi del suo livello e di quelli precedenti. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
+    if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Lo studente sceglie la difficoltà (Base A2 o Più difficile B1) e vede la versione di ogni testo per quella difficoltà. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + (t.draft ? ' <span class="tag warn">versione B1 scritta da Claude: da rivedere</span>' : '') + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
     if (tab === 'scrittura') h += C.writing.filter(w => !w.verifica).map(w => '<div class="card">' + levelBadge(w.level) + ' <b>' + esc(w.title) + '</b> · ' + w.min + '–' + w.max + ' parole<p>' + esc(w.prompt) + '</p></div>').join('');
     if (tab === 'lessico') h += C.vocab.map(t => '<details class="card"><summary>' + levelBadge(t.level) + ' ' + t.icon + ' <b>' + esc(t.title) + '</b> · ' + t.words.length + ' parole</summary><table class="tbl small">' + t.words.map(w => '<tr><td><b>' + esc(w.it) + '</b></td><td>' + esc(w.def || [w.gloss.en, w.gloss.fr, w.gloss.ar, w.gloss.zh].filter(Boolean).join(' · ')) + '</td><td><i>' + esc(w.ex) + '</i></td></tr>').join('') + '</table></details>').join('');
     if (tab === 'lingue') h += '<p>Per gli studenti la lingua d\'origine compare <b>solo nel dizionario</b>, come traduzione delle parole: tutto il resto dell\'app è in italiano. Le note contrastive qui sotto sono in italiano e le vedi solo tu, nella scheda di ogni studente e nei suggerimenti. In un contesto ufficiale è opportuno far verificare le traduzioni da mediatori linguistici: puoi segnalare correzioni con la revisione periodica.</p>' + IL2.l1.ORDER.map(c => { const p = IL2.l1.profile(c); return '<details class="card"><summary><b>' + esc(p.name) + '</b> · ' + esc(p.native) + '</summary>' + (p.general ? '<p>' + esc(p.general.it) + '</p>' : '') + '<ul>' + Object.entries(p.tips).map(([k, t]) => '<li><b>' + esc(topicName(k)) + ':</b> ' + esc(t.it) + '</li>').join('') + '</ul>' + (p.friends.length ? '<p><b>Falsi amici:</b> ' + p.friends.map(f => esc(f[0]) + ' = ' + esc(f[1])).join(' · ') + '</p>' : '') + '</details>'; }).join('');
