@@ -457,6 +457,17 @@ select.right { border-color: var(--good); background: var(--good-soft); } select
 .ok-line, .no-line, .warn-line { display: flex; gap: 8px; align-items: center; }
 .ok-line { color: var(--good); font-weight: 600; } .no-line { color: var(--bad); font-weight: 600; } .warn-line { color: var(--warn); font-weight: 600; }
 .exp { margin: 8px 0 0; }
+.fb.hint-box, .fb.near { background: var(--warn-soft); }
+.opt.struck { text-decoration: line-through; opacity: .55; border-color: var(--line); background: var(--surface-2); }
+.session-top .rule-btn { flex: none; white-space: nowrap; }
+.session-top .flag-btn { flex: none; color: var(--muted); }
+.rule-modal .theory { max-height: 60vh; overflow: auto; margin-bottom: 12px; }
+.rule-modal h3 { display: flex; gap: 8px; align-items: center; margin-top: 0; }
+.short-offer { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border-left: 5px solid var(--warn); background: var(--warn-soft); }
+.short-offer p { margin: 0; flex: 1 1 240px; }
+.mirato-card { border-left: 5px solid var(--warn); }
+.rule-details summary { cursor: pointer; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+.rule-details .theory { margin-top: 10px; }
 .session-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; position: sticky; bottom: 70px; padding: 10px 0; background: linear-gradient(transparent, var(--bg) 30%); }
 .session-actions .go { min-width: 170px; }
 @media (min-width: 761px) { .session-actions { bottom: 0; } }
@@ -795,7 +806,7 @@ a.tile.v-part { text-decoration: none; }
     return {
       l1: l1 || 'en', level: null, theta: null, levelOverride: null,
       skills: { grammatica: 0, lessico: 0, lettura: 0, ascolto: 0, scrittura: 0, parlato: 0 },
-      topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {}, verificheDone: {},
+      topics: {}, srs: {}, errors: [], unitsDone: {}, readingsDone: {}, listeningsDone: {}, verificheDone: {}, lessonTries: {}, mirato: {},
       speakingDone: {}, xp: 0, streak: { count: 0, best: 0, last: null }, badges: [], badgeLog: {}, stats: { writings: 0 },
       placement: [], nextTestDue: null, testRequested: false, timeLog: {}, practice: {},
       prefs: { fontScale: 1, dyslexia: false, ttsRate: 0.9, showL1: true, contrast: false },
@@ -805,7 +816,7 @@ a.tile.v-part { text-decoration: none; }
 
   // Campi del profilo che lo studente può aggiornare (gli altri sono gestiti dal server o dall'insegnante).
   const STUDENT_FIELDS = ['skills', 'topics', 'srs', 'errors', 'unitsDone', 'readingsDone', 'listeningsDone',
-    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice', 'verificheDone'];
+    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice', 'verificheDone', 'lessonTries', 'mirato'];
 
   function publicUser(u) {
     return {
@@ -964,7 +975,8 @@ a.tile.v-part { text-decoration: none; }
           userId: auth.userId, at: Date.now(), type: str(e.type, 30, 'tipo'), ref: str(e.ref, 80, 'ref'),
           skill: str(e.skill, 20, 'abilità'), correct: +e.correct || 0, total: +e.total || 0,
           durationSec: Math.min(+e.durationSec || 0, 7200), topics: Array.isArray(e.topics) ? e.topics.slice(0, 10) : [],
-          misses: Array.isArray(e.misses) ? e.misses.slice(0, 30).map(m => String(m).slice(0, 80)) : []
+          misses: Array.isArray(e.misses) ? e.misses.slice(0, 30).map(m => String(m).slice(0, 80)) : [],
+          ...(e.short ? { short: true } : {}), ...(e.mirato ? { mirato: true } : {})
         });
       }
       if (db.activity.length > MAX_ACTIVITY) db.activity = db.activity.slice(-MAX_ACTIVITY);
@@ -7482,6 +7494,49 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     return 'no';
   }
 
+  // Distanza di modifica (lettere sbagliate, in più o in meno).
+  function lev(a, b) {
+    if (a === b) return 0;
+    let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+  // Risposta «quasi giusta»: una sola parola con una lettera sbagliata, in più o in meno (due nelle parole lunghe),
+  // oppure le parole giuste ma attaccate o staccate. Le parole brevi (lo/la, di/da…) non contano: lì l'errore è di grammatica.
+  // Restituisce null oppure { space } | { word, n } (posizione della parola, da 0, e numero di parole).
+  function nearMiss(given, accepted) {
+    const x = strip(norm(given));
+    if (!x) return null;
+    for (const a0 of accepted) {
+      const a = strip(norm(a0));
+      if (a === x) continue;
+      if (a.replace(/ /g, '') === x.replace(/ /g, '')) return { space: true };
+      const aw = a.split(' '), xw = x.split(' ');
+      if (aw.length !== xw.length) continue;
+      const diff = aw.map((w, i) => w === xw[i] ? -1 : i).filter(i => i >= 0);
+      if (diff.length !== 1) continue;
+      const w = aw[diff[0]];
+      if (w.length >= 4 && lev(w, xw[diff[0]]) <= (w.length >= 8 ? 2 : 1)) return { word: diff[0], n: aw.length };
+    }
+    return null;
+  }
+  function nearText(nm) {
+    if (nm.space) return 'Controlla gli spazi tra le parole.';
+    if (nm.n > 1) return 'Controlla la parola numero ' + (nm.word + 1) + ': c\'è una lettera sbagliata.';
+    return 'C\'è una lettera sbagliata.';
+  }
+  // Inizio della risposta come indizio: «com…» per le parole lunghe, solo la prima lettera per quelle brevi.
+  function startHint(answer) {
+    const w = String(answer || '').trim().split(/[\s,]+/)[0] || '';
+    if (w.length < 2) return '';
+    const n = w.length >= 7 ? 3 : w.length >= 4 ? 2 : 1;
+    return 'La parola comincia con «' + w.slice(0, n) + '…».';
+  }
+
   // Le consegne sono solo in italiano: la lingua d'origine compare soltanto nel dizionario.
   function l1Line() { return ''; }
 
@@ -7516,6 +7571,14 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     return {
       ready: () => chosen !== null,
       dontKnow() { chosen = -1; },
+      // secondo tentativo: la scelta sbagliata viene barrata e si sceglie fra le altre (solo con almeno 3 opzioni)
+      peek() { return { ok: chosen >= 0 && options[chosen].i === item.a, given: chosen >= 0 ? options[chosen].t : '(non lo so)', canRetry: chosen >= 0 && item.o.length >= 3 }; },
+      retry() {
+        const b = box.querySelector('.opt[data-k="' + chosen + '"]');
+        if (b) { b.classList.remove('sel'); b.classList.add('struck'); b.disabled = true; b.setAttribute('aria-checked', 'false'); }
+        chosen = null; opts.onReady();
+      },
+      hint() { return 'Prova un\'altra risposta.'; },
       check() {
         const correct = item.o[item.a];
         const ok = chosen >= 0 && options[chosen].i === item.a;
@@ -7530,7 +7593,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   };
 
   R.tf = function (box, item, opts) {
-    const it = Object.assign({}, item, { o: ['Vero', 'Falso'], a: item.a ? 0 : 1, _order: [{ t: 'Vero', i: 0 }, { t: 'Falso', i: 1 }] });
+    const it = Object.assign({}, item, { o: ['Vero', 'Falso'], a: item.a ? 0 : 1, _order: [{ t: 'Vero', i: 0 }, { t: 'Falso', i: 1 }], exp: item.exp });
     const r = R.mc(box, it, opts);
     const p = box.querySelector('.q'); if (p) p.insertAdjacentHTML('afterend', l1Line('trueFalse'));
     return r;
@@ -7551,13 +7614,19 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     inp.addEventListener('input', () => opts.onReady());
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); opts.submit(); } });
     setTimeout(() => inp.focus(), 50);
+    let dk = false;
     return {
       ready: () => inp.value.trim().length > 0,
+      dontKnow() { dk = true; },
+      peek() { const g = grade(inp.value, item.a); return { ok: g !== 'no', given: inp.value, near: g === 'no' ? nearMiss(inp.value, item.a) : null, canRetry: !dk }; },
+      retry() { inp.classList.add('wrong'); setTimeout(() => { inp.focus(); inp.select(); }, 30); const clear = () => { inp.classList.remove('wrong'); inp.removeEventListener('input', clear); }; inp.addEventListener('input', clear); },
+      hint(pre) { return pre.near ? 'Quasi! ' + nearText(pre.near) : startHint(item.a[0]); },
       check() {
         inp.disabled = true;
+        if (dk) { inp.classList.add('wrong'); return { ok: false, given: '(non lo so)', expected: item.a[0] }; }
         const g = grade(inp.value, item.a);
         inp.classList.add(g === 'no' ? 'wrong' : 'right');
-        return { ok: g !== 'no', accent: g === 'accent', given: inp.value, expected: item.a[0] };
+        return { ok: g !== 'no', accent: g === 'accent', given: inp.value, expected: item.a[0], near: g === 'no' ? nearMiss(inp.value, item.a) : null };
       }
     };
   };
@@ -7619,13 +7688,20 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     if (opts.autoplay !== false) setTimeout(() => IL2.speech.say(item.say), 300);
     inp.addEventListener('input', () => opts.onReady());
     inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); opts.submit(); } });
+    let dk = false;
+    const acc = item.a.concat([item.say]);
     return {
       ready: () => inp.value.trim().length > 0,
+      dontKnow() { dk = true; },
+      peek() { const g = grade(inp.value, acc); return { ok: g !== 'no', given: inp.value, near: g === 'no' ? nearMiss(inp.value, acc) : null, canRetry: !dk }; },
+      retry() { inp.classList.add('wrong'); setTimeout(() => inp.focus(), 30); const clear = () => { inp.classList.remove('wrong'); inp.removeEventListener('input', clear); }; inp.addEventListener('input', clear); },
+      hint(pre) { return pre.near ? 'Quasi! ' + nearText(pre.near) : 'Ascolta ancora e correggi.'; },
       check() {
         inp.disabled = true;
-        const g = grade(inp.value, item.a.concat([item.say]));
+        if (dk) { inp.classList.add('wrong'); return { ok: false, given: '(non lo so)', expected: item.say }; }
+        const g = grade(inp.value, acc);
         inp.classList.add(g === 'no' ? 'wrong' : 'right');
-        return { ok: g !== 'no', accent: g === 'accent', given: inp.value, expected: item.say };
+        return { ok: g !== 'no', accent: g === 'accent', given: inp.value, expected: item.say, near: g === 'no' ? nearMiss(inp.value, acc) : null };
       }
     };
   };
@@ -7641,10 +7717,12 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       box.querySelectorAll('[data-j]').forEach(b => b.addEventListener('click', () => { picked.splice(+b.dataset.j, 1); draw(); opts.onReady(); }));
     }
     draw();
+    let dk = false;
     return {
       ready: () => picked.length === words.length,
+      dontKnow() { dk = true; },
       check() {
-        const given = picked.map(k => words[k].w).join(' ');
+        const given = dk ? '(non lo so)' : picked.map(k => words[k].w).join(' ');
         const ok = norm(given) === norm(item.a);
         box.querySelector('.answer-line').classList.add(ok ? 'right' : 'wrong');
         box.querySelectorAll('button').forEach(b => { b.disabled = true; });
@@ -7661,12 +7739,14 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
         uniq.map(r => '<option>' + esc(r) + '</option>').join('') + '</select></label>').join('') + '</div>';
     const sels = Array.from(box.querySelectorAll('select'));
     sels.forEach(s => s.addEventListener('change', () => opts.onReady()));
+    let dk = false;
     return {
       ready: () => sels.every(s => s.value),
+      dontKnow() { dk = true; },
       check() {
-        let all = true;
+        let all = !dk;
         sels.forEach((s, i) => { const ok = s.value === item.pairs[i][1]; s.disabled = true; s.classList.add(ok ? 'right' : 'wrong'); if (!ok) all = false; });
-        return { ok: all, given: sels.map(s => s.value).join(', '), expected: item.pairs.map(p => p[0] + ' → ' + p[1]).join(', ') };
+        return { ok: all, given: dk ? '(non lo so)' : sels.map(s => s.value).join(', '), expected: item.pairs.map(p => p[0] + ' → ' + p[1]).join(', ') };
       }
     };
   };
@@ -7686,28 +7766,37 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
 
   // ---------- Sessione ----------
   /*
-   * opts: { title, level, src, items, feedback (default true), requeue (default true), allowDontKnow,
-   *         onAnswer(item, res), engine (PlacementTest: sceglie gli item adattivamente), exitLabel }
+   * opts: { title, level, src, items, feedback (default true), requeue (default true),
+   *         allowDontKnow (default true: «Non lo so» c'è sempre, tranne se false),
+   *         hints (default true: al primo errore un indizio e un secondo tentativo, per gap/dettato/scelta multipla),
+   *         ruleHtml (la regola, apribile in ogni momento con il bottone «Regola»),
+   *         onStruggle() (chiamata una volta se le prime risposte sono sbagliate; può restituire una Promise),
+   *         onAnswer(item, res, firstTime), engine (PlacementTest: sceglie gli item adattivamente), exitLabel }
+   * Il punteggio e il quaderno degli errori contano sempre e solo il primo tentativo.
    */
   function runSession(root, opts) {
     return new Promise(resolve => {
       const feedback = opts.feedback !== false;
+      const allowDK = opts.allowDontKnow !== false;
+      const hints = opts.hints !== false && feedback && !opts.engine;
       const queue = opts.items ? opts.items.slice() : [];
       const missedOnce = new Set();
-      const results = []; const misses = [];
+      const results = []; const misses = []; const firstAnswers = [];
       const started = Date.now();
       let total = opts.engine ? null : queue.length;
       let done = 0, firstTryOk = 0;
-      let current = null, renderer = null, phase = 'answer';
+      let current = null, renderer = null, phase = 'answer', attempt = 0, struggleDue = false, struggleShown = false;
 
       root.innerHTML = '<div class="session">' +
         '<div class="session-top"><button type="button" class="btn icon ghost quit" aria-label="Esci">' + IL2.ui.icon('close') + '</button>' +
-        '<div class="progress"><span></span></div><span class="count small muted"></span></div>' +
+        '<div class="progress"><span></span></div><span class="count small muted"></span>' +
+        (opts.ruleHtml ? '<button type="button" class="btn ghost small rule-btn" title="Leggi la regola">' + IL2.ui.icon('book') + ' Regola</button>' : '') +
+        (opts.engine ? '' : '<button type="button" class="btn icon ghost flag-btn" aria-label="Segnala un problema con questo esercizio" title="Segnala un problema con questo esercizio">' + IL2.ui.icon('flag') + '</button>') + '</div>' +
         (opts.title ? '<h2 class="session-title">' + esc(opts.title) + '</h2>' : '') +
         '<div class="card exercise" aria-live="polite"></div>' +
         '<div class="fb" hidden></div>' +
         // «Non lo so» sta nella barra in basso, sempre visibile anche sui telefoni piccoli
-        '<div class="session-actions">' + (opts.allowDontKnow ? '<button type="button" class="btn dont-know">Non lo so</button>' : '<button type="button" class="btn ghost small report" title="Segnala un problema con questo esercizio">' + IL2.ui.icon('flag') + ' Segnala</button>') +
+        '<div class="session-actions">' + (allowDK ? '<button type="button" class="btn dont-know">Non lo so</button>' : '<span></span>') +
         '<button type="button" class="btn primary go" disabled>Controlla</button></div></div>';
       const box = root.querySelector('.exercise'), fb = root.querySelector('.fb'), go = root.querySelector('.go');
       const bar = root.querySelector('.progress span'), count = root.querySelector('.count');
@@ -7717,9 +7806,10 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       root.querySelector('.quit').addEventListener('click', async () => {
         if (done === 0 || await IL2.ui.confirm(opts.leaveGuard ? 'Vuoi interrompere il test?' : 'Vuoi uscire? I progressi delle risposte date sono già salvati.', 'Esci')) finish(true);
       });
-      const rep = root.querySelector('.report'); if (rep) rep.addEventListener('click', () => report(current, opts));
+      const rep = root.querySelector('.flag-btn'); if (rep) rep.addEventListener('click', () => report(current, opts));
+      const rb = root.querySelector('.rule-btn'); if (rb) rb.addEventListener('click', () => showRule(opts.ruleHtml));
       const dk = root.querySelector('.dont-know');
-      if (dk) dk.addEventListener('click', () => { if (phase === 'answer' && renderer.dontKnow) { renderer.dontKnow(); submit(); } });
+      if (dk) dk.addEventListener('click', () => { if (phase === 'answer' && renderer.dontKnow) { renderer.dontKnow(); submit(true); } });
 
       function progress() {
         const p = opts.engine ? opts.engine.progress() : results.length / Math.max(1, results.length + queue.length + 1);
@@ -7731,54 +7821,93 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
         IL2.speech.stop();
         current = opts.engine ? opts.engine.next() : queue.shift();
         if (!current) return finish(false);
-        phase = 'answer'; fb.hidden = true; fb.innerHTML = '';
-        if (dk) dk.disabled = false;
+        phase = 'answer'; attempt = 0; fb.hidden = true; fb.innerHTML = '';
         go.textContent = 'Controlla';
         go.disabled = true;
         const fn = R[current.t] || R.mc;
         renderer = fn(box, current, {
-          allowDontKnow: opts.allowDontKnow, autoplay: true,
+          allowDontKnow: allowDK, autoplay: true,
           onReady: () => { if (phase === 'answer') go.disabled = !renderer.ready(); },
           submit: () => { if (phase === 'answer' && renderer.ready()) submit(); },
           instant: false
         });
+        if (dk) dk.disabled = !renderer.dontKnow;
         progress();
         box.scrollIntoView({ block: 'nearest' });
       }
 
-      function submit() {
-        phase = 'feedback';
-        if (dk) dk.disabled = true;
-        const res = renderer.check();
+      // Registra la prima risposta a un esercizio (punteggio, errori, quaderno).
+      function recordFirst(res) {
         if (opts.engine) opts.engine.answer(current, res.ok);
         const firstTime = !missedOnce.has(current.uid || current.id);
-        if (firstTime) { done++; if (res.ok) firstTryOk++; }
+        if (firstTime) {
+          done++; if (res.ok) firstTryOk++;
+          firstAnswers.push(res.ok);
+          const n = firstAnswers.length, wrong = firstAnswers.filter(x => !x).length;
+          if (opts.onStruggle && !struggleShown && ((n === 2 && wrong === 2) || (n === 4 && wrong >= 3))) struggleDue = true;
+        }
         results.push({ item: current, ok: res.ok, firstTime });
         if (!res.ok && firstTime) misses.push(current.uid || current.id);
         if (opts.onAnswer) opts.onAnswer(current, res, firstTime);
-        if (!res.ok && opts.requeue !== false && !opts.engine && firstTime) { missedOnce.add(current.uid || current.id); queue.push(Object.assign({}, current, { _retry: true })); }
+        return firstTime;
+      }
+
+      function submit(dontKnow) {
+        // Primo tentativo sbagliato: si registra l'errore, poi un indizio e un secondo tentativo sullo stesso esercizio.
+        if (hints && attempt === 0 && !dontKnow && renderer.peek && renderer.retry) {
+          const pre = renderer.peek();
+          if (!pre.ok && pre.canRetry) {
+            attempt = 1;
+            recordFirst({ ok: false, given: pre.given, near: pre.near });
+            renderer.retry(pre);
+            const tip = renderer.hint ? renderer.hint(pre) : '';
+            let h = '<div class="warn-line">' + IL2.ui.icon('alert') + ' ' + (pre.near ? esc(tip) : 'Non ancora. Riprova!' + (tip ? ' ' + esc(tip) : '')) + '</div>';
+            if (current.exp) h += '<p class="exp"><b>Aiuto:</b> ' + esc(current.exp) + '</p>';
+            fb.innerHTML = h; fb.hidden = false; fb.className = 'fb hint-box';
+            go.disabled = !renderer.ready(); go.textContent = 'Controlla';
+            return;
+          }
+        }
+        phase = 'feedback';
+        if (dk) dk.disabled = true;
+        const res = renderer.check();
+        const second = attempt === 1;
+        const firstTime = second ? false : recordFirst(res);
+        if (second && opts.onAnswer) opts.onAnswer(current, res, false);
+        // all'ultimo tentativo sbagliato l'esercizio torna alla fine (una volta sola)
+        const requeue = !res.ok && opts.requeue !== false && !opts.engine && !current._retry;
+        if (requeue && (firstTime || second)) { missedOnce.add(current.uid || current.id); queue.push(Object.assign({}, current, { _retry: true })); }
         if (!feedback) { setTimeout(next, 150); return; }
-        showFeedback(res);
+        showFeedback(res, second, requeue);
         go.disabled = false;
         go.textContent = queue.length || opts.engine ? 'Avanti' : 'Fine';
         go.focus();
       }
 
-      function showFeedback(res) {
+      function showFeedback(res, second, requeued) {
         let h = '';
         if (res.note) h += '<div class="' + (res.ok ? 'ok-line' : 'no-line') + '">' + IL2.ui.icon(res.ok ? 'check' : 'close') + ' ' + esc(res.note) + '</div>';
-        else if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!']) + '</div>';
+        else if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + (second ? 'Giusto! Hai corretto.' : pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!'])) + '</div>';
         else if (res.ok && res.accent) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi! Attenzione agli accenti: <b>' + esc(res.expected) + '</b></div>';
+        else if (res.near) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi! Si scrive: <b>' + esc(res.expected) + '</b>' + ' ' + speakBtn(res.expected) + '</div>';
         else h += '<div class="no-line">' + IL2.ui.icon('close') + ' La risposta giusta è: <b>' + esc(res.expected) + '</b>' + (current.t === 'dict' || current.t === 'gap' ? ' ' + speakBtn(res.expected) : '') + '</div>';
-        if (current.exp && (!res.ok || res.accent)) h += '<p class="exp">' + esc(current.exp) + '</p>';
-        if (!res.ok && current._retry === undefined && opts.requeue !== false && !opts.engine) h += '<p class="small muted">Questo esercizio tornerà alla fine.</p>';
-        fb.innerHTML = h; fb.hidden = false; fb.className = 'fb ' + (res.ok ? 'good' : 'bad');
+        if (current.exp && (!res.ok || res.accent) && !second) h += '<p class="exp">' + esc(current.exp) + '</p>';
+        if (!res.ok && requeued) h += '<p class="small muted">Questo esercizio tornerà alla fine.</p>';
+        fb.innerHTML = h; fb.hidden = false; fb.className = 'fb ' + (res.ok ? 'good' : res.near ? 'near' : 'bad');
         root.querySelector('.session').classList.remove('pulse-good', 'pulse-bad'); void fb.offsetWidth;
         root.querySelector('.session').classList.add(res.ok ? 'pulse-good' : 'pulse-bad');
         bindSay(fb);
       }
 
-      go.addEventListener('click', () => { if (phase === 'answer') { if (renderer.ready()) submit(); } else next(); });
+      go.addEventListener('click', async () => {
+        if (phase === 'answer') { if (renderer.ready()) submit(); return; }
+        if (phase === 'wait') return;
+        if (struggleDue && !struggleShown && queue.length) {
+          struggleDue = false; struggleShown = true; phase = 'wait';
+          try { await opts.onStruggle(); } catch (e) { /* si continua comunque */ }
+        }
+        next();
+      });
 
       function finish(aborted) {
         IL2.speech.stop();
@@ -7786,6 +7915,14 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
         resolve({ aborted, total: done, correct: firstTryOk, results, misses, durationSec: Math.round((Date.now() - started) / 1000) });
       }
       next();
+    });
+  }
+
+  // La regola della lezione in una finestra: si chiude e si continua da dove si era.
+  function showRule(html) {
+    return IL2.ui.modal('<div class="rule-modal"><h3>' + IL2.ui.icon('book') + ' La regola</h3><div class="theory">' + html + '</div></div>' +
+      '<div class="row end"><button class="btn primary" data-close="ok">Continua</button></div>', {
+      onOpen: m => m.querySelectorAll('.theory i').forEach(el => { el.classList.add('sayable'); el.addEventListener('click', () => IL2.speech.say(el.textContent)); })
     });
   }
 
@@ -7810,7 +7947,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     } catch (e) { toast(e.message, 'bad'); }
   }
 
-  IL2.exercises = { runSession, grade, norm, speakBtn, bindSay, accentBar, bindAccents, l1Line, report };
+  IL2.exercises = { runSession, showRule, nearMiss, grade, norm, speakBtn, bindSay, accentBar, bindAccents, l1Line, report };
 })();
 
 ;
@@ -8411,6 +8548,8 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       h += (prog.done ? '<p class="review-empty small muted">' + icon('check') + ' Niente da ripassare adesso: le parole e gli errori torneranno al momento giusto.</p>' : '') + lessonCard;
     }
     if ((due || errs) && !prog.done) h += lessonCard;
+    const tt = targetedTopic(p);
+    if (tt) h += '<a class="card next-lesson mirato-card" href="#/mirato/' + tt.topic + '"><span class="nl-icon" aria-hidden="true">🎯</span><span class="nl-body"><small>Ripasso mirato</small><b>' + esc(C.topics[tt.topic].name) + '</b><span class="small muted">Qui fai ancora errori. Pochi esercizi e la regola.</span></span><span class="btn primary">Ripassa</span></a>';
     h += '</section>';
 
     // 2. Nuovo contenuto, a scelta fra scrittura, ascolto e parlato
@@ -8493,28 +8632,114 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const u = C.unitById[parts[0]]; if (!u) return IL2.go('percorso');
     if (guard(view, u.level, ['percorso?l=' + u.level, 'Lezioni ' + u.level])) return;
     const p = P(); const d = p.unitsDone[u.id];
+    const tries = (p.lessonTries || {})[u.id] || { quits: 0, low: 0 };
+    const short = shortItems(u);
+    // lezione difficile (uscito presto due volte, o finita sotto il 70%): si propone la versione corta
+    const offerShort = !d && short.length >= 4 && (tries.quits >= 2 || tries.low >= 1);
     view.innerHTML = '<a class="back" href="#/percorso?l=' + u.level + '">' + icon('back') + 'Lezioni ' + u.level + '</a>' +
       '<div class="unit-head lvl-' + u.level + '"><span class="uh-icon" aria-hidden="true">' + u.icon + '</span><div><p class="eyebrow">' + u.level + ' · ' + E.LEVEL_NAME[u.level] + '</p><h1>' + esc(u.title) + '</h1><p class="can">' + icon('target') + ' ' + esc(u.can) + '</p></div></div>' +
+      (offerShort ? '<section class="card short-offer">' + icon('target') + '<p><b>L\'ultima volta è stato difficile.</b> Prova prima la versione corta: ' + short.length + ' esercizi.</p><button class="btn primary" id="short">Versione corta (' + short.length + ')</button></section>' : '') +
       '<article class="card theory">' + u.theory + '</article><p class="small muted">' + icon('speaker') + ' Tocca le frasi in corsivo per ascoltarle.</p>' +
-      '<div class="row wrap sticky-actions"><button class="btn primary big" id="go">' + (d ? 'Rifai gli esercizi' : 'Inizia gli esercizi') + ' (' + u.items.length + ')</button>' +
+      '<div class="row wrap sticky-actions"><button class="btn ' + (offerShort ? 'ghost' : 'primary') + ' big" id="go">' + (d ? 'Rifai gli esercizi' : 'Inizia gli esercizi') + ' (' + u.items.length + ')</button>' +
       (u.vocab && C.vocabById[u.vocab] ? '<a class="btn ghost" href="#/tema/' + u.vocab + '">' + icon('dict') + ' Parole: ' + esc(C.vocabById[u.vocab].title) + '</a>' : '') + '</div>' +
       (d ? '<p class="small muted">Completata il ' + fmtDate(d.at) + ' · miglior risultato ' + d.best + '%</p>' : '');
     view.querySelectorAll('.theory i').forEach(el => { el.classList.add('sayable'); el.setAttribute('role', 'button'); el.tabIndex = 0; el.title = 'Tocca per ascoltare'; const s = () => IL2.speech.say(el.textContent); el.addEventListener('click', s); el.addEventListener('keydown', e => { if (e.key === 'Enter') s(); }); });
-    view.querySelector('#go').addEventListener('click', async () => {
+    const struggle = async () => {
+      const r = await IL2.ui.modal('<h3>Difficile?</h3><p>Va bene. Sbagliare è normale.</p>' +
+        '<div class="row end"><button class="btn ghost" data-close="null">Continua</button><button class="btn primary" data-close="rule">' + icon('book') + ' Leggi la regola</button></div>');
+      if (r === 'rule') await X.showRule(u.theory);
+    };
+    const run = async isShort => {
       const r = await X.runSession(view, {
-        title: u.title, items: u.items,
+        title: u.title + (isShort ? ' · versione corta' : ''), items: isShort ? short : u.items, ruleHtml: u.theory, onStruggle: struggle,
         onAnswer: (item, res, first) => { if (first) E.recordAnswer(p, item, res.ok, { level: u.level, given: res.given, src: u.id }); }
       });
-      if (r.aborted && r.total === 0) return IL2.go('unita/' + u.id);
       const pv = pctOf(r);
+      // uscite precoci e risultati bassi: servono a proporre la versione corta la volta dopo
+      const lt = p.lessonTries || (p.lessonTries = {});
+      const t = lt[u.id] || (lt[u.id] = { quits: 0, low: 0, at: 0 });
+      if (!isShort) {
+        if (r.aborted && r.total < u.items.length / 2) t.quits++;
+        else if (!r.aborted && pv < 70) t.low++;
+        t.at = Date.now();
+      }
+      if (r.aborted && r.total === 0) return IL2.go('unita/' + u.id);
+      if (isShort) {
+        done({ type: 'unit', ref: u.id, short: true, skill: 'grammatica', correct: r.correct, total: r.total, durationSec: r.durationSec, topics: u.topics, misses: r.misses });
+        IL2.award(3 + r.correct * 2);
+        view.innerHTML = resultCard(r, '<p>Bene! Adesso prova la lezione intera.</p>',
+          '<button class="btn primary" id="full">Prova la lezione intera</button>' + btn('unita/' + u.id, 'Leggi la regola') + btn('oggi', 'Oggi'));
+        view.querySelector('#full').addEventListener('click', () => run(false));
+        return;
+      }
       const wasDone = !!p.unitsDone[u.id];
       if (!r.aborted && pv >= 70) { const prev = p.unitsDone[u.id]; p.unitsDone[u.id] = { at: Date.now(), best: Math.max(pv, prev ? prev.best : 0), last: pv }; }
       done({ type: 'unit', ref: u.id, skill: 'grammatica', correct: r.correct, total: r.total, durationSec: r.durationSec, topics: u.topics, misses: r.misses });
       IL2.award(5 + r.correct * 2);
       const nu = E.nextUnit(p);
       const ready = !wasDone && E.levelUpReady(p);
-      view.innerHTML = resultCard(r, pv >= 70 ? '<p class="ok-line">' + icon('check') + ' Lezione completata!</p>' + (ready ? '<p>Hai completato quasi tutte le lezioni del ' + u.level + ': puoi fare il test per sbloccare il livello successivo.</p>' : '') : '<p>Per completare la lezione serve almeno il 70%.</p>',
+      view.innerHTML = resultCard(r, pv >= 70 ? '<p class="ok-line">' + icon('check') + ' Lezione completata!</p>' + (ready ? '<p>Hai completato quasi tutte le lezioni del ' + u.level + ': puoi fare il test per sbloccare il livello successivo.</p>' : '') : '<p>Per completare la lezione serve almeno il 70%.' + (short.length >= 4 ? ' Prova prima la versione corta.' : '') + '</p>',
         (pv < 70 ? btn('unita/' + u.id, 'Riprova la lezione', 'primary') : ready ? btn('test', 'Fai il test di livello', 'primary') : nu ? btn('unita/' + nu.unit.id, 'Prossima: ' + esc(nu.unit.title), 'primary') : '') + btn('percorso?l=' + u.level, 'Lezioni') + btn('oggi', 'Oggi'));
+    };
+    view.querySelector('#go').addEventListener('click', () => run(false));
+    const sb = view.querySelector('#short'); if (sb) sb.addEventListener('click', () => run(true));
+  };
+
+  // Versione corta di una lezione: 6 esercizi a scelta multipla o da completare, distribuiti su tutta la lezione.
+  function shortItems(u) {
+    const pool = u.items.filter(it => (it.t === 'mc' || it.t === 'tf' || it.t === 'gap') && !it.say);
+    if (pool.length <= 6) return pool;
+    const out = [];
+    for (let k = 0; k < 6; k++) out.push(pool[Math.floor(k * pool.length / 6)]);
+    return out;
+  }
+
+  // ---------- Ripasso mirato ----------
+  // Un argomento con almeno 3 errori negli ultimi 14 giorni diventa un ripasso mirato in «Oggi».
+  // Sparisce quando lo studente l'ha fatto (torna solo con nuovi errori, e non prima di 2 giorni).
+  const DAY = 86400000;
+  function targetedTopic(p) {
+    const since = Date.now() - 14 * DAY, by = {};
+    for (const e of p.errors) {
+      if (!e.topic || !C.topics[e.topic] || e.at < since) continue;
+      const it = C.itemByUid[e.key]; if (!it || !open(it.lv || 'A1')) continue;
+      const b = by[e.topic] || (by[e.topic] = { n: 0, last: 0, keys: [] });
+      b.n += e.count || 1; b.last = Math.max(b.last, e.at); if (!b.keys.includes(e.key)) b.keys.push(e.key);
+    }
+    const m = p.mirato || {};
+    const list = Object.entries(by).filter(([t, b]) => b.n >= 3 && !(m[t] && (m[t].at > b.last || m[t].at > Date.now() - 2 * DAY))).sort((a, b) => b[1].n - a[1].n);
+    return list.length ? Object.assign({ topic: list[0][0] }, list[0][1]) : null;
+  }
+  function targetedItems(p, topic) {
+    const errs = p.errors.filter(e => e.topic === topic && C.itemByUid[e.key]).sort((a, b) => b.at - a.at);
+    const mine = []; for (const e of errs) { const it = C.itemByUid[e.key]; if (!mine.includes(it) && open(it.lv || 'A1')) mine.push(it); if (mine.length >= 3) break; }
+    const LV = E.LEVELS;
+    const easy = shuffle(C.itemsForTopic(topic).filter(it => !mine.includes(it) && open(it.lv || 'A1') && (it.t === 'mc' || it.t === 'gap' || it.t === 'tf')))
+      .sort((a, b) => LV.indexOf(a.lv || 'A1') - LV.indexOf(b.lv || 'A1')).slice(0, 6 - mine.length);
+    // si comincia da un esercizio facile, poi si alternano i suoi errori e gli esercizi nuovi
+    const out = []; let i = 0, j = 0;
+    while (out.length < 6 && (i < easy.length || j < mine.length)) { if (i < easy.length) out.push(easy[i++]); if (j < mine.length && out.length < 6) out.push(mine[j++]); }
+    return out;
+  }
+  function topicRule(topic) {
+    const u = C.units.filter(x => x.topics.includes(topic) && open(x.level)).sort((a, b) => E.LEVELS.indexOf(a.level) - E.LEVELS.indexOf(b.level))[0];
+    return u ? u.theory : '';
+  }
+  R.mirato = async function (view, parts) {
+    const topic = parts[0]; const def = C.topics[topic]; if (!def) return IL2.go('oggi');
+    const p = P(); const items = targetedItems(p, topic); const rule = topicRule(topic);
+    if (!items.length) return IL2.go('oggi');
+    view.innerHTML = '<a class="back" href="#/oggi">' + icon('back') + 'Oggi</a><div class="page-head"><h1>Ripasso mirato</h1><p class="muted">' + esc(def.name) + '</p></div>' +
+      '<section class="card"><p>Qui fai ancora errori. È normale!</p><p>Fai ' + items.length + ' esercizi. Ci sono anche le tue frasi sbagliate.</p>' +
+      (rule ? '<details class="rule-details"><summary>' + icon('book') + ' Leggi la regola</summary><div class="theory">' + rule + '</div></details>' : '') + '</section>' +
+      '<button class="btn primary big" id="go">Inizia (' + items.length + ')</button>';
+    view.querySelector('#go').addEventListener('click', async () => {
+      const r = await X.runSession(view, { title: 'Ripasso mirato: ' + def.name, items, ruleHtml: rule || undefined, onAnswer: (item, res, first) => { if (first) E.recordAnswer(p, item, res.ok, { given: res.given }); } });
+      if (r.aborted && !r.total) return IL2.go('oggi');
+      (p.mirato || (p.mirato = {}))[topic] = { at: Date.now(), correct: r.correct, total: r.total };
+      done({ type: 'topic', ref: topic, mirato: true, skill: 'grammatica', correct: r.correct, total: r.total, durationSec: r.durationSec, topics: [topic], misses: r.misses });
+      IL2.award(3 + r.correct * 2);
+      view.innerHTML = resultCard(r, '<p>Gli esercizi sbagliati tornano nel ripasso.</p>', btn('oggi', 'Torna a Oggi', 'primary'));
     });
   };
 
@@ -10138,7 +10363,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const gmList = Object.entries(gm).sort((x, y) => y[1] - x[1]).slice(0, 20);
     const counts = { unit: Object.keys(p.unitsDone || {}).length, reading: Object.keys(p.readingsDone || {}).length, listening: Object.keys(p.listeningsDone || {}).length, writing: d.submissions.length };
     return '<div class="grid2"><div class="card"><h3>Cosa ha fatto</h3><div class="mini-stats"><span>' + icon('path') + '<b>' + counts.unit + '</b> lezioni</span><span>' + icon('read') + '<b>' + counts.reading + '</b> letture</span><span>' + icon('headphones') + '<b>' + counts.listening + '</b> ascolti</span><span>' + icon('pen') + '<b>' + counts.writing + '</b> scritti</span></div>' +
-      '<ul class="activity small">' + (acts.length ? acts.map(a => '<li>' + icon(ACT_ICON[a.type] || 'check') + '<span>' + esc(C.describe(a.type, a.ref) || a.type) + '</span><span class="muted">' + (a.total ? a.correct + '/' + a.total + ' · ' : '') + (a.durationSec ? Math.max(1, Math.round(a.durationSec / 60)) + ' min · ' : '') + fmtDate(a.at, true) + '</span></li>').join('') : '<li class="muted">Nessuna attività.</li>') + '</ul></div>' +
+      '<ul class="activity small">' + (acts.length ? acts.map(a => '<li>' + icon(ACT_ICON[a.type] || 'check') + '<span>' + esc((a.mirato ? 'Ripasso mirato · ' + ((C.topics[a.ref] || {}).name || a.ref) : C.describe(a.type, a.ref) || a.type) + (a.short ? ' (versione corta)' : '')) + '</span><span class="muted">' + (a.total ? a.correct + '/' + a.total + ' · ' : '') + (a.durationSec ? Math.max(1, Math.round(a.durationSec / 60)) + ' min · ' : '') + fmtDate(a.at, true) + '</span></li>').join('') : '<li class="muted">Nessuna attività.</li>') + '</ul></div>' +
       '<div class="card"><h3>Lessico</h3><div class="mini-stats"><span><b>' + srs.length + '</b> parole incontrate</span><span><b>' + learned + '</b> memorizzate</span><span><b>' + due + '</b> da ripassare</span></div>' +
       (themes.length ? '<div class="table-wrap"><table class="tbl small"><tr><th>Tema</th><th>Liv.</th><th>Memorizzate</th></tr>' + themes.map(x => '<tr><td>' + esc(x.t.title) + '</td><td>' + x.t.level + '</td><td class="mcell">' + meter(x.l, x.t.words.length, x.l === x.t.words.length ? 'ok' : '') + '<small>' + x.l + '/' + x.t.words.length + '</small></td></tr>').join('') + '</table></div>' : '<p class="muted small">Non ha ancora iniziato il lessico.</p>') +
       '<h4>Parole sbagliate nel bingo <small class="muted">(ultimi 30 giorni)</small></h4>' + (gmList.length ? '<p class="small">' + gmList.map(([w, c]) => '<span class="tag" lang="it">' + esc(w) + (c > 1 ? ' ×' + c : '') + '</span>').join(' ') + '</p><p class="small muted">Queste parole tornano nel suo Ripasso parole.</p>' : '<p class="muted small">Nessuna parola sbagliata nel bingo.</p>') + '</div></div>' +
