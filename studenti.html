@@ -7525,16 +7525,16 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     return null;
   }
   function nearText(nm) {
-    if (nm.space) return 'Le lettere sono giuste: controlla gli spazi tra le parole.';
-    if (nm.n > 1) return 'Una parola ha una lettera sbagliata, in più o in meno: guarda la parola n. ' + (nm.word + 1) + '.';
-    return 'Una lettera è sbagliata, in più o in meno.';
+    if (nm.space) return 'Controlla gli spazi tra le parole.';
+    if (nm.n > 1) return 'Controlla la parola numero ' + (nm.word + 1) + ': c\'è una lettera sbagliata.';
+    return 'C\'è una lettera sbagliata.';
   }
   // Inizio della risposta come indizio: «com…» per le parole lunghe, solo la prima lettera per quelle brevi.
   function startHint(answer) {
     const w = String(answer || '').trim().split(/[\s,]+/)[0] || '';
     if (w.length < 2) return '';
     const n = w.length >= 7 ? 3 : w.length >= 4 ? 2 : 1;
-    return 'La risposta comincia con «' + w.slice(0, n) + '…».';
+    return 'La parola comincia con «' + w.slice(0, n) + '…».';
   }
 
   // Le consegne sono solo in italiano: la lingua d'origine compare soltanto nel dizionario.
@@ -7578,7 +7578,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
         if (b) { b.classList.remove('sel'); b.classList.add('struck'); b.disabled = true; b.setAttribute('aria-checked', 'false'); }
         chosen = null; opts.onReady();
       },
-      hint() { return 'Non è questa: scegli fra le altre.'; },
+      hint() { return 'Prova un\'altra risposta.'; },
       check() {
         const correct = item.o[item.a];
         const ok = chosen >= 0 && options[chosen].i === item.a;
@@ -7695,7 +7695,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       dontKnow() { dk = true; },
       peek() { const g = grade(inp.value, acc); return { ok: g !== 'no', given: inp.value, near: g === 'no' ? nearMiss(inp.value, acc) : null, canRetry: !dk }; },
       retry() { inp.classList.add('wrong'); setTimeout(() => inp.focus(), 30); const clear = () => { inp.classList.remove('wrong'); inp.removeEventListener('input', clear); }; inp.addEventListener('input', clear); },
-      hint(pre) { return pre.near ? 'Quasi! ' + nearText(pre.near) : 'Riascolta, anche con «Più lento», e correggi la frase.'; },
+      hint(pre) { return pre.near ? 'Quasi! ' + nearText(pre.near) : 'Ascolta ancora e correggi.'; },
       check() {
         inp.disabled = true;
         if (dk) { inp.classList.add('wrong'); return { ok: false, given: '(non lo so)', expected: item.say }; }
@@ -7790,7 +7790,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       root.innerHTML = '<div class="session">' +
         '<div class="session-top"><button type="button" class="btn icon ghost quit" aria-label="Esci">' + IL2.ui.icon('close') + '</button>' +
         '<div class="progress"><span></span></div><span class="count small muted"></span>' +
-        (opts.ruleHtml ? '<button type="button" class="btn ghost small rule-btn" title="Rileggi la regola">' + IL2.ui.icon('book') + ' Regola</button>' : '') +
+        (opts.ruleHtml ? '<button type="button" class="btn ghost small rule-btn" title="Leggi la regola">' + IL2.ui.icon('book') + ' Regola</button>' : '') +
         (opts.engine ? '' : '<button type="button" class="btn icon ghost flag-btn" aria-label="Segnala un problema con questo esercizio" title="Segnala un problema con questo esercizio">' + IL2.ui.icon('flag') + '</button>') + '</div>' +
         (opts.title ? '<h2 class="session-title">' + esc(opts.title) + '</h2>' : '') +
         '<div class="card exercise" aria-live="polite"></div>' +
@@ -7887,9 +7887,9 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       function showFeedback(res, second, requeued) {
         let h = '';
         if (res.note) h += '<div class="' + (res.ok ? 'ok-line' : 'no-line') + '">' + IL2.ui.icon(res.ok ? 'check' : 'close') + ' ' + esc(res.note) + '</div>';
-        else if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + (second ? 'Giusto, al secondo tentativo!' : pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!'])) + '</div>';
+        else if (res.ok && !res.accent) h += '<div class="ok-line">' + IL2.ui.icon('check') + ' ' + (second ? 'Giusto! Hai corretto.' : pick(['Giusto!', 'Esatto!', 'Perfetto!', 'Ottimo!', 'Molto bene!'])) + '</div>';
         else if (res.ok && res.accent) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi! Attenzione agli accenti: <b>' + esc(res.expected) + '</b></div>';
-        else if (res.near) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi giusto! Si scrive: <b>' + esc(res.expected) + '</b>' + ' ' + speakBtn(res.expected) + '</div>';
+        else if (res.near) h += '<div class="warn-line">' + IL2.ui.icon('alert') + ' Quasi! Si scrive: <b>' + esc(res.expected) + '</b>' + ' ' + speakBtn(res.expected) + '</div>';
         else h += '<div class="no-line">' + IL2.ui.icon('close') + ' La risposta giusta è: <b>' + esc(res.expected) + '</b>' + (current.t === 'dict' || current.t === 'gap' ? ' ' + speakBtn(res.expected) : '') + '</div>';
         if (current.exp && (!res.ok || res.accent) && !second) h += '<p class="exp">' + esc(current.exp) + '</p>';
         if (!res.ok && requeued) h += '<p class="small muted">Questo esercizio tornerà alla fine.</p>';
@@ -7921,7 +7921,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   // La regola della lezione in una finestra: si chiude e si continua da dove si era.
   function showRule(html) {
     return IL2.ui.modal('<div class="rule-modal"><h3>' + IL2.ui.icon('book') + ' La regola</h3><div class="theory">' + html + '</div></div>' +
-      '<div class="row end"><button class="btn primary" data-close="ok">Ho capito, continuo</button></div>', {
+      '<div class="row end"><button class="btn primary" data-close="ok">Continua</button></div>', {
       onOpen: m => m.querySelectorAll('.theory i').forEach(el => { el.classList.add('sayable'); el.addEventListener('click', () => IL2.speech.say(el.textContent)); })
     });
   }
@@ -8549,7 +8549,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     }
     if ((due || errs) && !prog.done) h += lessonCard;
     const tt = targetedTopic(p);
-    if (tt) h += '<a class="card next-lesson mirato-card" href="#/mirato/' + tt.topic + '"><span class="nl-icon" aria-hidden="true">🎯</span><span class="nl-body"><small>Ripasso mirato</small><b>' + esc(C.topics[tt.topic].name) + '</b><span class="small muted">Qui hai sbagliato qualche volta: pochi esercizi brevi, con la regola.</span></span><span class="btn primary">Ripassa</span></a>';
+    if (tt) h += '<a class="card next-lesson mirato-card" href="#/mirato/' + tt.topic + '"><span class="nl-icon" aria-hidden="true">🎯</span><span class="nl-body"><small>Ripasso mirato</small><b>' + esc(C.topics[tt.topic].name) + '</b><span class="small muted">Qui fai ancora errori. Pochi esercizi e la regola.</span></span><span class="btn primary">Ripassa</span></a>';
     h += '</section>';
 
     // 2. Nuovo contenuto, a scelta fra scrittura, ascolto e parlato
@@ -8638,15 +8638,15 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const offerShort = !d && short.length >= 4 && (tries.quits >= 2 || tries.low >= 1);
     view.innerHTML = '<a class="back" href="#/percorso?l=' + u.level + '">' + icon('back') + 'Lezioni ' + u.level + '</a>' +
       '<div class="unit-head lvl-' + u.level + '"><span class="uh-icon" aria-hidden="true">' + u.icon + '</span><div><p class="eyebrow">' + u.level + ' · ' + E.LEVEL_NAME[u.level] + '</p><h1>' + esc(u.title) + '</h1><p class="can">' + icon('target') + ' ' + esc(u.can) + '</p></div></div>' +
-      (offerShort ? '<section class="card short-offer">' + icon('target') + '<p><b>L\'ultima volta questa lezione è stata difficile.</b> Puoi cominciare dalla versione corta: ' + short.length + ' esercizi, con la regola sempre a portata di mano. Poi provi la lezione intera.</p><button class="btn primary" id="short">Versione corta (' + short.length + ')</button></section>' : '') +
+      (offerShort ? '<section class="card short-offer">' + icon('target') + '<p><b>L\'ultima volta è stato difficile.</b> Prova prima la versione corta: ' + short.length + ' esercizi.</p><button class="btn primary" id="short">Versione corta (' + short.length + ')</button></section>' : '') +
       '<article class="card theory">' + u.theory + '</article><p class="small muted">' + icon('speaker') + ' Tocca le frasi in corsivo per ascoltarle.</p>' +
       '<div class="row wrap sticky-actions"><button class="btn ' + (offerShort ? 'ghost' : 'primary') + ' big" id="go">' + (d ? 'Rifai gli esercizi' : 'Inizia gli esercizi') + ' (' + u.items.length + ')</button>' +
       (u.vocab && C.vocabById[u.vocab] ? '<a class="btn ghost" href="#/tema/' + u.vocab + '">' + icon('dict') + ' Parole: ' + esc(C.vocabById[u.vocab].title) + '</a>' : '') + '</div>' +
       (d ? '<p class="small muted">Completata il ' + fmtDate(d.at) + ' · miglior risultato ' + d.best + '%</p>' : '');
     view.querySelectorAll('.theory i').forEach(el => { el.classList.add('sayable'); el.setAttribute('role', 'button'); el.tabIndex = 0; el.title = 'Tocca per ascoltare'; const s = () => IL2.speech.say(el.textContent); el.addEventListener('click', s); el.addEventListener('keydown', e => { if (e.key === 'Enter') s(); }); });
     const struggle = async () => {
-      const r = await IL2.ui.modal('<h3>Un po\' difficile?</h3><p>Va bene così: sbagliando si impara. Se vuoi, rileggi la regola e poi continui da dove sei.</p>' +
-        '<div class="row end"><button class="btn ghost" data-close="null">Continuo</button><button class="btn primary" data-close="rule">' + icon('book') + ' Rileggi la regola</button></div>');
+      const r = await IL2.ui.modal('<h3>Difficile?</h3><p>Va bene. Sbagliare è normale.</p>' +
+        '<div class="row end"><button class="btn ghost" data-close="null">Continua</button><button class="btn primary" data-close="rule">' + icon('book') + ' Leggi la regola</button></div>');
       if (r === 'rule') await X.showRule(u.theory);
     };
     const run = async isShort => {
@@ -8667,8 +8667,8 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       if (isShort) {
         done({ type: 'unit', ref: u.id, short: true, skill: 'grammatica', correct: r.correct, total: r.total, durationSec: r.durationSec, topics: u.topics, misses: r.misses });
         IL2.award(3 + r.correct * 2);
-        view.innerHTML = resultCard(r, '<p>Hai fatto la versione corta. Quando te la senti, prova la lezione intera: è quella che conta per completare la lezione.</p>',
-          '<button class="btn primary" id="full">Prova la lezione intera</button>' + btn('unita/' + u.id, 'Rileggi la regola') + btn('oggi', 'Oggi'));
+        view.innerHTML = resultCard(r, '<p>Bene! Adesso prova la lezione intera.</p>',
+          '<button class="btn primary" id="full">Prova la lezione intera</button>' + btn('unita/' + u.id, 'Leggi la regola') + btn('oggi', 'Oggi'));
         view.querySelector('#full').addEventListener('click', () => run(false));
         return;
       }
@@ -8678,7 +8678,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       IL2.award(5 + r.correct * 2);
       const nu = E.nextUnit(p);
       const ready = !wasDone && E.levelUpReady(p);
-      view.innerHTML = resultCard(r, pv >= 70 ? '<p class="ok-line">' + icon('check') + ' Lezione completata!</p>' + (ready ? '<p>Hai completato quasi tutte le lezioni del ' + u.level + ': puoi fare il test per sbloccare il livello successivo.</p>' : '') : '<p>Per completare la lezione serve almeno il 70%.' + (short.length >= 4 ? ' Puoi allenarti prima con la versione corta.' : '') + '</p>',
+      view.innerHTML = resultCard(r, pv >= 70 ? '<p class="ok-line">' + icon('check') + ' Lezione completata!</p>' + (ready ? '<p>Hai completato quasi tutte le lezioni del ' + u.level + ': puoi fare il test per sbloccare il livello successivo.</p>' : '') : '<p>Per completare la lezione serve almeno il 70%.' + (short.length >= 4 ? ' Prova prima la versione corta.' : '') + '</p>',
         (pv < 70 ? btn('unita/' + u.id, 'Riprova la lezione', 'primary') : ready ? btn('test', 'Fai il test di livello', 'primary') : nu ? btn('unita/' + nu.unit.id, 'Prossima: ' + esc(nu.unit.title), 'primary') : '') + btn('percorso?l=' + u.level, 'Lezioni') + btn('oggi', 'Oggi'));
     };
     view.querySelector('#go').addEventListener('click', () => run(false));
@@ -8730,8 +8730,8 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const p = P(); const items = targetedItems(p, topic); const rule = topicRule(topic);
     if (!items.length) return IL2.go('oggi');
     view.innerHTML = '<a class="back" href="#/oggi">' + icon('back') + 'Oggi</a><div class="page-head"><h1>Ripasso mirato</h1><p class="muted">' + esc(def.name) + '</p></div>' +
-      '<section class="card"><p>Su questo argomento hai sbagliato alcune volte. Va benissimo: è proprio così che si impara.</p><p>Fai ' + items.length + ' esercizi brevi. Ci sono anche le frasi dove hai sbagliato.</p>' +
-      (rule ? '<details class="rule-details"><summary>' + icon('book') + ' Rileggi la regola</summary><div class="theory">' + rule + '</div></details>' : '') + '</section>' +
+      '<section class="card"><p>Qui fai ancora errori. È normale!</p><p>Fai ' + items.length + ' esercizi. Ci sono anche le tue frasi sbagliate.</p>' +
+      (rule ? '<details class="rule-details"><summary>' + icon('book') + ' Leggi la regola</summary><div class="theory">' + rule + '</div></details>' : '') + '</section>' +
       '<button class="btn primary big" id="go">Inizia (' + items.length + ')</button>';
     view.querySelector('#go').addEventListener('click', async () => {
       const r = await X.runSession(view, { title: 'Ripasso mirato: ' + def.name, items, ruleHtml: rule || undefined, onAnswer: (item, res, first) => { if (first) E.recordAnswer(p, item, res.ok, { given: res.given }); } });
@@ -8739,7 +8739,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       (p.mirato || (p.mirato = {}))[topic] = { at: Date.now(), correct: r.correct, total: r.total };
       done({ type: 'topic', ref: topic, mirato: true, skill: 'grammatica', correct: r.correct, total: r.total, durationSec: r.durationSec, topics: [topic], misses: r.misses });
       IL2.award(3 + r.correct * 2);
-      view.innerHTML = resultCard(r, '<p>Gli esercizi sbagliati tornano nel ripasso finché non li fai giusti due volte.</p>', btn('oggi', 'Torna a Oggi', 'primary'));
+      view.innerHTML = resultCard(r, '<p>Gli esercizi sbagliati tornano nel ripasso.</p>', btn('oggi', 'Torna a Oggi', 'primary'));
     });
   };
 
