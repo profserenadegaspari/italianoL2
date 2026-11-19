@@ -6683,6 +6683,217 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
 })();
 
 ;
+/* js/content/scorta-a2-piu.js */
+/*
+ * Altri esercizi per le lezioni A2: con 16 esercizi per volta serve una scorta di circa 30 per lezione.
+ */
+(function () {
+  const C = (window.IL2 = window.IL2 || {}).content = window.IL2.content || {};
+  const S = C.scorta = C.scorta || {};
+  const add = (id, items) => { (S[id] = S[id] || []).push(...items); };
+
+  add('a2-01', [
+    { t: 'gap', q: 'Ieri sera io ___ una pizza con gli amici.', hint: 'mangiare', a: ['ho mangiato'], topic: 'passato-avere' },
+    { t: 'gap', q: 'Tu ___ il film di ieri?', hint: 'vedere', a: ['hai visto', 'hai veduto'], topic: 'participi-irregolari' },
+    { t: 'gap', q: 'Noi ___ la lettera alla nonna.', hint: 'scrivere', a: ['abbiamo scritto'], topic: 'participi-irregolari' },
+    { t: 'mc', q: 'Sabato Marco ___ a calcio tutto il pomeriggio.', o: ['ha giocato', 'è giocato', 'ha giocata'], a: 0, topic: 'passato-avere' },
+    { t: 'mc', q: 'Participio passato di "chiudere":', o: ['chiuso', 'chiudito', 'chiusto'], a: 0, topic: 'participi-irregolari' },
+    { t: 'mc', q: 'Participio passato di "rispondere":', o: ['risposto', 'risponduto', 'risposo'], a: 0, topic: 'participi-irregolari' },
+    { t: 'mc', q: 'Voi ___ la spesa ieri?', o: ['avete fatto', 'avete fatte', 'siete fatto'], a: 0, topic: 'passato-avere' },
+    { t: 'order', words: ['Ieri', 'ho', 'letto', 'un', 'libro'], a: 'Ieri ho letto un libro', topic: 'participi-irregolari' }
+  ]);
+
+  add('a2-02', [
+    { t: 'gap', q: 'Ieri Anna ___ a casa alle otto.', hint: 'tornare', a: ['è tornata'], topic: 'passato-essere' },
+    { t: 'gap', q: 'I miei amici ___ in Spagna.', hint: 'andare', a: ['sono andati'], topic: 'passato-essere' },
+    { t: 'gap', q: 'Io (Ali) ___ in Italia due anni fa.', hint: 'arrivare', a: ['sono arrivato'], topic: 'passato-essere' },
+    { t: 'mc', q: 'Le ragazze ___ al cinema.', o: ['sono andate', 'sono andati', 'hanno andato'], a: 0, topic: 'passato-essere' },
+    { t: 'mc', q: 'Stamattina Luca ___ tardi.', o: ['è uscito', 'ha uscito', 'è uscita'], a: 0, topic: 'passato-essere' },
+    { t: 'mc', q: 'Domenica noi ___ a casa.', o: ['siamo rimasti', 'abbiamo rimasto', 'siamo rimasto'], a: 0, topic: 'passato-essere' },
+    { t: 'tf', q: '"Mia madre è nata in Marocco" è corretto.', a: true, topic: 'passato-essere' },
+    { t: 'dict', say: 'Siamo partiti presto e siamo arrivati a Roma.', a: ['siamo partiti presto e siamo arrivati a roma'], topic: 'passato-essere', skill: 'ascolto' }
+  ]);
+
+  add('a2-03', [
+    { t: 'gap', q: 'Il gatto dorme ___ letto. (su + il)', a: ['sul'], topic: 'preposizioni-articolate' },
+    { t: 'gap', q: 'Vado ___ dottore. (da + il)', a: ['dal'], topic: 'preposizioni-articolate' },
+    { t: 'gap', q: 'Le chiavi sono ___ borsa. (in + la)', a: ['nella'], topic: 'preposizioni-articolate' },
+    { t: 'mc', q: 'Il libro ___ ragazzo è sul banco.', o: ['del', 'dal', 'nel'], a: 0, topic: 'preposizioni-articolate' },
+    { t: 'mc', q: 'Telefono ___ amici.', o: ['agli', 'ai', 'alle'], a: 0, topic: 'preposizioni-articolate' },
+    { t: 'mc', q: 'Il quaderno è ___ zaino.', o: ['nello', 'nel', 'nella'], a: 0, topic: 'preposizioni-articolate' },
+    { t: 'mc', q: 'Mio padre esce ___ ufficio alle sei.', o: ['dall\'', 'dell\'', 'sull\''], a: 0, topic: 'preposizioni-articolate' },
+    { t: 'order', words: ['Il', 'telefono', 'è', 'sul', 'tavolo'], a: 'Il telefono è sul tavolo', topic: 'preposizioni-articolate' }
+  ]);
+
+  add('a2-04', [
+    { t: 'gap', q: 'Da bambino io ___ sempre al parco.', hint: 'giocare', a: ['giocavo'], topic: 'imperfetto' },
+    { t: 'gap', q: 'Mia nonna ___ molto bene.', hint: 'cucinare', a: ['cucinava'], topic: 'imperfetto' },
+    { t: 'gap', q: 'Noi ___ in un piccolo paese.', hint: 'vivere', a: ['vivevamo'], topic: 'imperfetto' },
+    { t: 'mc', q: 'Quando ero piccolo, ___ paura del buio.', o: ['avevo', 'ho avuto', 'avrò'], a: 0, topic: 'imperfetto' },
+    { t: 'mc', q: 'Imperfetto di "fare" (tu):', o: ['facevi', 'favi', 'fasti'], a: 0, topic: 'imperfetto' },
+    { t: 'mc', q: 'Imperfetto di "essere" (loro):', o: ['erano', 'sono', 'essevano'], a: 0, topic: 'imperfetto' },
+    { t: 'tf', q: 'L\'imperfetto serve per raccontare le abitudini del passato.', a: true, topic: 'imperfetto' },
+    { t: 'dict', say: 'Da piccola andavo a scuola a piedi.', a: ['da piccola andavo a scuola a piedi'], topic: 'imperfetto', skill: 'ascolto' }
+  ]);
+
+  add('a2-05', [
+    { t: 'mc', q: 'Compri il pane? Sì, ___ compro.', o: ['lo', 'la', 'li'], a: 0, topic: 'pronomi-diretti' },
+    { t: 'mc', q: 'Mangi le mele? Sì, ___ mangio.', o: ['le', 'li', 'la'], a: 0, topic: 'pronomi-diretti' },
+    { t: 'mc', q: 'Conosci Sara? No, non ___ conosco.', o: ['la', 'lo', 'le'], a: 0, topic: 'pronomi-diretti' },
+    { t: 'mc', q: 'Dove sono i libri? ___ cerco da un\'ora!', o: ['Li', 'Le', 'Lo'], a: 0, topic: 'pronomi-diretti' },
+    { t: 'gap', q: 'Leggi il giornale? Sì, ___ leggo ogni mattina.', a: ['lo'], topic: 'pronomi-diretti' },
+    { t: 'gap', q: 'Chiami tu le ragazze? Sì, ___ chiamo io.', a: ['le'], topic: 'pronomi-diretti' },
+    { t: 'gap', q: 'Mi aiuti? Sì, ___ aiuto volentieri.', a: ['ti'], topic: 'pronomi-diretti' },
+    { t: 'order', words: ['La', 'pizza?', 'La', 'mangio', 'stasera'], a: 'La pizza? La mangio stasera', topic: 'pronomi-diretti' }
+  ]);
+
+  add('a2-06', [
+    { t: 'gap', q: 'Domani io ___ la nonna.', hint: 'chiamare', a: ['chiamerò'], topic: 'futuro' },
+    { t: 'gap', q: 'L\'anno prossimo noi ___ in Italia.', hint: 'tornare', a: ['torneremo'], topic: 'futuro' },
+    { t: 'mc', q: 'Stasera ___ un film. (io, vedere)', o: ['vedrò', 'vederò', 'vedevo'], a: 0, topic: 'futuro' },
+    { t: 'mc', q: 'Domani ___ bel tempo.', o: ['farà', 'fará', 'fera'], a: 0, topic: 'futuro' },
+    { t: 'mc', q: 'Adesso non posso rispondere: ___ mangiando.', o: ['sto', 'sono', 'ho'], a: 0, topic: 'stare-gerundio' },
+    { t: 'mc', q: 'I bambini stanno ___ in giardino.', o: ['giocando', 'giocato', 'giocare'], a: 0, topic: 'stare-gerundio' },
+    { t: 'tf', q: '"Sto scrivendo" vuol dire che scrivo proprio adesso.', a: true, topic: 'stare-gerundio' }
+  ]);
+
+  add('a2-07', [
+    { t: 'mc', q: 'Quante mele vuoi? ___ voglio tre.', o: ['Ne', 'Le', 'Lo'], a: 0, topic: 'partitivo-ne' },
+    { t: 'mc', q: 'Hai dei fratelli? Sì, ___ ho due.', o: ['ne', 'li', 'ci'], a: 0, topic: 'partitivo-ne' },
+    { t: 'mc', q: 'Vorrei ___ pane, per favore.', o: ['del', 'dei', 'della'], a: 0, topic: 'partitivo-ne' },
+    { t: 'mc', q: 'Compro ___ pomodori per l\'insalata.', o: ['dei', 'del', 'delle'], a: 0, topic: 'partitivo-ne' },
+    { t: 'gap', q: 'Quanto latte compri? ___ compro un litro.', a: ['Ne', 'ne'], topic: 'partitivo-ne' },
+    { t: 'gap', q: 'Vuoi un po\' d\'acqua? No grazie, non ___ voglio.', a: ['ne'], topic: 'partitivo-ne' },
+    { t: 'dict', say: 'Vorrei delle mele. Ne prendo un chilo.', a: ['vorrei delle mele. ne prendo un chilo', 'vorrei delle mele ne prendo un chilo'], topic: 'partitivo-ne', skill: 'ascolto' }
+  ]);
+
+  add('a2-08', [
+    { t: 'mc', q: 'Milano è ___ grande di Bologna.', o: ['più', 'molto', 'tanto'], a: 0, topic: 'comparativi' },
+    { t: 'mc', q: 'Il treno è più veloce ___ autobus.', o: ['dell\'', 'che l\'', 'come l\''], a: 0, topic: 'comparativi' },
+    { t: 'mc', q: 'Questa è la pizza ___ buona della città.', o: ['più', 'meglio', 'molto'], a: 0, topic: 'comparativi' },
+    { t: 'mc', q: 'Per l\'esame ___ studiare molto.', o: ['devo', 'posso stare', 'so'], a: 0, topic: 'modali' },
+    { t: 'mc', q: 'Scusi, ___ aprire la finestra?', o: ['posso', 'devo stare', 'voglio di'], a: 0, topic: 'modali' },
+    { t: 'gap', q: 'Mio fratello ___ suonare la chitarra: ha imparato da piccolo.', hint: 'sapere', a: ['sa'], topic: 'modali' },
+    { t: 'gap', q: 'Luca è alto come ___ padre.', a: ['suo'], topic: 'comparativi' },
+    { t: 'order', words: ['Il', 'mare', 'è', 'più', 'bello', 'della', 'montagna'], a: 'Il mare è più bello della montagna', topic: 'comparativi' }
+  ]);
+
+  add('a2-09', [
+    { t: 'mc', q: 'A Marco piace il calcio? Sì, ___ piace molto.', o: ['gli', 'le', 'lo'], a: 0, topic: 'pronomi-indiretti' },
+    { t: 'mc', q: 'Scrivi a Sara? Sì, ___ scrivo una mail.', o: ['le', 'gli', 'la'], a: 0, topic: 'pronomi-indiretti' },
+    { t: 'mc', q: 'A me ___ i gatti.', o: ['piacciono', 'piace', 'piaccio'], a: 0, topic: 'piacere' },
+    { t: 'mc', q: 'Ti ___ ballare?', o: ['piace', 'piacciono', 'piaci'], a: 0, topic: 'piacere' },
+    { t: 'gap', q: 'Telefoni ai nonni? Sì, ___ telefono ogni domenica.', a: ['gli'], topic: 'pronomi-indiretti' },
+    { t: 'gap', q: 'A noi ___ molto la musica italiana.', hint: 'piacere', a: ['piace'], topic: 'piacere' },
+    { t: 'dict', say: 'A mia sorella piacciono i film d\'amore.', a: ['a mia sorella piacciono i film d\'amore'], topic: 'piacere', skill: 'ascolto' }
+  ]);
+
+  add('a2-10', [
+    { t: 'mc', q: 'Al dottore: "___ fa male la testa."', o: ['Mi', 'Io', 'Me'], a: 0, topic: 'pronomi-indiretti' },
+    { t: 'mc', q: 'Il bambino piange: ___ fa male il dente.', o: ['gli', 'lo', 'lui'], a: 0, topic: 'pronomi-indiretti' },
+    { t: 'mc', q: 'Hai la febbre: ___ stare a letto.', o: ['devi', 'sai', 'vuoi di'], a: 0, topic: 'modali' },
+    { t: 'mc', q: 'Non ___ venire a scuola oggi: sono malato.', o: ['posso', 'devo di', 'so'], a: 0, topic: 'modali' },
+    { t: 'gap', q: 'Signora, che cosa ___ fa male?', a: ['Le', 'le'], topic: 'pronomi-indiretti' },
+    { t: 'gap', q: 'Il medico ___ ha dato una medicina. (a me)', a: ['mi'], topic: 'pronomi-indiretti' },
+    { t: 'order', words: ['Mi', 'fanno', 'male', 'le', 'gambe'], a: 'Mi fanno male le gambe', topic: 'pronomi-indiretti' }
+  ]);
+
+  add('a2-11', [
+    { t: 'mc', q: 'Mi piace ___ giacca qui vicino a me.', o: ['questa', 'quella', 'quel'], a: 0, topic: 'dimostrativi' },
+    { t: 'mc', q: 'Vedi ___ ragazzi laggiù?', o: ['quei', 'quelli', 'quegli'], a: 0, topic: 'dimostrativi' },
+    { t: 'mc', q: 'Quanto costa ___ zaino in vetrina?', o: ['quello', 'quel', 'quell\''], a: 0, topic: 'dimostrativi' },
+    { t: 'mc', q: 'Le scarpe ___ sono troppo piccole.', o: ['rosse', 'rossi', 'rossa'], a: 0, topic: 'aggettivi' },
+    { t: 'mc', q: 'Ho comprato una maglia ___.', o: ['verde', 'verda', 'verdi'], a: 0, topic: 'aggettivi' },
+    { t: 'gap', q: 'Prendo ___ pantaloni neri, non questi. (lontano)', a: ['quei'], topic: 'dimostrativi' },
+    { t: 'gap', q: 'Vorrei provare ___ camicia, qui. (vicino)', a: ['questa'], topic: 'dimostrativi' },
+    { t: 'dict', say: 'Questa gonna è bella, ma quella è più economica.', a: ['questa gonna è bella, ma quella è più economica', 'questa gonna è bella ma quella è più economica'], topic: 'dimostrativi', skill: 'ascolto' }
+  ]);
+
+  add('a2-12', [
+    { t: 'mc', q: 'Per il pranzo ___ quattro piatti.', o: ['ci vogliono', 'ci vuole', 'ci vuoi'], a: 0, topic: 'ci-vuole' },
+    { t: 'mc', q: 'Per arrivare a scuola ___ dieci minuti.', o: ['ci vogliono', 'ci vuole', 'ci sono voluto'], a: 0, topic: 'ci-vuole' },
+    { t: 'mc', q: 'Per la pasta ___ un po\' di sale.', o: ['ci vuole', 'ci vogliono', 'ci volete'], a: 0, topic: 'ci-vuole' },
+    { t: 'mc', q: 'Marco, ___ l\'acqua, per favore! (prendere)', o: ['prendi', 'prende', 'prendere'], a: 0, topic: 'imperativo' },
+    { t: 'mc', q: 'Ragazzi, ___ le mani prima di mangiare! (lavarsi)', o: ['lavatevi', 'lavate', 'vi lavate'], a: 0, topic: 'imperativo' },
+    { t: 'gap', q: '___ la pasta nell\'acqua bollente. (mettere, tu)', a: ['Metti', 'metti'], topic: 'imperativo' },
+    { t: 'gap', q: 'Non ___ il forno! (aprire, tu)', a: ['aprire'], topic: 'imperativo', exp: 'Imperativo negativo con tu: non + infinito.' },
+    { t: 'order', words: ['Per', 'il', 'caffè', 'ci', 'vuole', 'la', 'moka'], a: 'Per il caffè ci vuole la moka', topic: 'ci-vuole' }
+  ]);
+
+  add('a2-13', [
+    { t: 'mc', q: 'Allo sportello: "___ un\'informazione, per favore."', o: ['Vorrei', 'Voglio di', 'Vorrò'], a: 0, topic: 'modali' },
+    { t: 'mc', q: '___ costa il biglietto?', o: ['Quanto', 'Quale', 'Chi'], a: 0, topic: 'domande' },
+    { t: 'mc', q: '___ apre l\'ufficio?', o: ['A che ora', 'Quanto', 'Chi'], a: 0, topic: 'domande' },
+    { t: 'mc', q: '___ sono i documenti? Sono nella borsa.', o: ['Dove', 'Come', 'Quando'], a: 0, topic: 'domande' },
+    { t: 'mc', q: 'Signora, ___ è di qui?', o: ['Lei', 'Tu', 'Loro'], a: 0, topic: 'pronomi-soggetto' },
+    { t: 'gap', q: '___ ti chiami? Mi chiamo Wei.', a: ['Come', 'come'], topic: 'domande' },
+    { t: 'gap', q: 'Noi siamo pronti. E ___, ragazzi?', a: ['voi'], topic: 'pronomi-soggetto' },
+    { t: 'dict', say: 'Scusi, dove posso fare la carta d\'identità?', a: ['scusi, dove posso fare la carta d\'identità?', 'scusi dove posso fare la carta d\'identità'], topic: 'domande', skill: 'ascolto' }
+  ]);
+
+  add('a2-x1', [
+    { t: 'mc', q: 'Questo regalo è per ___. (tu)', o: ['te', 'ti', 'tu'], a: 0, topic: 'pronomi-tonici' },
+    { t: 'mc', q: 'Vieni al cinema con ___? (noi)', o: ['noi', 'ci', 'nostri'], a: 0, topic: 'pronomi-tonici' },
+    { t: 'mc', q: 'Abito vicino a ___. (lei)', o: ['lei', 'la', 'le'], a: 0, topic: 'pronomi-tonici' },
+    { t: 'mc', q: 'Ho parlato di ___ con la prof. (voi)', o: ['voi', 'vi', 'vostro'], a: 0, topic: 'pronomi-tonici' },
+    { t: 'gap', q: 'Esco con Marco: vado al parco con ___.', a: ['lui'], topic: 'pronomi-tonici' },
+    { t: 'gap', q: 'A ___ piace il tè, a te il caffè.', a: ['me'], topic: 'pronomi-tonici' },
+    { t: 'order', words: ['Questo', 'libro', 'è', 'per', 'te'], a: 'Questo libro è per te', topic: 'pronomi-tonici' }
+  ]);
+
+  add('a2-x2', [
+    { t: 'mc', q: 'Il ragazzo ___ parla è mio cugino.', o: ['che', 'chi', 'cui'], a: 0, topic: 'relativo-che' },
+    { t: 'mc', q: 'Ho letto il libro ___ mi hai dato.', o: ['che', 'quale', 'chi'], a: 0, topic: 'relativo-che' },
+    { t: 'mc', q: 'La signora che abita qui ___ molto gentile.', o: ['è', 'sono', 'ha'], a: 0, topic: 'relativo-che' },
+    { t: 'gap', q: 'Ecco la bici ___ ho comprato ieri.', a: ['che'], topic: 'relativo-che' },
+    { t: 'gap', q: 'Conosci la ragazza ___ canta?', a: ['che'], topic: 'relativo-che' },
+    { t: 'tf', q: 'In "Il film che ho visto è bello", "che" sostituisce "il film".', a: true, topic: 'relativo-che' },
+    { t: 'order', words: ['Il', 'cane', 'che', 'abbaia', 'è', 'mio'], a: 'Il cane che abbaia è mio', topic: 'relativo-che' },
+    { t: 'dict', say: 'La maestra che insegna inglese è molto brava.', a: ['la maestra che insegna inglese è molto brava'], topic: 'relativo-che', skill: 'ascolto' }
+  ]);
+
+  add('a2-x3', [
+    { t: 'mc', q: 'Ho ___ amico in Francia.', o: ['qualche', 'qualcuno', 'nessuni'], a: 0, topic: 'indefiniti' },
+    { t: 'mc', q: '___ giorno vado a scuola in bus.', o: ['Ogni', 'Ognuno', 'Tutti'], a: 0, topic: 'indefiniti' },
+    { t: 'mc', q: 'Non c\'è ___ in classe.', o: ['nessuno', 'qualcuno', 'ognuno'], a: 0, topic: 'indefiniti' },
+    { t: 'mc', q: '___ i ragazzi sono in palestra.', o: ['Tutti', 'Ogni', 'Qualche'], a: 0, topic: 'indefiniti' },
+    { t: 'gap', q: 'C\'è ___ alla porta? (una persona, non so chi)', a: ['qualcuno'], topic: 'indefiniti' },
+    { t: 'gap', q: 'Hai fame? Vuoi ___ da mangiare?', a: ['qualcosa'], topic: 'indefiniti' },
+    { t: 'dict', say: 'Ogni mattina qualcuno porta il pane.', a: ['ogni mattina qualcuno porta il pane'], topic: 'indefiniti', skill: 'ascolto' }
+  ]);
+
+  add('a2-x4', [
+    { t: 'mc', q: 'In Italia ___ la pasta ogni giorno.', o: ['si mangia', 'si mangiano', 'si mangi'], a: 0, topic: 'si-impersonale-a2' },
+    { t: 'mc', q: 'Qui non ___ fumare.', o: ['si può', 'si possono', 'si puoi'], a: 0, topic: 'si-impersonale-a2' },
+    { t: 'mc', q: 'Come ___ "book" in italiano?', o: ['si dice', 'si dicono', 'ti dice'], a: 0, topic: 'si-impersonale-a2' },
+    { t: 'mc', q: 'In questo negozio ___ scarpe.', o: ['si vendono', 'si vende', 'si venda'], a: 0, topic: 'si-impersonale-a2' },
+    { t: 'gap', q: 'A scuola ___ entra alle otto.', a: ['si'], topic: 'si-impersonale-a2' },
+    { t: 'gap', q: 'Al cinema non ___ parla ad alta voce.', a: ['si'], topic: 'si-impersonale-a2' },
+    { t: 'order', words: ['In', 'biblioteca', 'si', 'parla', 'piano'], a: 'In biblioteca si parla piano', topic: 'si-impersonale-a2' }
+  ]);
+
+  add('a2-x5', [
+    { t: 'mc', q: 'Se ___ freddo, metto il cappotto.', o: ['fa', 'faccio', 'farei'], a: 0, topic: 'se-prima-di' },
+    { t: 'mc', q: 'Se hai tempo, ___ da me.', o: ['vieni', 'venire', 'venuto'], a: 0, topic: 'se-prima-di' },
+    { t: 'mc', q: 'Prima di ___, faccio colazione.', o: ['uscire', 'esco', 'uscito'], a: 0, topic: 'se-prima-di' },
+    { t: 'mc', q: 'Lavati i denti prima ___ andare a letto.', o: ['di', 'a', 'che'], a: 0, topic: 'se-prima-di' },
+    { t: 'gap', q: 'Se ___ stanco, vado a dormire. (essere, io)', a: ['sono'], topic: 'se-prima-di' },
+    { t: 'gap', q: 'Prima di ___ la strada, guarda a destra e a sinistra. (attraversare)', a: ['attraversare'], topic: 'se-prima-di' },
+    { t: 'tf', q: '"Prima di mangio, lavo le mani" è corretto.', a: false, topic: 'se-prima-di', exp: 'Dopo "prima di" va l\'infinito: prima di mangiare.' }
+  ]);
+
+  add('a2-x6', [
+    { t: 'mc', q: 'Piove, ___ resto a casa.', o: ['allora', 'invece', 'ma'], a: 0, topic: 'connettivi-a2' },
+    { t: 'mc', q: 'Io amo il mare, mia sorella ___ preferisce la montagna.', o: ['invece', 'allora', 'infatti'], a: 0, topic: 'connettivi-a2' },
+    { t: 'mc', q: 'Luca è stanco: ___ ha lavorato tutto il giorno.', o: ['infatti', 'invece', 'però'], a: 0, topic: 'connettivi-a2' },
+    { t: 'mc', q: 'Mi piace la pizza, ___ stasera mangio la pasta.', o: ['ma', 'quindi', 'infatti'], a: 0, topic: 'connettivi-a2' },
+    { t: 'mc', q: 'Prima studio, ___ esco con gli amici.', o: ['poi', 'però', 'invece'], a: 0, topic: 'connettivi-a2' },
+    { t: 'gap', q: 'Ho fame, ___ mangio un panino. (per questo motivo)', a: ['quindi', 'allora', 'perciò'], topic: 'connettivi-a2' },
+    { t: 'order', words: ['Fa', 'caldo,', 'quindi', 'andiamo', 'al', 'mare'], a: 'Fa caldo, quindi andiamo al mare', topic: 'connettivi-a2' }
+  ]);
+})();
+
+;
 /* js/content/scorta-b1.js */
 /*
  * Scorta di esercizi in più per le lezioni B1 (anche quelle «come all'esame»).
@@ -6928,6 +7139,178 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     { t: 'order', words: ['Alcuni', 'miei', 'amici', 'abitano', 'in', 'Francia'], a: 'Alcuni miei amici abitano in Francia', topic: 'indefiniti-b1' },
     { t: 'dict', say: 'Ciascuno studente riceve un libro nuovo.', a: ['ciascuno studente riceve un libro nuovo'], topic: 'indefiniti-b1', skill: 'ascolto' }
   ];
+})();
+
+;
+/* js/content/scorta-b1-piu.js */
+/*
+ * Altri esercizi per le lezioni B1: la scorta arriva a circa 30 esercizi per lezione
+ * (ogni volta se ne propongono sempre 12, diversi dalla volta prima).
+ */
+(function () {
+  const C = (window.IL2 = window.IL2 || {}).content = window.IL2.content || {};
+  const S = C.scorta = C.scorta || {};
+  const add = (id, items) => { (S[id] = S[id] || []).push(...items); };
+
+  add('b1-01', [
+    { t: 'mc', q: 'Mentre ___ i compiti, mia sorella guardava la TV.', o: ['facevo', 'ho fatto', 'farò'], a: 0, topic: 'passato-imperfetto' },
+    { t: 'mc', q: 'L\'estate scorsa ___ in Puglia per una settimana.', o: ['siamo stati', 'eravamo', 'stavamo'], a: 0, topic: 'passato-imperfetto', exp: 'Durata precisa e conclusa (una settimana) → passato prossimo.' },
+    { t: 'mc', q: 'Il ragazzo ___ alto e ___ i capelli ricci.', o: ['era, aveva', 'è stato, ha avuto', 'fu, ebbe'], a: 0, topic: 'passato-imperfetto', exp: 'Descrizione nel passato → imperfetto.' },
+    { t: 'mc', q: 'Ieri ___ la nonna per la prima volta in ospedale.', o: ['ho visitato', 'visitavo', 'visito'], a: 0, topic: 'passato-imperfetto' },
+    { t: 'gap', q: 'Quando ero piccolo, ogni domenica ___ dai nonni.', hint: 'andare, io', a: ['andavo'], topic: 'passato-imperfetto' },
+    { t: 'gap', q: 'Mentre camminavo, ___ un vecchio amico.', hint: 'incontrare, io', a: ['ho incontrato'], topic: 'passato-imperfetto' },
+    { t: 'dict', say: 'Faceva freddo, così abbiamo acceso il fuoco.', a: ['faceva freddo, così abbiamo acceso il fuoco', 'faceva freddo così abbiamo acceso il fuoco'], topic: 'passato-imperfetto', skill: 'ascolto' }
+  ]);
+
+  add('b1-02', [
+    { t: 'mc', q: 'Hai restituito il libro a Luca? — Sì, ___ ho restituito.', o: ['gliel\'', 'gli', 'lo'], a: 0, topic: 'pronomi-combinati' },
+    { t: 'mc', q: 'Mi porti i quaderni? — Sì, ___ porto domani.', o: ['te li', 'ti li', 'te le'], a: 0, topic: 'pronomi-combinati' },
+    { t: 'mc', q: 'Ci date la chiave? — Sì, ___ diamo subito.', o: ['ve la', 'vi la', 'ce la'], a: 0, topic: 'pronomi-combinati' },
+    { t: 'mc', q: 'Hai chiesto alla prof? — Sì, ___ ho chiesto.', o: ['le', 'la', 'gli'], a: 0, topic: 'pronomi-indiretti' },
+    { t: 'gap', q: 'Hai dato il regalo alla mamma? — Sì, ___ ho dato.', a: ['gliel\'', 'glielo'], topic: 'pronomi-combinati' },
+    { t: 'gap', q: 'Mi mostri le foto? — Sì, ___ mostro subito.', a: ['te le'], topic: 'pronomi-combinati' },
+    { t: 'order', words: ['Il', 'libro?', 'Te', 'lo', 'presto', 'domani'], a: 'Il libro? Te lo presto domani', topic: 'pronomi-combinati' }
+  ]);
+
+  add('b1-03', [
+    { t: 'mc', q: '___ aiutarmi con questo esercizio?', o: ['Potresti', 'Potrai', 'Puoi stato'], a: 0, topic: 'condizionale' },
+    { t: 'mc', q: 'Secondo me voi ___ dormire di più.', o: ['dovreste', 'dovrete', 'dovevate'], a: 0, topic: 'condizionale' },
+    { t: 'mc', q: 'Mi ___ un bicchiere d\'acqua, per favore?', o: ['daresti', 'darai', 'davi'], a: 0, topic: 'condizionale' },
+    { t: 'mc', q: 'Con più tempo libero, ___ a suonare la chitarra.', o: ['imparerei', 'imparerò', 'imparavo'], a: 0, topic: 'condizionale' },
+    { t: 'gap', q: 'Io al tuo posto ___ un giorno di riposo.', hint: 'prendere', a: ['prenderei'], topic: 'condizionale' },
+    { t: 'gap', q: 'I miei genitori ___ comprare una casa più grande.', hint: 'volere', a: ['vorrebbero'], topic: 'condizionale' },
+    { t: 'order', words: ['Mi', 'piacerebbe', 'visitare', 'Venezia'], a: 'Mi piacerebbe visitare Venezia', topic: 'condizionale' }
+  ]);
+
+  add('b1-04', [
+    { t: 'mc', q: 'Giulia, ___ i piatti, per favore!', o: ['lava', 'lavi', 'lavare'], a: 0, topic: 'imperativo' },
+    { t: 'mc', q: 'Ragazzi, ___ a pagina venti!', o: ['aprite', 'aprono', 'aprire'], a: 0, topic: 'imperativo' },
+    { t: 'mc', q: 'Signora, ___ un momento, per favore.', o: ['aspetti', 'aspetta', 'aspettare'], a: 0, topic: 'imperativo', exp: 'Con Lei (formale) si usa il congiuntivo: aspetti.' },
+    { t: 'mc', q: 'Non ___ paura, è solo un cane piccolo! (tu)', o: ['avere', 'hai', 'abbi'], a: 0, topic: 'imperativo' },
+    { t: 'gap', q: '___ qui, Marco! (venire, tu)', a: ['Vieni', 'vieni'], topic: 'imperativo' },
+    { t: 'gap', q: 'Mi passi il sale? — Sì, ecco, ___! (prendere + lo, tu)', a: ['prendilo'], topic: 'imperativo' },
+    { t: 'dict', say: 'Gira a sinistra e poi prendi la prima strada a destra.', a: ['gira a sinistra e poi prendi la prima strada a destra'], topic: 'imperativo', skill: 'ascolto' }
+  ]);
+
+  add('b1-05', [
+    { t: 'mc', q: 'Credo che il negozio ___ alle otto.', o: ['chiuda', 'chiude stato', 'chiudere'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'mc', q: 'Spero che tu ___ tempo per venire.', o: ['abbia', 'hai avuto', 'avere'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'mc', q: 'È possibile che domani ___.', o: ['nevichi', 'nevicare', 'nevicato'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'mc', q: 'Sono sicuro che Ali ___ la risposta.', o: ['sa', 'sappia', 'sapere'], a: 0, topic: 'congiuntivo-presente', exp: 'Con "sono sicuro che" (certezza) si usa l\'indicativo.' },
+    { t: 'gap', q: 'Penso che loro ___ arabo. (parlare)', a: ['parlino'], topic: 'congiuntivo-presente' },
+    { t: 'gap', q: 'Mia madre vuole che io ___ a casa presto. (tornare)', a: ['torni'], topic: 'congiuntivo-presente' },
+    { t: 'order', words: ['Penso', 'che', 'Marco', 'sia', 'simpatico'], a: 'Penso che Marco sia simpatico', topic: 'congiuntivo-presente' }
+  ]);
+
+  add('b1-06', [
+    { t: 'mc', q: 'La scuola ___ studio è in centro.', o: ['in cui', 'che', 'di cui'], a: 0, topic: 'relativi' },
+    { t: 'mc', q: 'Il ragazzo ___ ho prestato la bici è Omar.', o: ['a cui', 'che', 'cui di'], a: 0, topic: 'relativi' },
+    { t: 'mc', q: 'Il libro ___ ti ho parlato è in biblioteca.', o: ['di cui', 'che', 'a cui'], a: 0, topic: 'relativi' },
+    { t: 'mc', q: 'Vieni a Roma con noi? — Sì, ___ vengo volentieri.', o: ['ci', 'ne', 'lo'], a: 0, topic: 'ci-ne' },
+    { t: 'mc', q: 'Parlate spesso della scuola? — Sì, ___ parliamo sempre.', o: ['ne', 'ci', 'la'], a: 0, topic: 'ci-ne' },
+    { t: 'gap', q: 'Quanti anni hai? — ___ ho sedici.', a: ['Ne', 'ne'], topic: 'ci-ne' },
+    { t: 'dict', say: 'Questa è la casa in cui sono cresciuto.', a: ['questa è la casa in cui sono cresciuto'], topic: 'relativi', skill: 'ascolto' }
+  ]);
+
+  add('b1-07', [
+    { t: 'mc', q: 'Quando siamo arrivati alla stazione, il treno ___.', o: ['era già partito', 'partiva già', 'parte già'], a: 0, topic: 'trapassato' },
+    { t: 'mc', q: 'Ero contenta perché ___ un bel voto.', o: ['avevo preso', 'prenderò', 'prendo'], a: 0, topic: 'trapassato' },
+    { t: 'mc', q: 'Non sono uscito ___ dovevo studiare.', o: ['perché', 'però', 'quindi'], a: 0, topic: 'connettivi-base' },
+    { t: 'mc', q: 'Era tardi, ___ abbiamo preso un taxi.', o: ['così', 'invece', 'mentre'], a: 0, topic: 'connettivi-base' },
+    { t: 'gap', q: 'Mi ha detto che ___ già quel film. (vedere, lui)', a: ['aveva visto'], topic: 'trapassato' },
+    { t: 'gap', q: 'Sara è stanca ___ ha lavorato molto. (connettivo di causa)', a: ['perché', 'poiché'], topic: 'connettivi-base' },
+    { t: 'order', words: ['Il', 'film', 'era', 'già', 'cominciato', 'quando', 'siamo', 'entrati'], a: 'Il film era già cominciato quando siamo entrati', topic: 'trapassato' }
+  ]);
+
+  add('b1-08', [
+    { t: 'mc', q: 'Se ___ tempo, ti aiuto.', o: ['ho', 'avrei', 'avessi stato'], a: 0, topic: 'periodo-ipotetico' },
+    { t: 'mc', q: 'Se esci senza giacca, ___ freddo.', o: ['avrai', 'avevi', 'avresti avuto'], a: 0, topic: 'periodo-ipotetico' },
+    { t: 'mc', q: 'Quando ___ la scuola, cercherò un lavoro.', o: ['avrò finito', 'finivo', 'finirei'], a: 0, topic: 'futuro-anteriore' },
+    { t: 'mc', q: 'Luca non è ancora arrivato: ___ il treno.', o: ['avrà perso', 'perderà', 'perdeva'], a: 0, topic: 'futuro-anteriore', exp: 'Il futuro anteriore esprime anche un\'ipotesi sul passato.' },
+    { t: 'gap', q: 'Se ___ il bus, arrivi in dieci minuti. (prendere, tu)', a: ['prendi'], topic: 'periodo-ipotetico' },
+    { t: 'gap', q: 'Dopo che ___ cena, usciremo. (fare, noi)', a: ['avremo fatto'], topic: 'futuro-anteriore' },
+    { t: 'dict', say: 'Se domani piove, restiamo a casa a studiare.', a: ['se domani piove, restiamo a casa a studiare', 'se domani piove restiamo a casa a studiare'], topic: 'periodo-ipotetico', skill: 'ascolto' }
+  ]);
+
+  add('b1-09', [
+    { t: 'mc', q: 'Leonardo da Vinci ___ a Vinci nel 1452.', o: ['nacque', 'nasce', 'nascerà'], a: 0, topic: 'passato-remoto' },
+    { t: 'mc', q: '"I Romani vinsero la guerra." Vinsero è il passato remoto di:', o: ['vincere', 'vivere', 'venire'], a: 0, topic: 'passato-remoto' },
+    { t: 'mc', q: '"La regina ebbe tre figli." Che cosa significa?', o: ['Ha avuto tre figli.', 'Avrà tre figli.', 'Ha tre figli adesso.'], a: 0, topic: 'passato-remoto' },
+    { t: 'mc', q: 'Il Colosseo ___ dai Romani.', o: ['fu costruito', 'costruì', 'fu costruita'], a: 0, topic: 'passivo' },
+    { t: 'mc', q: 'Le lettere ___ dal postino ogni mattina.', o: ['vengono portate', 'portano', 'vengono portati'], a: 0, topic: 'passivo' },
+    { t: 'gap', q: 'Il quadro fu dipinto ___ Raffaello.', a: ['da'], topic: 'passivo' },
+    { t: 'tf', q: '"Fu" è il passato remoto di "essere".', a: true, topic: 'passato-remoto' }
+  ]);
+
+  add('b1-10', [
+    { t: 'mc', q: 'È meglio che tu ___ a letto presto stasera.', o: ['vada', 'vai', 'andare'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'mc', q: 'Il dottore dice che è importante ___ colazione ogni mattina.', o: ['fare', 'faccia', 'fai'], a: 0, topic: 'congiuntivo-presente', exp: 'Senza un soggetto preciso, dopo "è importante" va l\'infinito.' },
+    { t: 'mc', q: 'Bisogna che voi ___ più frutta.', o: ['mangiate', 'mangiare', 'mangiavate'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'mc', q: 'Spero che il mal di testa ti ___ presto.', o: ['passi', 'passa stato', 'passare'], a: 0, topic: 'congiuntivo-presente' },
+    { t: 'gap', q: 'È necessario che tu ___ questa medicina tre volte al giorno. (prendere)', a: ['prenda'], topic: 'congiuntivo-presente' },
+    { t: 'gap', q: 'Il medico vuole che noi ___ di più a piedi. (camminare)', a: ['camminiamo'], topic: 'congiuntivo-presente' },
+    { t: 'dict', say: 'È importante che tu beva molta acqua.', a: ['è importante che tu beva molta acqua'], topic: 'congiuntivo-presente', skill: 'ascolto' }
+  ]);
+
+  add('b1-11', [
+    { t: 'mc', q: 'Un riassunto deve essere:', o: ['più breve del testo originale', 'più lungo del testo originale', 'uguale al testo originale'], a: 0, topic: 'riassumere' },
+    { t: 'mc', q: 'Nel riassunto, «Marco disse: "Sono felice"» diventa:', o: ['Marco dice che è felice.', 'Marco dice: sono felice.', 'Io sono felice.'], a: 0, topic: 'riassumere' },
+    { t: 'mc', q: 'Il racconto ___ la storia di un ragazzo che parte per l\'Italia.', o: ['narra', 'dice a', 'parla che'], a: 0, topic: 'riassumere' },
+    { t: 'mc', q: '___, la ragazza ritrova la sua famiglia.', o: ['Alla fine', 'All\'inizio', 'Per esempio'], a: 0, topic: 'connettivi-base' },
+    { t: 'gap', q: 'Prima il ragazzo ha paura, ___ trova il coraggio. (dopo)', a: ['poi'], topic: 'connettivi-base' },
+    { t: 'tf', q: 'In un riassunto si usano le proprie parole, non si copia il testo.', a: true, topic: 'riassumere' },
+    { t: 'order', words: ['Il', 'libro', 'racconta', 'la', 'vita', 'di', 'un', 'pescatore'], a: 'Il libro racconta la vita di un pescatore', topic: 'riassumere' }
+  ]);
+
+  add('b1-12', [
+    { t: 'mc', q: '___ candidarmi per il posto di commessa.', o: ['Vorrei', 'Vorrò', 'Volli'], a: 0, topic: 'condizionale' },
+    { t: 'mc', q: 'Al colloquio: "___ dirmi quanto dura il contratto?"', o: ['Potrebbe', 'Potrà stato', 'Poteva'], a: 0, topic: 'condizionale' },
+    { t: 'mc', q: 'Cerchiamo una persona ___ parli inglese.', o: ['che', 'cui', 'di cui'], a: 0, topic: 'relativi' },
+    { t: 'mc', q: 'L\'ufficio ___ lavoro è al secondo piano.', o: ['in cui', 'che', 'a cui'], a: 0, topic: 'relativi' },
+    { t: 'gap', q: 'Mi ___ lavorare in un ristorante. (piacere, cond.)', a: ['piacerebbe'], topic: 'condizionale' },
+    { t: 'gap', q: 'Il capo con ___ ho parlato è molto gentile.', a: ['cui'], topic: 'relativi' },
+    { t: 'dict', say: 'Sarei disponibile a lavorare anche nel fine settimana.', a: ['sarei disponibile a lavorare anche nel fine settimana'], topic: 'condizionale', skill: 'ascolto' }
+  ]);
+
+  add('b1-13', [
+    { t: 'mc', q: 'Il prezzo è passato da 2 a 3 euro: è ___.', o: ['aumentato', 'diminuito', 'rimasto uguale'], a: 0, topic: 'lingua-studio' },
+    { t: 'mc', q: 'Lo 0% significa:', o: ['nessuno', 'tutti', 'la metà'], a: 0, topic: 'lingua-studio' },
+    { t: 'mc', q: 'Gli studenti erano 30 e sono ancora 30: il numero è ___.', o: ['stabile', 'in aumento', 'in calo'], a: 0, topic: 'lingua-studio' },
+    { t: 'mc', q: 'Nel grafico, la linea che scende indica un ___.', o: ['calo', 'aumento', 'record'], a: 0, topic: 'lingua-studio' },
+    { t: 'mc', q: 'I maschi sono 40, le femmine 60: le femmine sono ___ dei maschi.', o: ['più numerose', 'meno numerose', 'tante quanto'], a: 0, topic: 'comparativi' },
+    { t: 'gap', q: 'Il 10% degli studenti viene in bici: sono ___ studenti su cento.', a: ['dieci', '10'], topic: 'lingua-studio' },
+    { t: 'order', words: ['Il', 'numero', 'di', 'turisti', 'è', 'aumentato', 'molto'], a: 'Il numero di turisti è aumentato molto', topic: 'lingua-studio' }
+  ]);
+
+  add('b1-x1', [
+    { t: 'mc', q: 'Hai comprato le arance? — Sì, le ho ___.', o: ['comprate', 'comprato', 'comprati'], a: 0, topic: 'accordo-participio' },
+    { t: 'mc', q: 'Hai salutato i professori? — Sì, li ho ___.', o: ['salutati', 'salutato', 'salutate'], a: 0, topic: 'accordo-participio' },
+    { t: 'mc', q: 'Quante foto hai fatto? — Ne ho ___ cento!', o: ['fatte', 'fatto', 'fatti'], a: 0, topic: 'accordo-participio' },
+    { t: 'mc', q: 'La pizza? L\'abbiamo ___ tutta.', o: ['mangiata', 'mangiato', 'mangiate'], a: 0, topic: 'accordo-participio' },
+    { t: 'gap', q: 'Le scarpe nuove? Le ho ___ ieri. (mettere)', a: ['messe'], topic: 'accordo-participio' },
+    { t: 'gap', q: 'I biglietti? Li abbiamo già ___. (prendere)', a: ['presi'], topic: 'accordo-participio' },
+    { t: 'tf', q: 'Si dice «Le ragazze le ho conosciute a scuola».', a: true, topic: 'accordo-participio' }
+  ]);
+
+  add('b1-x2', [
+    { t: 'mc', q: '___ ha finito può uscire.', o: ['Chi', 'Che', 'Cui'], a: 0, topic: 'relativo-chi' },
+    { t: 'mc', q: 'La ragazza ___ ha finito può uscire.', o: ['che', 'chi', 'cui'], a: 0, topic: 'relativo-chi' },
+    { t: 'mc', q: '___ dorme non piglia pesci. (proverbio)', o: ['Chi', 'Che', 'Quale'], a: 0, topic: 'relativo-chi' },
+    { t: 'mc', q: 'Chi parla troppo ___ poco.', o: ['ascolta', 'ascoltano', 'ascoltare'], a: 0, topic: 'relativo-chi', exp: '"Chi" vuole il verbo al singolare.' },
+    { t: 'gap', q: '___ ha bisogno di aiuto può chiedere alla prof.', a: ['Chi', 'chi'], topic: 'relativo-chi' },
+    { t: 'gap', q: 'Do il premio a ___ risponde per primo.', a: ['chi'], topic: 'relativo-chi' },
+    { t: 'order', words: ['Chi', 'legge', 'molto', 'scrive', 'meglio'], a: 'Chi legge molto scrive meglio', topic: 'relativo-chi' }
+  ]);
+
+  add('b1-x3', [
+    { t: 'mc', q: '___ ragazzo ha ricevuto un regalo.', o: ['Ciascun', 'Alcuni', 'Qualsiasi i'], a: 0, topic: 'indefiniti-b1' },
+    { t: 'mc', q: 'Ho comprato ___ libri usati al mercato.', o: ['alcuni', 'ciascuno', 'qualche'], a: 0, topic: 'indefiniti-b1' },
+    { t: 'mc', q: 'Mangio ___ cosa: non sono difficile.', o: ['qualsiasi', 'alcuna', 'nessuna'], a: 0, topic: 'indefiniti-b1' },
+    { t: 'mc', q: 'Non ho ___ voglia di uscire.', o: ['nessuna', 'alcune', 'ciascuna'], a: 0, topic: 'indefiniti-b1' },
+    { t: 'gap', q: 'Hai ancora ___ domanda? (una o più, non so quante)', a: ['qualche'], topic: 'indefiniti-b1' },
+    { t: 'gap', q: '___ deve portare il suo quaderno. (ogni persona)', a: ['Ciascuno', 'ciascuno', 'Ognuno', 'ognuno'], topic: 'indefiniti-b1' },
+    { t: 'dict', say: 'Alcuni studenti sono arrivati in ritardo.', a: ['alcuni studenti sono arrivati in ritardo'], topic: 'indefiniti-b1', skill: 'ascolto' }
+  ]);
 })();
 
 ;
@@ -7294,7 +7677,9 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const extra = (C.scorta || {})[u.id];
     if (extra && extra.length) { u.base = u.items.length; u.items = u.items.concat(extra); }
   }
+  // esercizi proposti ogni volta (presi dalla scorta della lezione)
   C.LESSON_SIZE = 12;
+  C.lessonSize = () => C.LESSON_SIZE;
   C.itemByUid = {};
   function tag(list, prefix, level, skill) {
     list.forEach((it, i) => {
@@ -9500,7 +9885,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const p = P(); const d = p.unitsDone[u.id];
     const tries = (p.lessonTries || {})[u.id] || { quits: 0, low: 0 };
     const short = shortItems(u);
-    const nItems = Math.min(C.LESSON_SIZE || 12, u.items.length);
+    const nItems = Math.min(C.lessonSize(u), u.items.length);
     // lezione difficile (uscito presto due volte, o finita sotto il 70%): si propone la versione corta
     const offerShort = !d && short.length >= 4 && (tries.quits >= 2 || tries.low >= 1);
     view.innerHTML = '<a class="back" href="#/percorso?l=' + u.level + '">' + icon('back') + 'Lezioni ' + u.level + '</a>' +
@@ -9557,7 +9942,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   // (un dettato e un riordino se la lezione li ha). Si va dal più semplice al più impegnativo.
   const TYPE_RANK = { tf: 0, mc: 1, match: 2, gap: 3, order: 4, cloze: 5, dict: 6 };
   function pickLessonItems(u, p) {
-    const n = C.LESSON_SIZE || 12;
+    const n = C.lessonSize(u);
     if (u.items.length <= n) return u.items;
     const lt = p.lessonTries || (p.lessonTries = {});
     const t = lt[u.id] || (lt[u.id] = { quits: 0, low: 0, at: 0 });
@@ -11531,7 +11916,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const s = C.stats();
     let h = head('Contenuti', s.units + ' lezioni con ' + s.items + ' esercizi · ' + s.words + ' parole · ' + s.readings + ' letture · ' + s.listenings + ' ascolti · ' + s.writing + ' tracce di scrittura · ' + s.placement + ' domande nel test di livello.') +
       '<div class="tabs">' + [['unita', 'Lezioni'], ['letture', 'Letture'], ['ascolti', 'Ascolti'], ['scrittura', 'Scrittura'], ['verifiche', 'Verso la verifica'], ['lessico', 'Lessico'], ['mie', 'Le mie liste'], ['lingue', 'Lingue d\'origine'], ['test', 'Test']].map(([k, l]) => '<a class="tab' + (k === tab ? ' on' : '') + '" href="#/contenuti?t=' + k + '">' + l + '</a>').join('') + '</div>';
-    if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi' + (u.items.length > (C.LESSON_SIZE || 12) ? ', ' + (C.LESSON_SIZE || 12) + ' per volta' : '') + '</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
+    if (tab === 'unita') h += E.LEVELS.map(lv => '<h2>' + levelBadge(lv) + ' ' + E.LEVEL_NAME[lv] + '</h2><ul class="list">' + C.units.filter(u => u.level === lv).map(u => '<li><a class="row-item" href="#/anteprima/' + u.id + '"><span class="u-icon">' + u.icon + '</span><span><b>' + esc(u.title) + '</b>' + (u.extra ? ' <span class="tag tag-soft">nuova, dai sillabi d\'esame</span>' : '') + '<small>' + esc(u.can) + ' · ' + u.items.length + ' esercizi' + (u.items.length > C.lessonSize(u) ? ', ' + C.lessonSize(u) + ' per volta' : '') + '</small></span>' + icon('chevron') + '</a></li>').join('') + '</ul>').join('');
     if (tab === 'letture') h += C.readings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.genre) + '</summary><p class="pre">' + esc(r.text) + '</p><ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'ascolti') h += C.listenings.map(r => '<details class="card"><summary>' + levelBadge(r.level) + ' <b>' + esc(r.title) + '</b> · ' + esc(r.situation) + '</summary>' + r.script.map(([v, t]) => '<p><b>' + v + ':</b> ' + esc(t) + '</p>').join('') + '<ol>' + r.questions.map(x => '<li>' + esc(x.q) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>').join('');
     if (tab === 'verifiche') h += '<p>La sezione «Verso la verifica» degli studenti: per ogni testo ci sono esercizi di lessico, grammatica e comprensione. Lo studente sceglie la difficoltà (Base A2 o Più difficile B1) e vede la versione di ogni testo per quella difficoltà. Qui sotto trovi tutti gli esercizi con le risposte.</p>' + (C.verifiche || []).map(g => '<h2>' + g.icon + ' ' + esc(g.title) + '</h2>' + g.texts.map(t => '<details class="card"><summary>' + levelBadge(t.level) + (t.levelLabel ? ' <small>' + esc(t.levelLabel) + '</small>' : '') + ' <b>' + esc(t.title) + '</b> · ' + esc(t.cap) + (t.draft ? ' <span class="tag warn">versione B1 scritta da Claude: da rivedere</span>' : '') + '</summary><p class="pre">' + esc(t.text) + '</p>' + C.VERIFICA_PARTS.map(([k, l]) => '<h4>' + l + (k === 'grammatica' && t.grammatica ? ': ' + esc(t.grammatica.title) : '') + '</h4><ol class="small">' + ((C.verificaPart[t.id + ':' + k] || {}).items || []).map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol>').join('') + (t.aperte ? '<h4>Domande aperte (le correggi tu, negli Scritti)</h4><ol class="small">' + t.aperte.map(q => '<li>' + esc(q) + '</li>').join('') + '</ol>' : '') + (t.write ? '<p class="small"><b>Scrivi (facoltativo):</b> ' + esc(t.write.prompt) + '</p>' : '') + '</details>').join('') + Object.values(g.scheda || {}).map(sc => '<details class="card"><summary>' + levelBadge(sc.level) + ' <b>' + esc(sc.title) + '</b> (la correggi tu, negli Scritti)</summary><p class="small">' + esc(sc.intro) + '</p><ol class="small">' + sc.questions.map(q => '<li>' + esc(q) + '</li>').join('') + '</ol></details>').join('') + (g.extraItems && g.extraItems.length ? '<details class="card"><summary><b>Personaggi e frasi</b> (nel ripasso di tutto)</summary><ol class="small">' + g.extraItems.map(x => '<li>' + esc(itemText(x)) + ' → <b>' + esc(answerOf(x)) + '</b></li>').join('') + '</ol></details>' : '')).join('');
