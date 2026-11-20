@@ -8407,6 +8407,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
  * - Chrome perde l'audio se speak() segue subito cancel(), o se l'oggetto utterance viene eliminato
  *   dalla memoria prima della fine: si attende un istante e si tengono i riferimenti;
  * - Chrome interrompe i testi lunghi dopo circa 15 secondi: il testo è diviso in frasi brevi;
+ * - su Android e iPhone pause()/resume() ferma la voce: non si usa; se la voce si pianta si riparte;
  * - Safari su iPhone/iPad parla solo dopo un tocco: la sintesi viene "sbloccata" al primo tocco;
  * - se il dispositivo non ha una voce italiana, o la sintesi fallisce, l'app lo segnala con un
  *   messaggio chiaro invece di restare in silenzio.
@@ -8484,29 +8485,40 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   ['pointerdown', 'keydown', 'touchend'].forEach(ev => document.addEventListener(ev, unlock, { once: true, capture: true }));
 
   // ---------- Parlare ----------
+  // Nota: NON si usa più il vecchio trucco pause()/resume() ogni 10 secondi. Su Android e su iPhone
+  // pause() ferma la voce e resume() non la fa ripartire: era la causa dell'audio che si bloccava
+  // dopo pochi secondi negli ascolti. Al suo posto: frasi brevi (meno di 15 secondi anche al rallentatore)
+  // e un controllo che, se la voce si pianta a metà, svuota la coda e riparte dalla frase successiva.
   let rate = 0.9;
   const alive = new Set(); // riferimenti alle frasi in corso (evita che vengano eliminate dalla memoria)
   let generation = 0;
-  let keepAlive = null;
+  const MAX_CHUNK = 120;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
   function available() { return !!synth; }
   function stop() {
     generation++; scriptToken++;
     if (!synth) return;
     try { synth.cancel(); } catch (e) { /* nulla */ }
     alive.clear();
-    clearInterval(keepAlive); keepAlive = null;
   }
   function chunks(text) {
     const parts = String(text).replace(/\s+/g, ' ').trim().match(/[^.!?;:]+[.!?;:]*\s*/g) || [String(text)];
     const out = [];
     for (let p of parts) {
       p = p.trim(); if (!p) continue;
-      while (p.length > 180) { const cut = p.lastIndexOf(',', 180) > 60 ? p.lastIndexOf(',', 180) + 1 : p.lastIndexOf(' ', 180); out.push(p.slice(0, cut).trim()); p = p.slice(cut).trim(); }
+      while (p.length > MAX_CHUNK) {
+        const comma = p.lastIndexOf(',', MAX_CHUNK);
+        let cut = comma > 40 ? comma + 1 : p.lastIndexOf(' ', MAX_CHUNK);
+        if (cut <= 0) cut = MAX_CHUNK;
+        out.push(p.slice(0, cut).trim()); p = p.slice(cut).trim();
+      }
       if (p) out.push(p);
     }
     return out;
   }
-  function speakOne(text, opts, gen) {
+  // Durata prevista di una frase (l'italiano letto ha circa 14 caratteri al secondo a velocità 1).
+  function expectedMs(text, r) { return text.length * 1000 / (14 * (r || 1)); }
+  function speakOne(text, opts, gen, retry) {
     return new Promise(resolve => {
       if (gen !== generation) return resolve(false);
       const u = new SpeechSynthesisUtterance(text);
@@ -8516,22 +8528,47 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       // Se c'è una sola voce, il secondo personaggio dei dialoghi si distingue appena con il tono.
       u.pitch = opts.voice === 'B' && v && v === pickVoice('A') ? 0.9 : 1;
       alive.add(u);
-      let started = false, finished = false;
-      const finish = ok => { if (finished) return; finished = true; alive.delete(u); clearTimeout(watchdog); clearTimeout(hard); resolve(ok); };
-      u.onstart = () => { started = true; state.ok++; };
+      let started = false, finished = false, rescued = false, lastWord = 0, words = false, resumed = false;
+      let stall = null;
+      const timers = [];
+      const finish = ok => { if (finished) return; finished = true; alive.delete(u); timers.forEach(clearTimeout); clearInterval(stall); resolve(ok); };
+      // La voce si è piantata a metà frase: si svuota la coda e si va avanti con la frase successiva.
+      const rescue = () => {
+        if (finished || gen !== generation) return;
+        rescued = true; state.rescued = (state.rescued || 0) + 1;
+        try { synth.cancel(); } catch (e) { /* nulla */ }
+        wait(120).then(() => finish(true));
+      };
+      u.onstart = () => { started = true; lastWord = Date.now(); state.ok++; };
+      u.onboundary = () => { words = true; lastWord = Date.now(); };
       u.onend = () => finish(true);
       u.onerror = e => {
         const err = e && e.error;
+        if (rescued) return;
         if (err !== 'interrupted' && err !== 'canceled') problem(err === 'language-unavailable' || err === 'voice-unavailable' ? 'noitalian' : err === 'not-allowed' ? 'blocked' : 'failed');
         finish(false);
       };
-      // se dopo qualche secondo non è partita, il browser ha bloccato o perso la sintesi
-      const watchdog = setTimeout(() => {
+      // Se dopo qualche secondo non è partita, il browser ha la sintesi in pausa, bloccata da una
+      // frase vecchia rimasta in coda, oppure non autorizzata.
+      timers.push(setTimeout(() => {
         if (started || finished || gen !== generation) return;
-        if (synth.paused) { try { synth.resume(); } catch (e) { /* nulla */ } return; }
-        problem(state.ok ? 'stalled' : 'blocked'); finish(false);
-      }, 3500);
-      const hard = setTimeout(() => finish(started), Math.max(6000, text.length * 220));
+        if (synth.paused && !resumed) { resumed = true; try { synth.resume(); } catch (e) { /* nulla */ } return; }
+        if (!retry && state.ok) {
+          // una frase precedente è rimasta appesa: si svuota la coda e si riprova una volta
+          rescued = true; alive.delete(u);
+          try { synth.cancel(); } catch (e) { /* nulla */ }
+          finished = true; timers.forEach(clearTimeout); clearInterval(stall);
+          return wait(150).then(() => speakOne(text, opts, gen, true)).then(resolve);
+        }
+        problem(state.ok ? 'stalled' : 'blocked'); try { synth.cancel(); } catch (e) { /* nulla */ } finish(false);
+      }, 3500));
+      // Se le parole arrivavano e poi si fermano per diversi secondi, la voce si è piantata.
+      stall = setInterval(() => {
+        if (!started || finished || synth.paused) return;
+        if (words && Date.now() - lastWord > 4500) rescue();
+      }, 1000);
+      // Limite massimo: il doppio della durata prevista (le voci che non segnalano le parole).
+      timers.push(setTimeout(() => { if (started) rescue(); else finish(false); }, Math.max(6000, expectedMs(text, u.rate) * 2 + 2500)));
       try { if (synth.paused) synth.resume(); synth.speak(u); } catch (e) { problem('failed'); finish(false); }
     });
   }
@@ -8540,16 +8577,13 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     if (!synth) { problem('nosynth'); return false; }
     if (!text) return false;
     const gen = ++generation;
-    if (synth.speaking || synth.pending) { try { synth.cancel(); } catch (e) { /* nulla */ } await new Promise(r => setTimeout(r, 80)); }
+    if (synth.speaking || synth.pending) { try { synth.cancel(); } catch (e) { /* nulla */ } await wait(100); }
     await waitVoices();
     if (gen !== generation) return false;
     if (all.length && !voices.length && !state.warnedNoIt) { state.warnedNoIt = true; problem('noitalian'); }
     if (!all.length && !state.warnedNoIt) { state.warnedNoIt = true; problem('novoices'); }
-    clearInterval(keepAlive);
-    keepAlive = setInterval(() => { if (synth.speaking && !synth.paused) { try { synth.pause(); synth.resume(); } catch (e) { /* nulla */ } } }, 10000);
     let ok = true;
     for (const c of chunks(text)) { if (gen !== generation) return false; ok = (await speakOne(c, opts, gen)) && ok; }
-    clearInterval(keepAlive); keepAlive = null;
     return ok;
   }
   let scriptToken = 0;
