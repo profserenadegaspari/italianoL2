@@ -816,7 +816,7 @@ a.tile.v-part { text-decoration: none; }
 
   // Campi del profilo che lo studente può aggiornare (gli altri sono gestiti dal server o dall'insegnante).
   const STUDENT_FIELDS = ['skills', 'topics', 'srs', 'errors', 'unitsDone', 'readingsDone', 'listeningsDone',
-    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice', 'verificheDone', 'lessonTries', 'mirato'];
+    'speakingDone', 'xp', 'streak', 'badges', 'badgeLog', 'stats', 'timeLog', 'prefs', 'gamesDone', 'practice', 'verificheDone', 'lessonTries', 'mirato', 'formBackfill'];
 
   function publicUser(u) {
     return {
@@ -7636,6 +7636,41 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   A('C1', 0.2, 'Per quanto la tesi sia suggestiva, i dati a sostegno appaiono, a un esame attento, piuttosto esili.', 'Che cosa pensa chi parla della tesi?', ['È affascinante ma poco dimostrata', 'È del tutto dimostrata', 'È noiosa e sbagliata'], 'ac1c');
   A('C1', 0.4, 'Non fosse stato per l\'intervento tempestivo dei volontari, i danni dell\'alluvione sarebbero stati ben più gravi.', 'Che cosa si dice dei volontari?', ['Hanno limitato i danni', 'Sono arrivati in ritardo', 'Hanno causato danni'], 'ac1d');
 
+  // ---------------- Lessico: altre domande (22/11/2026) ----------------
+  // Più domande per livello e alcune da scrivere: così il lessico non si misura solo riconoscendo la parola fra tre.
+  // Aggiunte in fondo per non cambiare gli id delle domande già usate nei test precedenti.
+  const LS = (lv, d, q, a, hint) => bank.push({ id: 'p' + (++n), skill: 'lessico', lv, d, t: 'gap', q, a, hint, topic: 'lessico' });
+  L('A1', -0.3, 'Il contrario di "grande" è…', ['piccolo', 'alto', 'lungo']);
+  L('A1', 0, 'Di notte dormo nel…', ['letto', 'forno', 'frigorifero']);
+  L('A1', 0.2, 'Il colore del cielo quando è sereno è…', ['azzurro', 'rosso', 'marrone']);
+  LS('A1', -0.1, 'La madre di mia madre è mia ___.', ['nonna'], 'comincia con n');
+  LS('A1', 0.2, 'Il giorno prima di oggi è ___.', ['ieri'], 'comincia con i');
+  LS('A1', 0.4, 'Mangio la minestra con il ___.', ['cucchiaio'], 'comincia con c');
+  L('A2', -0.3, 'In negozio pago con la carta o in…', ['contanti', 'conti', 'contatti']);
+  L('A2', 0, 'Mi fa male la testa: prendo una…', ['medicina', 'merenda', 'misura']);
+  L('A2', 0.3, 'Il negozio dove si compra la carne è la…', ['macelleria', 'pescheria', 'cartoleria']);
+  LS('A2', -0.2, 'Per aprire la porta di casa uso la ___.', ['chiave'], 'comincia con c');
+  LS('A2', 0.1, 'Il mese dopo gennaio è ___.', ['febbraio'], 'comincia con f');
+  LS('A2', 0.4, 'Per sapere che tempo farà domani guardo le ___ del tempo.', ['previsioni'], 'comincia con p');
+  L('B1', -0.2, 'Chi va ogni giorno a lavorare in un\'altra città è un…', ['pendolare', 'passeggero', 'turista']);
+  L('B1', 0.1, 'Quando un negozio abbassa i prezzi ci sono gli…', ['sconti', 'scontri', 'scontrini']);
+  L('B1', 0.35, 'Una persona che non dice mai bugie è…', ['sincera', 'sicura', 'severa']);
+  LS('B1', 0, 'Per cercare lavoro mandi il tuo ___ vitae.', ['curriculum'], 'comincia con c');
+  LS('B1', 0.2, 'Il contrario di "vincere" è ___.', ['perdere'], 'comincia con p');
+  LS('B1', 0.45, 'Qui non si può fumare: è ___.', ['vietato'], 'comincia con v');
+  L('B2', -0.3, 'Una persona che pensa solo a se stessa è…', ['egoista', 'altruista', 'ottimista']);
+  L('B2', 0, 'I soldi che i cittadini pagano allo Stato sono le…', ['tasse', 'multe', 'bollette']);
+  L('B2', 0.3, 'Spendere meno soldi significa…', ['risparmiare', 'rimborsare', 'riscattare']);
+  LS('B2', 0, 'Il contrario di "aumentare" è ___.', ['diminuire', 'calare'], 'comincia con d o c');
+  LS('B2', 0.25, 'Chi lavora senza contratto lavora in ___.', ['nero'], 'comincia con n');
+  LS('B2', 0.4, 'Un problema che riguarda tutto il mondo è un problema ___.', ['globale', 'mondiale'], 'comincia con g o m');
+  L('C1', -0.3, 'Una decisione presa senza riflettere è…', ['avventata', 'avveduta', 'avvenuta']);
+  L('C1', 0, '"Prendere atto" di qualcosa significa…', ['riconoscerla', 'scriverla a mano', 'recitarla a teatro']);
+  L('C1', 0.3, 'Un aumento forte e improvviso dei prezzi è un…', ['rincaro', 'ricatto', 'riscatto']);
+  LS('C1', 0, 'Chi non sta né con una parte né con l\'altra è ___.', ['neutrale'], 'comincia con n');
+  LS('C1', 0.2, 'Il contrario di "ammettere" una colpa è ___.', ['negare'], 'comincia con n');
+  LS('C1', 0.45, 'Una legge che non è più valida è stata ___.', ['abrogata'], 'comincia con a');
+
   C.placement = bank;
 
   // Domanda iniziale di autovalutazione: definisce il punto di partenza del test (non il risultato).
@@ -7866,10 +7901,16 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
 
   // ---------------- Modello dello studente ----------------
   const K_TOPIC = 0.35, K_SKILL = 0.12;
-  function updateSkill(profile, skill, b, correct) {
+  // Peso nella stima «dalla pratica» delle attività di lessico facili da indovinare o giudicate dallo studente:
+  // bingo con le immagini o con l'audio (si sceglie fra le parole della cartella), carte «Lo so» (autovalutazione).
+  // Così poche partite veloci non fanno salire il lessico di un livello.
+  const PRACTICE_WEIGHT = { 'bingo-riconosci': 0.15, 'bingo-ascolta': 0.25, 'bingo-scrivi': 0.5, carte: 0.15 };
+  // w = quanto conta la risposta (1 = esercizio vero; meno per attività facili da indovinare o giudicate da sé)
+  function updateSkill(profile, skill, b, correct, w) {
     if (!skill || profile.skills[skill] === undefined) return;
     const cur = profile.skills[skill] || (profile.theta != null ? profile.theta : -2);
-    profile.skills[skill] = +(cur + K_SKILL * ((correct ? 1 : 0) - logistic(cur - b))).toFixed(3);
+    const k = K_SKILL * (w == null ? 1 : w);
+    profile.skills[skill] = +(cur + k * ((correct ? 1 : 0) - logistic(cur - b))).toFixed(3);
   }
   function updateTopic(profile, topic, b, correct) {
     if (!topic) return;
@@ -7889,7 +7930,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   function recordAnswer(profile, item, correct, ctx) {
     const b = itemB(item, ctx && ctx.level);
     const skill = item.skill || (ctx && ctx.skill) || 'grammatica';
-    updateSkill(profile, skill, b, correct);
+    updateSkill(profile, skill, b, correct, ctx && ctx.weight != null ? ctx.weight : item.weight);
     logPractice(profile, skill, correct);
     if (item.topic) updateTopic(profile, item.topic, b, correct);
     if (!correct && ctx && ctx.logError !== false) addError(profile, item, ctx);
@@ -8253,7 +8294,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
 
   IL2.engine = {
     LEVELS, LEVEL_B, SKILLS, SKILL_LABEL, LEVEL_NAME, LEVEL_DESC, levelFromTheta, sublevel, itemB,
-    PlacementTest, recordAnswer, topicMastery, addError, resolveError, srsReview, dueWords, INTERVALS,
+    PlacementTest, recordAnswer, PRACTICE_WEIGHT, topicMastery, addError, resolveError, srsReview, dueWords, INTERVALS,
     touchStreak, addTime, minutesToday, today, BADGES, BADGE_GROUPS, checkBadges, badgeProgress, badgeDone, currentLevel, nextUnit, weakTopics,
     weakestSkill, dailyPlan, nextVocabTheme, testDue, logistic, eap, unlocked, levelProgress, levelUpReady, unitsFor,
     logPractice, practiceSummary, testLevel
@@ -8748,7 +8789,40 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     return (out + esc(text.slice(pos))).replace(/\n/g, '<br>');
   }
 
-  IL2.checker = { check, highlight, CONNECTIVES };
+  // ---------------- Stima automatica della forma (solo testi liberi di «Scrivere») ----------------
+  // Cinque controlli di forma, con soglie per livello. Non valuta il contenuto né l'aderenza alla traccia:
+  // serve a far muovere la Scrittura nel grafico «dalla pratica». Lo studente non vede i dettagli.
+  const FORM_LIMITS = {
+    A1: { err: 4, avg: 20, variety: 40 }, A2: { err: 3, avg: 22, variety: 45 }, B1: { err: 2, avg: 25, variety: 50 },
+    B2: { err: 1.5, avg: 30, variety: 55 }, C1: { err: 1, avg: 32, variety: 60 }
+  };
+  const FORM_LABEL = { lunghezza: 'Lunghezza', ortografia: 'Ortografia e punteggiatura', frasi: 'Frasi', varieta: 'Varietà delle parole', connettivi: 'Connettivi del livello' };
+  function connectivesOk(lv, u) {
+    const b = u.base.length, m = u.medio.length, a = u.alto.length;
+    if (lv === 'A1') return b + m + a >= 1;
+    if (lv === 'A2') return b + m + a >= 2;
+    if (lv === 'B1') return m + a >= 1 && b + m + a >= 3;
+    if (lv === 'B2') return a >= 1 && m + a >= 2;
+    return a >= 2;
+  }
+  function formScore(text, task) {
+    const lv = (task && task.level) || 'A2', L = FORM_LIMITS[lv] || FORM_LIMITS.A2;
+    const min = (task && task.min) || 30;
+    const r = check(text, task), st = r.stats, n = st.words;
+    const density = r.issues.length / Math.max(1, n / 100);
+    const tooShort = n < min * 0.5;
+    const cons = [].concat(st.connectives.base, st.connectives.medio, st.connectives.alto);
+    const checks = [
+      { k: 'lunghezza', ok: n >= min * 0.8, detail: n + ' parole (richieste ' + min + '–' + ((task && task.max) || '') + ')' },
+      { k: 'ortografia', ok: !tooShort && density <= L.err, detail: r.issues.length + ' segnalazioni (' + (Math.round(density * 10) / 10) + ' ogni 100 parole, al massimo ' + L.err + ')' },
+      { k: 'frasi', ok: !tooShort && st.sentences >= 2 && st.avgSentence <= L.avg, detail: st.sentences + ' frasi, in media ' + st.avgSentence + ' parole (al massimo ' + L.avg + ')' },
+      { k: 'varieta', ok: !tooShort && st.variety >= L.variety, detail: st.variety + '% di parole diverse (almeno ' + L.variety + '%)' },
+      { k: 'connettivi', ok: !tooShort && connectivesOk(lv, st.connectives), detail: cons.length ? cons.join(', ') : 'nessuno' }
+    ];
+    return { score: Math.round(100 * checks.filter(c => c.ok).length / checks.length), level: lv, checks, tooShort };
+  }
+
+  IL2.checker = { check, highlight, formScore, FORM_LABEL, CONNECTIVES };
 })();
 
 ;
@@ -9799,6 +9873,18 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   R.oggi = async function (view) {
     const p = P(), st = S();
     const subs = await IL2.api.call('mySubmissions').catch(() => []);
+    // Una sola volta: i testi liberi mandati prima della stima automatica contano anche loro nella Scrittura.
+    if (!p.formBackfill) {
+      let n = 0;
+      subs.forEach(x => {
+        const task = C.writingById[x.taskId];
+        if (!task || task.questions || (x.autoFeedback && x.autoFeedback.form)) return;
+        const f = IL2.checker.formScore(x.text || '', Object.assign({}, task, { level: x.level || task.level }));
+        f.checks.forEach(c => E.recordAnswer(p, { skill: 'scrittura', lv: x.level || task.level }, c.ok, { logError: false }));
+        n++;
+      });
+      p.formBackfill = { at: Date.now(), n }; IL2.save(true);
+    }
     const td = E.testDue(p, st.settings);
     const lv = E.currentLevel(p), prog = E.levelProgress(p, lv);
     const goal = (st.settings && st.settings.dailyGoalMinutes) || 15, mins = E.minutesToday(p);
@@ -10200,7 +10286,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       card.addEventListener('click', flip); card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
       view.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => {
         const qv = +b.dataset.q; E.srsReview(p, w.id, qv);
-        E.recordAnswer(p, { skill: 'lessico', lv: w.level || E.currentLevel(p) }, qv >= 2, { logError: false });
+        E.recordAnswer(p, { skill: 'lessico', lv: w.level || E.currentLevel(p) }, qv >= 2, { logError: false, weight: E.PRACTICE_WEIGHT.carte });
         if (qv >= 2) ok++; else if (qv === 0 && queue.filter(x => x === w).length < 2) queue.push(w);
         i++; IL2.save(); draw();
       }));
@@ -10477,30 +10563,23 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       (t.model ? '<details class="card"><summary>Vedi un esempio</summary><p><i>' + esc(t.model) + '</i></p></details>' : '') +
       '<textarea id="txt" rows="10" class="writing" placeholder="Scrivi qui il tuo testo…" spellcheck="false" lang="it">' + esc(draft) + '</textarea>' + X.accentBar() +
       (t.points ? '<div class="card w-check"><b>Prima di mandare, controlla. Nel testo c\'è:</b>' + t.points.slice().concat(['Ho scritto tra ' + t.min + ' e ' + t.max + ' parole', t.short ? 'Ho cominciato con un saluto e ho firmato' : 'Ho riletto i verbi e gli accordi']).map(x => '<label><input type="checkbox" class="wc-box"> ' + esc(x) + '</label>').join('') + '</div>' : '') +
-      '<div class="row between wrap"><span class="small muted" id="wc"></span><span class="row wrap"><button class="btn ghost" id="chk">' + icon('search') + ' Controlla</button><button class="btn primary" id="send">' + (window.IL2_SITE === 'studenti' ? 'Salva e manda all\'insegnante' : 'Invia all\'insegnante') + '</button></span></div><div id="fbk"></div>';
+      '<div class="row between wrap"><span class="small muted" id="wc"></span><span class="row wrap"><button class="btn primary" id="send">' + (window.IL2_SITE === 'studenti' ? 'Salva e manda all\'insegnante' : 'Invia all\'insegnante') + '</button></span></div>';
     const ta = view.querySelector('#txt'), wc = view.querySelector('#wc');
     X.bindAccents(view, ta);
     const upd = () => { const n = (ta.value.match(/[a-zà-ÿ']+/gi) || []).length; wc.textContent = n + ' parole'; wc.className = 'small ' + (n < t.min ? 'muted' : n > t.max * 1.25 ? 'warn-text' : 'ok-text'); try { localStorage.setItem(key, ta.value); } catch (e) { /* nulla */ } };
     ta.addEventListener('input', upd); upd();
-    view.querySelector('#chk').addEventListener('click', () => {
-      const last = IL2.checker.check(ta.value, t); const st = last.stats;
-      view.querySelector('#fbk').innerHTML = '<div class="card"><h3>Revisione automatica</h3>' +
-        (last.issues.length ? '<p class="small">Ho trovato ' + last.issues.length + ' punti da controllare:</p><div class="checked">' + IL2.checker.highlight(ta.value, last.issues) + '</div><ul class="issues">' + last.issues.slice(0, 15).map(i => '<li><b>' + esc(i.text) + '</b>' + (i.fix ? ' → <b class="ok-text">' + esc(i.fix) + '</b>' : '') + ': ' + esc(i.msg) + '</li>').join('') + '</ul>' : '<p class="ok-line">' + icon('check') + ' Non ho trovato errori di ortografia frequenti.</p>') +
-        (last.tips.length ? '<h4>Suggerimenti</h4><ul>' + last.tips.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '') +
-        '<p class="small muted">Parole: ' + st.words + ' · frasi: ' + st.sentences + ' · varietà lessicale: ' + st.variety + '%</p>' +
-        '<p class="small muted">La revisione automatica non trova tutti gli errori: l\'insegnante leggerà il tuo testo.</p></div>';
-      view.querySelectorAll('.checked mark').forEach(m => m.addEventListener('click', () => toast(m.title)));
-    });
     view.querySelector('#send').addEventListener('click', async () => {
       const text = ta.value.trim(); const n = (text.match(/[a-zà-ÿ']+/gi) || []).length;
       if (n < Math.min(10, t.min)) return toast('Il testo è troppo breve', 'bad');
       if (t.points && Array.from(view.querySelectorAll('.wc-box')).some(b => !b.checked) && !await IL2.ui.confirm('Non hai spuntato tutti i punti della lista. Vuoi mandare il testo lo stesso?', 'Manda')) return;
       if (n < t.min && !await IL2.ui.confirm('Il testo ha ' + n + ' parole (richieste almeno ' + t.min + '). Vuoi inviarlo lo stesso?', 'Invia')) return;
       const chk = IL2.checker.check(text, t);
+      // stima automatica della forma: lo studente non la vede, l'insegnante sì (negli Scritti)
+      const form = IL2.checker.formScore(text, t);
       try {
-        await IL2.api.call('submitWriting', { taskId: t.id, title: t.title, level: t.level, text, autoFeedback: { stats: chk.stats, issues: chk.issues.length, tips: chk.tips } });
-        const density = chk.issues.length / Math.max(1, n / 100);
-        E.recordAnswer(p, { skill: 'scrittura', lv: t.level }, density < 3 && n >= t.min * 0.8, { logError: false });
+        await IL2.api.call('submitWriting', { taskId: t.id, title: t.title, level: t.level, text, autoFeedback: { stats: chk.stats, issues: chk.issues.length, tips: chk.tips, form: { score: form.score, level: form.level, checks: form.checks } } });
+        // ogni controllo di forma conta come una risposta di Scrittura, così il grafico «dalla pratica» si muove davvero
+        form.checks.forEach(c => E.recordAnswer(p, { skill: 'scrittura', lv: t.level }, c.ok, { logError: false }));
         done({ type: 'writing', ref: t.id, skill: 'scrittura', correct: n >= t.min ? 1 : 0, total: 1, durationSec: Math.round((Date.now() - started) / 1000) });
         p.stats = p.stats || {}; p.stats.writings = (p.stats.writings || 0) + 1;
         IL2.award(10);
@@ -11217,7 +11296,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     function mark(w) { const k = card.indexOf(w); if (k >= 0) { marked.add(w.id); cells[k].classList.add('on'); } }
     function result(w, good, msg) {
       answered++; if (good) ok++; else { misses.push(w.it); missed.set(w.id, w); }
-      E.recordAnswer(P(), { skill: 'lessico', lv: w.level || 'A1' }, good, { logError: false });
+      E.recordAnswer(P(), { skill: 'lessico', lv: w.level || 'A1' }, good, { logError: false, weight: E.PRACTICE_WEIGHT['bingo-' + modo] });
       if (good && onCard.has(w.id)) mark(w);
       if (!good) {
         const k = card.indexOf(w); if (k >= 0) { cells[k].classList.add('show'); setTimeout(() => cells[k].classList.remove('show'), 1600); }
@@ -11697,9 +11776,30 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     }).join('') + '<p class="small muted">Percentuale di risposte giuste al primo tentativo (la migliore). Gli errori sono anche nel Registro degli errori. Domande aperte e scheda finale arrivano negli Scritti, da correggere.</p></div>';
   }
 
+  // Stima automatica della forma: solo per i testi liberi (non domande aperte né schede finali).
+  function formOf(x, prof) {
+    const task = C.writingById[x.taskId];
+    if (!task || task.questions) return null;
+    if (x.autoFeedback && x.autoFeedback.form) return x.autoFeedback.form;
+    // testi mandati prima della stima: contano nel livello solo dopo il ricalcolo fatto una volta nell'app dello studente
+    const counted = prof && prof.formBackfill && x.at <= prof.formBackfill.at;
+    return Object.assign({ late: !counted }, IL2.checker.formScore(x.text || '', Object.assign({}, task, { level: x.level || task.level })));
+  }
+  function formTag(f) { return f ? '<span class="tag ' + (f.score >= 80 ? 'good' : f.score >= 40 ? '' : 'warn') + '" title="Stima automatica della forma">forma ' + f.score + '%</span>' : ''; }
+  function formChecks(f) { return '<ul class="list form-checks small">' + f.checks.map(c => '<li>' + (c.ok ? '✅' : '⚪') + ' <b>' + esc(IL2.checker.FORM_LABEL[c.k] || c.k) + '</b>: ' + esc(c.detail) + '</li>').join('') + '</ul>'; }
+  function formCard(d) {
+    const rows = d.submissions.map(x => ({ x, f: formOf(x, d.profile) })).filter(r => r.f).sort((a, b) => b.x.at - a.x.at);
+    if (!rows.length) return '';
+    const last = rows.slice(0, 5); const avg = Math.round(last.reduce((t, r) => t + r.f.score, 0) / last.length);
+    return '<div class="card"><h3>Scrittura: stima automatica della forma <span class="tag-soft">automatica, da confermare</span></h3>' +
+      '<p class="small">Media degli ultimi ' + last.length + ' testi liberi: <b>' + avg + '%</b>. Livello di Scrittura stimato dalla pratica: <b>' + E.levelFromTheta(d.profile.skills.scrittura) + '</b>.</p>' +
+      '<ul class="list">' + rows.slice(0, 10).map(r => '<li><a class="row-item" href="#/scritto/' + r.x.id + '">' + icon('pen') + '<span><b>' + esc(r.x.title) + '</b><small>' + esc(r.x.level || '') + ' · ' + fmtDate(r.x.at) + ' · ' + r.f.checks.filter(c => c.ok).length + ' controlli su ' + r.f.checks.length + (r.f.late ? ' · calcolata ora, non conta nel livello' : '') + '</small></span>' + formTag(r.f) + '</a></li>').join('') + '</ul>' +
+      '<p class="small muted">Controlla solo la forma: lunghezza, ortografia e punteggiatura frequenti, frasi, varietà delle parole, connettivi del livello. Non valuta il contenuto, se il testo risponde alla traccia o se è copiato. Lo studente vede solo la Scrittura nel grafico «dalla pratica», non questi dettagli. Contano solo i testi liberi, non le domande aperte e le schede finali.</p></div>';
+  }
   function secWritings(s, d) {
-    return '<div class="grid2"><div class="card"><h3>Scritti</h3>' + (d.submissions.length ? '<ul class="list">' + d.submissions.map(x => '<li><a class="row-item" href="#/scritto/' + x.id + '">' + icon('pen') + '<span><b>' + esc(x.title) + '</b><small>' + fmtDate(x.at) + (x.autoFeedback && x.autoFeedback.stats ? ' · ' + x.autoFeedback.stats.words + ' parole' : '') + '</small></span><span class="tag ' + (x.status === 'corretto' ? 'good' : 'warn') + '">' + (x.status === 'corretto' ? 'commentato' : 'da leggere') + '</span></a></li>').join('') + '</ul>' : '<p class="muted small">Nessuno scritto inviato.</p>') + '</div>' +
+    return '<div class="grid2"><div class="card"><h3>Scritti</h3>' + (d.submissions.length ? '<ul class="list">' + d.submissions.map(x => '<li><a class="row-item" href="#/scritto/' + x.id + '">' + icon('pen') + '<span><b>' + esc(x.title) + '</b><small>' + fmtDate(x.at) + (x.autoFeedback && x.autoFeedback.stats ? ' · ' + x.autoFeedback.stats.words + ' parole' : '') + '</small></span>' + formTag(formOf(x, d.profile)) + '<span class="tag ' + (x.status === 'corretto' ? 'good' : 'warn') + '">' + (x.status === 'corretto' ? 'commentato' : 'da leggere') + '</span></a></li>').join('') + '</ul>' : '<p class="muted small">Nessuno scritto inviato.</p>') + '</div>' +
       '<div class="card"><h3>Note dell\'insegnante</h3><textarea id="note" rows="6" placeholder="Osservazioni, bisogni, PDP/PEI, contatti con la famiglia… (visibili solo a te)">' + esc(d.note) + '</textarea><button class="btn small" id="savenote">Salva nota</button></div></div>' +
+      formCard(d) +
       '<details class="card danger-zone"><summary>Azioni avanzate</summary><p class="small">Esporta tutti i dati dello studente (ad esempio per una richiesta della famiglia), azzera i progressi (ricomincia dal test iniziale) o elimina definitivamente lo studente e tutti i suoi dati.</p><div class="row wrap"><button class="btn ghost" id="exp">Esporta i suoi dati</button><button class="btn warn" id="reset">Azzera progressi</button><button class="btn danger" id="del">Elimina studente</button></div></details>';
   }
   function bindNotes(view, s, d) {
@@ -11833,11 +11933,12 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   // L'insegnante legge i testi e lascia un commento: nessun voto e nessuna griglia.
   R.scritti = async function (view, parts, q) {
     const list = await IL2.api.call('listSubmissions');
+    const profs = {}; for (const id of new Set(list.map(x => x.userId))) { const sd = await IL2.api.call('getStudent', { id }).catch(() => null); profs[id] = sd && sd.profile; }
     const filter = q.f || 'inviato';
     const shown = list.filter(s => filter === 'tutti' || s.status === filter);
     view.innerHTML = head('Scritti', 'I testi che gli studenti scrivono nella pratica. Puoi leggerli e lasciare un commento.') +
       '<div class="tabs">' + [['inviato', 'Da leggere'], ['corretto', 'Commentati'], ['tutti', 'Tutti']].map(([k, l]) => '<a class="tab' + (k === filter ? ' on' : '') + '" href="#/scritti?f=' + k + '">' + l + ' (' + list.filter(s => k === 'tutti' || s.status === k).length + ')</a>').join('') + '</div>' +
-      (shown.length ? '<ul class="list">' + shown.map(s => '<li><a class="row-item" href="#/scritto/' + s.id + '">' + icon('pen') + '<span><b>' + esc(s.title) + '</b><small>' + esc(s.studentName) + ' · ' + esc(s.level || '') + ' · ' + fmtDate(s.at, true) + (s.autoFeedback && s.autoFeedback.stats ? ' · ' + s.autoFeedback.stats.words + ' parole' : '') + '</small></span>' + (s.status === 'corretto' ? '<span class="tag good">commentato</span>' : '<span class="tag warn">nuovo</span>') + icon('chevron') + '</a></li>').join('') + '</ul>' : '<div class="card empty-state"><p class="muted">Nessuno scritto in questo elenco.</p></div>');
+      (shown.length ? '<ul class="list">' + shown.map(s => '<li><a class="row-item" href="#/scritto/' + s.id + '">' + icon('pen') + '<span><b>' + esc(s.title) + '</b><small>' + esc(s.studentName) + ' · ' + esc(s.level || '') + ' · ' + fmtDate(s.at, true) + (s.autoFeedback && s.autoFeedback.stats ? ' · ' + s.autoFeedback.stats.words + ' parole' : '') + '</small></span>' + formTag(formOf(s, profs[s.userId])) + (s.status === 'corretto' ? '<span class="tag good">commentato</span>' : '<span class="tag warn">nuovo</span>') + icon('chevron') + '</a></li>').join('') + '</ul>' : '<div class="card empty-state"><p class="muted">Nessuno scritto in questo elenco.</p></div>');
   };
   R.elaborati = R.scritti;
 
@@ -11846,11 +11947,13 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const s = list.find(x => x.id === parts[0]); if (!s) return IL2.go('scritti');
     const task = C.writingById[s.taskId];
     const chk = IL2.checker.check(s.text, task ? Object.assign({ level: s.level }, task) : null);
+    const sd = await IL2.api.call('getStudent', { id: s.userId }).catch(() => null);
+    const fm = formOf(s, sd && sd.profile);
     view.innerHTML = '<a class="back" href="#/scritti">' + icon('back') + 'Scritti</a>' + head(esc(s.title), '<a href="#/studente/' + s.userId + '">' + esc(s.studentName) + '</a> · ' + esc(s.level || '') + ' · ' + fmtDate(s.at, true)) +
       (task ? '<div class="card prompt small"><b>Consegna:</b> ' + esc(task.prompt) + ' (' + task.min + '–' + task.max + ' parole)</div>' : '') +
       '<div class="grid2"><div class="card"><h3>Testo con segnalazioni automatiche</h3><div class="checked">' + IL2.checker.highlight(s.text, chk.issues) + '</div>' +
       '<p class="small muted">' + chk.stats.words + ' parole · ' + chk.stats.sentences + ' frasi · varietà lessicale ' + chk.stats.variety + '% · connettivi: ' + ([].concat(chk.stats.connectives.base, chk.stats.connectives.medio, chk.stats.connectives.alto).join(', ') || 'nessuno') + '</p>' +
-      (chk.issues.length ? '<ul class="issues small">' + chk.issues.map(i => '<li><b>' + esc(i.text) + '</b>' + (i.fix ? ' → ' + esc(i.fix) : '') + ': ' + esc(i.msg) + '</li>').join('') + '</ul>' : '') + '</div>' +
+      (chk.issues.length ? '<ul class="issues small">' + chk.issues.map(i => '<li><b>' + esc(i.text) + '</b>' + (i.fix ? ' → ' + esc(i.fix) : '') + ': ' + esc(i.msg) + '</li>').join('') + '</ul>' : '') + (fm ? '<h4>Stima automatica della forma: ' + fm.score + '% <span class="tag-soft">da confermare</span></h4>' + formChecks(fm) + (fm.late ? '<p class="small muted">Testo mandato prima di questa funzione: la stima è calcolata ora e non conta nel livello.</p>' : '') : '') + '</div>' +
       '<div class="card"><h3>Il tuo commento</h3><form id="rv" class="stack">' +
       '<label>Commento per lo studente<textarea name="feedback" rows="6" required placeholder="Cosa va bene, cosa migliorare, un consiglio concreto…">' + esc(s.teacherFeedback || '') + '</textarea></label>' +
       '<div class="row wrap small">Frasi rapide: ' + ['Bel lavoro! ', 'Attenzione agli accenti. ', 'Rivedi l\'accordo tra nome e aggettivo. ', 'Usa più connettivi per collegare le frasi. ', 'Il testo è chiaro e ben organizzato. ', 'Ripassa l\'uso di passato prossimo e imperfetto. '].map(t => '<button type="button" class="chip" data-add="' + esc(t) + '">' + esc(t.trim()) + '</button>').join('') + '</div>' +
@@ -11958,7 +12061,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     if (tab === 'lessico') h += C.vocab.map(t => '<details class="card"><summary>' + levelBadge(t.level) + ' ' + t.icon + ' <b>' + esc(t.title) + '</b> · ' + t.words.length + ' parole</summary><table class="tbl small">' + t.words.map(w => '<tr><td><b>' + esc(w.it) + '</b></td><td>' + esc(w.def || [w.gloss.en, w.gloss.fr, w.gloss.ar, w.gloss.zh].filter(Boolean).join(' · ')) + '</td><td><i>' + esc(w.ex) + '</i></td></tr>').join('') + '</table></details>').join('');
     if (tab === 'lingue') h += '<p>Per gli studenti la lingua d\'origine compare <b>solo nel dizionario</b>, come traduzione delle parole: tutto il resto dell\'app è in italiano. Le note contrastive qui sotto sono in italiano e le vedi solo tu, nella scheda di ogni studente e nei suggerimenti. In un contesto ufficiale è opportuno far verificare le traduzioni da mediatori linguistici: puoi segnalare correzioni con la revisione periodica.</p>' + IL2.l1.ORDER.map(c => { const p = IL2.l1.profile(c); return '<details class="card"><summary><b>' + esc(p.name) + '</b> · ' + esc(p.native) + '</summary>' + (p.general ? '<p>' + esc(p.general.it) + '</p>' : '') + '<ul>' + Object.entries(p.tips).map(([k, t]) => '<li><b>' + esc(topicName(k)) + ':</b> ' + esc(t.it) + '</li>').join('') + '</ul>' + (p.friends.length ? '<p><b>Falsi amici:</b> ' + p.friends.map(f => esc(f[0]) + ' = ' + esc(f[1])).join(' · ') + '</p>' : '') + '</details>'; }).join('');
     if (tab === 'test') h += '<div class="card"><h3>Come funziona il test di livello</h3><ul><li>Banca di ' + s.placement + ' domande calibrate sui livelli A1–C1 (grammatica, lessico, lettura, ascolto).</li><li>Test adattivo: ogni domanda è scelta in base alle risposte precedenti (modello di Rasch, stima bayesiana EAP).</li><li>Si ferma quando la stima è abbastanza precisa (o al numero massimo di domande, regolabile nelle impostazioni).</li><li>Nei test periodici evita le domande dell\'ultimo test e parte dal livello precedente.</li><li>Restituisce il livello QCER, la posizione nel livello (iniziale, intermedio, avanzato) e un profilo per abilità.</li><li>Il livello raggiunto sblocca le lezioni di quel livello e dei precedenti. Chi completa l\'80% delle lezioni del proprio livello può anticipare il test.</li></ul><p class="small muted">Le soglie e la difficoltà delle domande sono una calibrazione iniziale: con l\'uso reale, la revisione periodica può ricalibrarle sui dati raccolti.</p></div>' +
-      E.LEVELS.map(lv => '<details class="card"><summary>' + levelBadge(lv) + ' ' + C.placement.filter(x => x.lv === lv).length + ' domande</summary><ol class="small">' + C.placement.filter(x => x.lv === lv).map(x => '<li>[' + x.skill + '] ' + (x.text ? '<i>' + esc(x.text) + '</i> ' : '') + (x.say ? '(audio) <i>' + esc(x.say) + '</i> ' : '') + esc(x.q) + ' → <b>' + esc(x.o[0]) + '</b></li>').join('') + '</ol></details>').join('');
+      E.LEVELS.map(lv => '<details class="card"><summary>' + levelBadge(lv) + ' ' + C.placement.filter(x => x.lv === lv).length + ' domande</summary><ol class="small">' + C.placement.filter(x => x.lv === lv).map(x => '<li>[' + x.skill + '] ' + (x.text ? '<i>' + esc(x.text) + '</i> ' : '') + (x.say ? '(audio) <i>' + esc(x.say) + '</i> ' : '') + esc(x.q) + (x.hint ? ' <i>(' + esc(x.hint) + ')</i>' : '') + ' → <b>' + esc(x.o ? x.o[0] : x.a.join(' / ')) + '</b>' + (x.t === 'gap' ? ' <span class="tag tag-soft">da scrivere</span>' : '') + '</li>').join('') + '</ol></details>').join('');
     if (tab === 'mie') {
       h += '<div class="card"><h3>Nuova lista di parole</h3><p class="small">Crea liste di lessico per i tuoi studenti (es. parole di una lezione di storia): compaiono nella sezione Parole di chi ha raggiunto il livello indicato. Una parola per riga: <code>parola; spiegazione; esempio</code>.</p><form id="cvf" class="stack"><input type="hidden" name="id"><div class="grid-form"><label>Titolo<input name="title" required maxlength="80"></label><label>Livello<select name="level">' + E.LEVELS.map(l => '<option>' + l + '</option>').join('') + '</select></label></div><textarea name="words" rows="8" placeholder="il triangolo; figura con tre lati; Il triangolo ha tre angoli."></textarea><div class="row"><button class="btn primary">Salva lista</button><button type="button" class="btn ghost" id="cvnew">Nuova</button></div></form></div>' +
         (cv.length ? cv.map(v => '<div class="card"><div class="row between"><b>' + esc(v.title) + '</b><span>' + levelBadge(v.level) + ' ' + v.words.length + ' parole <button class="btn small ghost" data-edit="' + v.id + '">Modifica</button><button class="btn small danger" data-del="' + v.id + '">Elimina</button></span></div></div>').join('') : '<p class="muted">Nessuna lista personale.</p>');
