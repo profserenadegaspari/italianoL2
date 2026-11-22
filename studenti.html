@@ -9608,7 +9608,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   // ---------- Struttura ----------
   const NAV = {
     student: [['oggi', 'home', 'Oggi'], ['percorso', 'path', 'Lezioni', 'unita,argomento'], ['parole', 'dict', 'Parole', 'ripasso,tema,dizionario'], ['pratica', 'target', 'Pratica', 'leggi,ascolta,parla,scrivi,errori,ripasso-misto,materie,schede,scheda'], ['verifiche', 'clip', 'Verso la verifica'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['profilo', 'user', 'Io', 'elaborati,audio,test']],
-    teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['impostazioni', 'gear', 'Impostazioni']]
+    teacher: [['panoramica', 'grid', 'Panoramica', 'studente'], ['studenti', 'users', 'Studenti'], ['scritti', 'pen', 'Scritti', 'scritto'], ['suggerimenti', 'bulb', 'Suggerimenti'], ['contenuti', 'library', 'Contenuti', 'anteprima'], ['giochi', 'puzzle', 'Giochi', 'bingo,cruciverba'], ['impostazioni', 'gear', 'Impostazioni']]
   };
   function shell() {
     const st = IL2.state; const role = st.user.role;
@@ -11199,8 +11199,17 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   const R = IL2.routes.student;
   const { esc, icon, shuffle, toast, levelBadge } = IL2.ui;
   const E = IL2.engine;
-  const P = () => IL2.state.profile;
-  const open = lv => E.unlocked(P(), lv);
+  // Anche l'insegnante può provare i giochi (anteprima): nessun blocco di livello e nessun progresso salvato.
+  // In anteprima si usa un profilo di prova che vive solo in memoria.
+  const preview = () => !!(IL2.state && IL2.state.user && IL2.state.user.role === 'teacher');
+  let trial = null;
+  const P = () => preview() ? (trial || (trial = { level: 'B1', levelOverride: null, srs: {}, gamesDone: {}, skills: {}, topics: {}, errors: {}, xp: 0 })) : IL2.state.profile;
+  const open = lv => preview() || E.unlocked(P(), lv);
+  const track = {
+    log: e => preview() ? null : IL2.log(e),
+    award: x => preview() ? null : IL2.award(x),
+    save: () => preview() ? null : IL2.save()
+  };
   const say = t => { try { IL2.speech.say(t); } catch (e) { /* audio non disponibile */ } };
   const games = () => (P().gamesDone || (P().gamesDone = {}));
   const NAMES = { A1: 'Contatto', A2: 'Sopravvivenza', B1: 'Soglia', B2: 'Progresso', C1: 'Efficacia' };
@@ -11208,19 +11217,19 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   R.giochi = async function (view) {
     const cwDone = G.CROSSWORDS.filter(s => games()[s.id]).length;
     const b = games().bingo;
-    view.innerHTML = '<div class="page-head"><h1>Giochi</h1><p class="muted">Per ripassare le parole in un altro modo. Usano il lessico dei livelli che hai sbloccato.</p></div>' +
+    view.innerHTML = '<div class="page-head"><h1>Giochi</h1><p class="muted">' + (preview() ? 'Anteprima: prova i giochi come li vedono gli studenti. Qui sono aperti tutti i livelli e non si salva niente.' : 'Per ripassare le parole in un altro modo. Usano il lessico dei livelli che hai sbloccato.') + '</p></div>' +
       '<div class="game-grid">' +
       '<a class="card game-card g-bingo" href="#/bingo"><span class="g-art" aria-hidden="true">🍎 🚌 ☀️<br>📕 🐟 🏠</span><b>Bingo delle parole</b><small>Guarda l\'immagine o ascolta la parola e trovala nella tua cartella, oppure scrivila. Per livello, per argomento o con parole miste.</small>' +
-      (b ? '<span class="g-stat">' + b.count + (b.count === 1 ? ' partita' : ' partite') + '</span>' : '') + '</a>' +
+      (b && !preview() ? '<span class="g-stat">' + b.count + (b.count === 1 ? ' partita' : ' partite') + '</span>' : '') + '</a>' +
       '<a class="card game-card g-cw" href="#/cruciverba"><span class="g-art" aria-hidden="true">C A S A<br>· · · L<br>· · · B</span><b>Cruciverba</b><small>Dieci cruciverba dal più facile al più difficile: prima con frasi da completare, poi con definizioni in italiano.</small>' +
-      '<span class="g-stat">' + cwDone + ' su ' + G.CROSSWORDS.length + ' completati</span></a></div>';
+      (preview() ? '' : '<span class="g-stat">' + cwDone + ' su ' + G.CROSSWORDS.length + ' completati</span>') + '</a></div>';
   };
 
   // ---------- Bingo ----------
   function bingoSources() {
     const vocab = C.vocab.filter(t => open(t.level));
     const src = [];
-    src.push({ key: 'misto', lv: E.currentLevel(P()), label: 'Misto', sub: 'Parole da lezioni e temi diversi', words: () => {
+    if (!preview()) src.push({ key: 'misto', lv: E.currentLevel(P()), label: 'Misto', sub: 'Parole da lezioni e temi diversi', words: () => {
       const studied = new Set(Object.keys(P().srs));
       const all = G.pictureWords(shuffle(vocab));
       const mine = all.filter(w => studied.has(w.id));
@@ -11232,7 +11241,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     }
     for (const m of C.MATERIE || []) {
       const ts = () => vocab.filter(t => t.materia === m.id || (t.studio && new RegExp(m.id, 'i').test(t.id)));
-      if (G.pictureWords(ts()).length >= 9) src.push({ key: 'mat-' + m.id, group: 'Materie', label: m.icon + ' ' + m.name, sub: 'Fino al tuo livello', words: () => G.pictureWords(ts()) });
+      if (G.pictureWords(ts()).length >= 9) src.push({ key: 'mat-' + m.id, group: 'Materie', label: m.icon + ' ' + m.name, sub: preview() ? 'Tutti i livelli' : 'Fino al tuo livello', words: () => G.pictureWords(ts()) });
     }
     for (const t of C.vocab) {
       if (t.materia || G.pictureWords([t]).length < 9) continue;
@@ -11243,25 +11252,32 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
 
   R.bingo = async function (view, parts, q) {
     const srcs = bingoSources();
-    const modo = ['scrivi', 'ascolta'].includes(q.modo) ? q.modo : 'riconosci';
+    // Dal B1 in su si consigliano «Ascolta» e «Scrivi» (più ripasso vero); «Riconosci» resta sempre disponibile.
+    const advanced = !preview() && ['B1', 'B2', 'C1'].includes(E.currentLevel(P()));
+    const modo = ['scrivi', 'ascolta', 'riconosci'].includes(q.modo) ? q.modo : advanced ? 'ascolta' : 'riconosci';
+    const tip = m => advanced && m !== 'riconosci' ? ' <span class="tag tag-soft">consigliata</span>' : '';
     const src = srcs.find(s => s.key === q.da);
     if (src && !src.locked) return playBingo(view, src, modo);
     const link = s => s.locked ? '<span class="chip-src locked" title="Si sblocca al livello ' + s.lv + '">' + icon('lock') + esc(s.label) + '</span>'
       : '<a class="chip-src" href="#/bingo?da=' + encodeURIComponent(s.key) + '&modo=' + modo + '"><b>' + esc(s.label) + '</b><small>' + esc(s.sub || '') + '</small></a>';
     const groups = ['Per livello', 'Materie', 'Per argomento'];
-    view.innerHTML = '<a class="back" href="#/giochi">' + icon('back') + 'Giochi</a><div class="page-head"><h1>Bingo delle parole</h1><p class="muted">Compare un\'immagine o senti una parola: trovala nella tua cartella, oppure scrivila. Una casella si segna solo con la risposta giusta: se sbagli, la parola torna più avanti. Fai bingo completando una riga, una colonna o una diagonale.</p></div>' +
-      '<div class="seg wrap" role="group" aria-label="Modalità"><a class="' + (modo === 'riconosci' ? 'on' : '') + '" href="#/bingo?modo=riconosci">' + icon('target') + ' Riconosci la parola</a><a class="' + (modo === 'ascolta' ? 'on' : '') + '" href="#/bingo?modo=ascolta">' + icon('speaker') + ' Ascolta la parola</a><a class="' + (modo === 'scrivi' ? 'on' : '') + '" href="#/bingo?modo=scrivi">' + icon('pen') + ' Scrivi la parola</a></div>' +
-      '<h2 class="h-sec">Con quali parole?</h2><div class="src-row">' + link(srcs[0]) + '</div>' +
+    const first = srcs.find(x => !x.group);
+    view.innerHTML = '<a class="back" href="#/giochi">' + icon('back') + 'Giochi</a><div class="page-head"><h1>Bingo delle parole</h1><p class="muted">Compare un\'immagine o senti una parola: trovala nella tua cartella, oppure scrivila. Una casella si segna solo con la risposta giusta: se sbagli, la parola torna più avanti. Fai bingo completando una riga, una colonna o una diagonale. Dal livello B1 fai bingo quando la cartella è piena.</p></div>' +
+      '<div class="seg wrap" role="group" aria-label="Modalità"><a class="' + (modo === 'riconosci' ? 'on' : '') + '" href="#/bingo?modo=riconosci">' + icon('target') + ' Riconosci la parola</a><a class="' + (modo === 'ascolta' ? 'on' : '') + '" href="#/bingo?modo=ascolta">' + icon('speaker') + ' Ascolta la parola' + tip('ascolta') + '</a><a class="' + (modo === 'scrivi' ? 'on' : '') + '" href="#/bingo?modo=scrivi">' + icon('pen') + ' Scrivi la parola' + tip('scrivi') + '</a></div>' +
+      (advanced ? '<p class="small muted">Al tuo livello prova «Ascolta» o «Scrivi»: ripassi meglio le parole.</p>' : '') +
+      (preview() ? '<p class="small muted">Dal B1 in su lo studente fa bingo solo a cartella piena, e la pagina gli consiglia «Ascolta» e «Scrivi».</p>' : '') +
+      '<h2 class="h-sec">Con quali parole?</h2>' + (first ? '<div class="src-row">' + link(first) + '</div>' : '') +
       groups.map(g => { const list = srcs.filter(s => s.group === g); return list.length ? '<h3 class="h-sub">' + g + '</h3><div class="src-row">' + list.map(link).join('') + '</div>' : ''; }).join('');
   };
 
   // Difficoltà del bingo secondo il livello: cartella piccola, prima lettera e audio come aiuto, un errore di battitura tollerato.
+  // full: dal B1 si vince a cartella piena (tutte le parole), non con una sola riga.
   G.BINGO_RULES = {
     A1: { size: 3, first: true, listen: true, typo: 1 },
     A2: { size: 3, first: true, listen: true, typo: 1 },
-    B1: { size: 4, first: false, listen: true, typo: 0 },
-    B2: { size: 4, first: false, listen: false, typo: 0 },
-    C1: { size: 4, first: false, listen: false, typo: 0 }
+    B1: { size: 4, first: false, listen: true, typo: 0, full: true },
+    B2: { size: 4, first: false, listen: false, typo: 0, full: true },
+    C1: { size: 4, first: false, listen: false, typo: 0, full: true }
   };
   function dist(a, b) {
     const d = [...Array(b.length + 1)].map((_, j) => j);
@@ -11283,10 +11299,10 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     const lines = [];
     for (let r = 0; r < size; r++) { lines.push([...Array(size)].map((_, c) => r * size + c)); lines.push([...Array(size)].map((_, c) => c * size + r)); }
     lines.push([...Array(size)].map((_, k) => k * size + k)); lines.push([...Array(size)].map((_, k) => k * size + size - 1 - k));
-    const hasBingo = () => lines.find(l => l.every(k => marked.has(card[k].id)));
+    const hasBingo = () => rules.full ? (marked.size === n ? card.map((_, k) => k) : null) : lines.find(l => l.every(k => marked.has(card[k].id)));
 
     view.innerHTML = '<div class="session bingo"><div class="session-top"><a class="btn icon ghost" href="#/bingo?modo=' + modo + '" aria-label="Esci">' + icon('close') + '</a><div class="progress"><span style="width:0%"></span></div><span class="count small muted"></span></div>' +
-      '<h2 class="session-title">Bingo · ' + esc(src.label) + '</h2>' +
+      '<h2 class="session-title">Bingo · ' + esc(src.label) + '</h2>' + (rules.full ? '<p class="small muted bingo-goal">Segna tutte le caselle per fare bingo.</p>' : '') +
       '<div class="bingo-wrap"><div class="card bingo-call"><div class="call-pic" aria-live="polite"></div><div class="call-ask"></div><div class="call-act"></div><div class="call-fb" aria-live="polite"></div></div>' +
       '<div class="bingo-card s' + size + '" role="grid" aria-label="La tua cartella">' + card.map((w, k) => '<button class="bcell" data-k="' + k + '" type="button"><span class="bw" lang="it">' + esc(w.it) + '</span><span class="bp" aria-hidden="true">' + w.pic + '</span></button>').join('') + '</div></div></div>';
     const $ = s => view.querySelector(s);
@@ -11360,9 +11376,9 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       const r = { correct: ok, total: answered, durationSec: Math.round((Date.now() - started) / 1000) };
       // Le parole sbagliate entrano nel Ripasso parole di Oggi (e l'insegnante le vede nella pagina dello studente).
       for (const w of missed.values()) E.srsReview(P(), w.id, 0);
-      IL2.log({ type: 'game', ref: 'bingo:' + src.key + (modo === 'ascolta' ? ':ascolta' : ''), skill: 'lessico', correct: ok, total: answered, durationSec: r.durationSec, misses: [...new Set(misses)].slice(0, 20) });
+      track.log({ type: 'game', ref: 'bingo:' + src.key + (modo === 'ascolta' ? ':ascolta' : ''), skill: 'lessico', correct: ok, total: answered, durationSec: r.durationSec, misses: [...new Set(misses)].slice(0, 20) });
       const g = games(); g.bingo = { count: ((g.bingo && g.bingo.count) || 0) + 1, at: Date.now() };
-      IL2.award(2 + ok); IL2.save();
+      track.award(2 + ok); track.save();
       view.innerHTML = '<section class="result card"><div class="big-emoji" aria-hidden="true">' + (bingo ? '🎉' : '🙂') + '</div><h2>' + (bingo ? 'Bingo!' : 'Partita finita') + '</h2>' +
         '<p class="muted">' + ok + ' risposte giuste su ' + answered + '.</p>' +
         (misses.length ? '<p>Da ripassare: ' + [...new Set(misses)].map(m => '<b lang="it">' + esc(m) + '</b>').join(', ') + '.<br><small class="muted">Le ritrovi nel Ripasso parole di Oggi.</small></p>' : '') +
@@ -11454,10 +11470,10 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
       finished = true;
       const solved = cw.entries.filter(e => cellsOf(e).every(k => !helped.has(k))).length;
       const r = { correct: solved, total: cw.entries.length, durationSec: Math.round((Date.now() - started) / 1000) };
-      IL2.log({ type: 'game', ref: 'cruciverba:' + cw.id, skill: 'lessico', correct: solved, total: cw.entries.length, durationSec: r.durationSec });
+      track.log({ type: 'game', ref: 'cruciverba:' + cw.id, skill: 'lessico', correct: solved, total: cw.entries.length, durationSec: r.durationSec });
       cw.entries.forEach(e => E.recordAnswer(P(), { skill: 'lessico', lv: cw.level }, cellsOf(e).every(k => !helped.has(k)), { logError: false }));
-      if (!gaveUp) { const g = games(); g[cw.id] = { at: Date.now(), solved, total: cw.entries.length }; IL2.award(3 + solved); }
-      IL2.save();
+      if (!gaveUp) { const g = games(); g[cw.id] = { at: Date.now(), solved, total: cw.entries.length }; track.award(3 + solved); }
+      track.save();
       view.querySelectorAll('.cw-grid input').forEach(i => { i.readOnly = true; });
       const box = document.createElement('section'); box.className = 'result card';
       const nextCw = G.CROSSWORDS[G.CROSSWORDS.findIndex(s => s.id === cw.id) + 1];
@@ -11472,6 +11488,7 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
     view.querySelector('.cw-grid').addEventListener('input', updateBank); updateBank();
     focusCell(cellsOf(cur).find(k => !inputs[k].readOnly) || pos); highlight();
   }
+  IL2.gameRoutes = { giochi: R.giochi, bingo: R.bingo, cruciverba: R.cruciverba };
 })();
 
 ;
@@ -11486,6 +11503,8 @@ Gli offrirono allora da mangiare, ma fra Cristoforo chiese soltanto un pezzo di 
   const E = IL2.engine, C = IL2.content;
   const DAY = 86400000;
   const R = IL2.routes.teacher = {};
+  // Giochi in anteprima (stesse pagine degli studenti, senza blocchi e senza salvare): vedi games.js
+  if (IL2.gameRoutes) Object.assign(R, IL2.gameRoutes);
 
   // Senza server (area insegnante sul computer) le modifiche arrivano allo studente solo con un nuovo link di invito:
   // l'app lo ricorda finché il link non viene riaperto qui.
